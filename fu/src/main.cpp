@@ -1,6 +1,7 @@
 #include <wx/wx.h>
 #include <wx/snglinst.h>
 #include "ui/tray.cpp"
+#include "os/os.h"
 
 class App : public wxApp
 {
@@ -19,6 +20,7 @@ public:
         wxInitAllImageHandlers();
         _tray = new Tray();
         
+        Init();
         return true;
     }
 };

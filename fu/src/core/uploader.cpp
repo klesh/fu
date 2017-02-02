@@ -47,7 +47,6 @@ protected:
         if (site == NULL)
             return EmitError("None of site is selected");
         
-        wxString urlFormat = site->GetUrlFormat();
         wxString siteId = site->GetId();
         
         wxCommandEvent start(EVT_UPLOAD_START);
@@ -69,7 +68,7 @@ protected:
         
         for (auto &file : _files)
         {
-            auto oStream = ptc->OpenStream(file->GetRemoteName());
+            auto oStream = ptc->OpenStream(file->GetFileName(), file->GetRemoteName());
             if (oStream == NULL)
                 return EmitError(wxString::Format("Fail to open remote file.\n%s", ptc->GetErrorMessage()));
             
@@ -79,21 +78,23 @@ protected:
  
             oStream->Close();
             
-            file->SetSiteId(siteId);
-            file->SetStatus(UPLOADED);
+            delete oStream;
             
-            auto error = oStream->GetLastError();
-            
-            if (error != wxSTREAM_NO_ERROR)
+            auto message = ptc->GetErrorMessage();
+            if (!message.IsEmpty())
             {
-                auto rc = EmitError(wxString::Format("Upload fail, erro code: %d", error));
+                file->SetStatus(PENDING);
+                EmitError(wxString::Format("Upload fail: %s", message));
                 ptc->Disconnect();
                 delete ptc;
-                delete oStream;
-                return rc;
+                return (ExitCode)1;
             }
-            
-            delete oStream;
+            else
+            {
+                file->SetSiteId(siteId);
+                file->SetStatus(UPLOADED);
+                file->SetExtraInfo(ptc->GetLastExtraInfo());
+            }
         }
         
         ptc->Disconnect();

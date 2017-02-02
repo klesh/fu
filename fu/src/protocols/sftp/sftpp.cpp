@@ -10,20 +10,7 @@ using namespace std;
 
 class SftpProvider : public PtcProvider
 {
-private:
-    vector<PtcSettingMeta*> _settingMetas;
-    
 public:
-    SftpProvider()
-    {
-        _settingMetas.push_back(new PtcSettingMeta("host", "Host", true));
-        _settingMetas.push_back(new PtcSettingMeta("port", "Port", false, PtcSettingMeta::TYPE_PINT));
-        _settingMetas.push_back(new PtcSettingMeta("user", "User", true));
-        _settingMetas.push_back(new PtcSettingMeta("pass", "Password", false, PtcSettingMeta::TYPE_PASSWORD));
-        _settingMetas.push_back(new PtcSettingMeta("key", "Private Key", false, PtcSettingMeta::TYPE_FILE));
-        _settingMetas.push_back(new PtcSettingMeta("path", "Remote Path", false));
-    }
-    
     virtual const wxString &GetName()
     {
         static wxString name = "sftp";
@@ -32,27 +19,22 @@ public:
     
     virtual const vector<PtcSettingMeta*> &GetSettingMetas()
     {
-        return _settingMetas;
+        static vector<PtcSettingMeta*> metas =
+        {
+            new PtcSettingMeta("host", "Host", true),
+            new PtcSettingMeta("port", "Port", false, PtcSettingMeta::TYPE_PINT),
+            new PtcSettingMeta("user", "User", true),
+            new PtcSettingMeta("pass", "Password", false, PtcSettingMeta::TYPE_PASSWORD),
+            new PtcSettingMeta("key", "Private Key", false, PtcSettingMeta::TYPE_FILE),
+            new PtcSettingMeta("path", "Remote Path", false),
+            new PtcSettingMeta("urlFormat", "URL format", true)
+        };
+        return metas;
     }
     
     virtual Ptc *CreateInstance(map<wxString, wxString> &settings)
     {
-        Sftp *sftp = new Sftp();
-        for (auto const &pair : settings)
-        {
-            if (pair.first == wxT("host"))
-                sftp->SetHost(pair.second);
-            else if (pair.first == wxT("port"))
-                sftp->SetPort(pair.second);
-            else if (pair.first == wxT("user"))
-                sftp->SetUser(pair.second);
-            else if (pair.first == wxT("pass"))
-                sftp->SetPass(pair.second);
-            else if (pair.first == wxT("key"))
-                sftp->SetKeyPath(pair.second);
-            else if (pair.first == wxT("path"))
-                sftp->SetRemotePath(pair.second);
-        }
+        auto sftp = new Sftp(settings);
         return (Ptc*)sftp;
     }
 };

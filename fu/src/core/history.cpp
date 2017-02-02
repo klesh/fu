@@ -52,13 +52,21 @@ private:
                 File* file = new File();
                 file->SetOriginalPath(child->GetAttribute("path"));
                 file->SetName(child->GetAttribute("name"));
-                file->SetFilename(child->GetAttribute("filename"));
+                file->SetFileName(child->GetAttribute("filename"));
                 file->SetRemoteName(child->GetAttribute("remoteName"));
                 file->SetExt(child->GetAttribute("ext"));
                 file->SetSiteId(child->GetAttribute("siteId"));
                 file->GetUploadedAt().ParseISOCombined(child->GetAttribute("uploadedAt"));
                 file->SetThumbnailPath(GetThumbFullPath(file->GetRemoteName()));
                 file->IsImage(child->GetAttribute("isImage") == "true");
+                
+                auto *extra = child->GetChildren();
+                while (extra)
+                {
+                    file->AddExtraInfo(extra->GetName(), extra->GetNodeContent());
+                    extra = extra->GetNext();
+                }
+                
                 _all.push_back(file);
             }
             
@@ -81,12 +89,22 @@ public:
             wxXmlNode *fileNode = new wxXmlNode(wxXML_ELEMENT_NODE, "file");
             fileNode->AddAttribute("path", file->GetOriginalPath());
             fileNode->AddAttribute("name", file->GetName());
-            fileNode->AddAttribute("filename", file->GetFilename());
+            fileNode->AddAttribute("filename", file->GetFileName());
             fileNode->AddAttribute("remoteName", file->GetRemoteName());
             fileNode->AddAttribute("ext", file->GetExt());
             fileNode->AddAttribute("siteId", file->GetSiteId());
             fileNode->AddAttribute("isImage", file->IsImage() ? "true" : "false");
             fileNode->AddAttribute("uploadedAt", file->GetUploadedAt().FormatISOCombined());
+            
+            for (auto const &extra : file->GetExtraInfo())
+            {
+                auto extraNode = new wxXmlNode(wxXML_ELEMENT_NODE, extra.first);
+                auto extraTextNode = new wxXmlNode(wxXML_TEXT_NODE, "");
+                extraTextNode->SetContent(extra.second);
+                extraNode->AddChild(extraTextNode);
+                
+                fileNode->AddChild(extraNode);
+            }
             
             root->AddChild(fileNode);
         }

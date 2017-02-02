@@ -7,10 +7,9 @@
 
 #include "ptc.h"
 #include "ptcp.h"
-#include "sftp/sftp.cpp"
 #include "sftp/sftpp.cpp"
-#include "local/local.cpp"
 #include "local/localp.cpp"
+#include "imgur/imgurp.cpp"
 
 #define ThePtcFactory PtcFactory::Inst()
 
@@ -25,8 +24,9 @@ private:
     {
         _all.insert(pair<wxString, PtcProvider*>("local", (PtcProvider*)new LocalProvider()));
         _all.insert(pair<wxString, PtcProvider*>("sftp", (PtcProvider*)new SftpProvider()));
-        _allKeys.push_back("local");
-        _allKeys.push_back("sftp");
+        _all.insert(pair<wxString, PtcProvider*>("imgur.com", (PtcProvider*)new ImgurProvider()));
+        for (auto const &it : _all)
+            _allKeys.push_back(it.first);
     }
     
 public:

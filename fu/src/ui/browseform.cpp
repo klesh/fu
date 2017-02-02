@@ -199,7 +199,7 @@ class BrowseForm : public wxDialog
                     continue;
                
                 if (!keyword.IsEmpty()
-                    && file->GetFilename().Find(keyword) == wxNOT_FOUND
+                    && file->GetFileName().Find(keyword) == wxNOT_FOUND
                     && file->GetRemoteName().Find(keyword) == wxNOT_FOUND)
                     continue;
                 

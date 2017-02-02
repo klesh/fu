@@ -12,47 +12,13 @@
 class Sftp : public Ptc
 {
 private:
-    wxString _host;
-    wxString _port;
-    wxString _user;
-    wxString _pass;
-    wxString _keyPath;
-    wxString _remotePath;
     ssh_session _session = NULL;
     sftp_session _sftp = NULL;
     bool _connected = false;
-    wxString _message;
     
 public:
-    
-    void SetHost(const wxString &host)
+    Sftp(map<wxString, wxString> settings) : Ptc(settings)
     {
-        _host = host;
-    }
-    
-    void SetPort(const wxString &port)
-    {
-        _port = port;
-    }
-    
-    void SetUser(const wxString &user)
-    {
-        _user = user;
-    }
-    
-    void SetPass(const wxString &pass)
-    {
-        _pass = pass;
-    }
-    
-    void SetKeyPath(const wxString &keyPath)
-    {
-        _keyPath = keyPath;
-    }
-    
-    void SetRemotePath(const wxString &remotePath)
-    {
-        _remotePath = remotePath;
     }
     
     bool Connect()
@@ -63,12 +29,16 @@ public:
         if (_session == NULL)
             return false;
         
-        unsigned int port = wxAtoi(_port);
-        ssh_options_set(_session, SSH_OPTIONS_HOST, _host.mb_str().data());
+        unsigned int port = wxAtoi(_settings["port"]);
+        const char *puser = _settings["user"].mb_str().data();
+        const char *ppass = _settings["pass"].mb_str().data();
+        ssh_options_set(_session, SSH_OPTIONS_HOST, _settings["host"].mb_str().data());
         ssh_options_set(_session, SSH_OPTIONS_PORT, &port);
-        ssh_options_set(_session, SSH_OPTIONS_USER, _user.mb_str().data());
+        ssh_options_set(_session, SSH_OPTIONS_USER, puser);
         
-        bool authByPass = _keyPath.IsEmpty();
+        wxString keyPath = _settings["key"];
+        
+        bool authByPass = keyPath.IsEmpty();
         
         rc = ssh_connect(_session);
         if (rc != SSH_OK)
@@ -82,7 +52,7 @@ public:
         
         if (authByPass)
         {
-            rc = ssh_userauth_password(_session, NULL, _pass.mb_str().data());
+            rc = ssh_userauth_password(_session, NULL, ppass);
             
             if (rc != SSH_AUTH_SUCCESS)
             {
@@ -93,7 +63,7 @@ public:
         }
         else
         {
-            rc = ssh_userauth_privatekey_file(_session, _user.mb_str().data(), _keyPath.mb_str().data(), _pass.mb_str().data());
+            rc = ssh_userauth_privatekey_file(_session, puser, keyPath.mb_str().data(), ppass);
             if (rc != SSH_AUTH_SUCCESS)
             {
                 _message = wxString::Format("Error public key authentication: %d\n", ssh_get_error(_session));
@@ -140,16 +110,13 @@ public:
         }
     }
     
-    ~Sftp()
-    {
-        Disconnect();
-    }
+protected:
     
-    wxOutputStream *OpenStream(const wxString &remoteName)
+    virtual wxOutputStream *OnOpenStream(const wxString &fileName, const wxString &remoteName)
     {
         int accessType = O_WRONLY | O_CREAT | O_TRUNC;
         
-        wxString path = _remotePath;
+        wxString path = _settings["path"];
         
         if (!path.IsEmpty())
             if (path.Last() != '/') path = path + "/";
@@ -164,11 +131,6 @@ public:
         
         SftpFileOutputStream *stream = new SftpFileOutputStream(file);
         return (wxOutputStream*)stream;
-    }
-    
-    const wxString &GetErrorMessage()
-    {
-        return _message;
     }
 };
 

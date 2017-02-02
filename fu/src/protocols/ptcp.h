@@ -17,6 +17,7 @@ protected:
     wxString _caption;
     bool _isRequired;
     int _type;
+    wxString _hint;
     
 public:
     enum {
@@ -27,18 +28,20 @@ public:
         TYPE_DIR
     };
     
-    PtcSettingMeta(const wxString &name, const wxString &caption, bool isRequired = false, int type = TYPE_STRING)
+    PtcSettingMeta(const wxString &name, const wxString &caption, bool isRequired = false, int type = TYPE_STRING, const wxString hint = wxEmptyString)
     {
         _name = name;
         _caption = caption;
         _isRequired = isRequired;
         _type = type;
+        _hint = hint;
     }
     
     wxString &GetName() { return _name; }
     wxString &GetCaption() { return _caption; }
     bool IsRequired() { return _isRequired; }
     int GetValueType() { return _type; }
+    wxString &GetHint() { return _hint; }
 };
 
 /**

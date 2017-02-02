@@ -5,10 +5,13 @@
 #include <wx/regex.h>
 #include <wx/wfstream.h>
 #include <wx/quantize.h>
+#include <map>
 #include "config.cpp"
 #include "func.cpp"
 
 #define MAX_FILE_ID 4000
+
+using namespace std;
 
 const static wxRegEx IMG_PATTERN("\\.(png|jpg|jpeg|gif)$", wxRE_ICASE);
 
@@ -27,9 +30,10 @@ class File
 private:
     wxImage _imgOriginal;
     wxBitmap _bmpThumbnail;
-    wxString _originalPath, _thumbnailPath, _name, _remoteName, _ext, _siteId,  _filename;
+    wxString _originalPath, _thumbnailPath, _name, _remoteName, _ext, _siteId,  _fileName;
     wxDateTime _uploadedAt;
     FileStatus _status;
+    map<wxString, wxString> _extraInfo;
     bool _isImage = false;
     
 public:
@@ -38,7 +42,7 @@ public:
     File(wxBitmap &original)
     {
         _imgOriginal = original.ConvertToImage();
-        _filename = _name = "Copied";
+        _fileName = _name = "Copied";
         _ext = "jpg";
         _isImage = true;
         _imgOriginal.SetType(wxBITMAP_TYPE_JPEG);
@@ -48,7 +52,7 @@ public:
     File(wxString &path)
     {
         _originalPath = path;
-        _filename = _name = wxFileNameFromPath(path);
+        _fileName = _name = wxFileNameFromPath(path);
         _ext = path.AfterLast('.').Lower();
         _isImage = IMG_PATTERN.Matches(path);
         if (_name.Length() > 10)
@@ -151,20 +155,20 @@ public:
         _name = name;
     }
     
-    wxString &GetFilename()
+    wxString &GetFileName()
     {
-        return _filename;
+        return _fileName;
     }
     
-    void SetFilename(const wxString &filename)
+    void SetFileName(const wxString &fileName)
     {
-        _filename = filename;
+        _fileName = fileName;
     }
     
     wxString GetLongName()
     {
-        if (!_filename.IsEmpty())
-            return _filename;
+        if (!_fileName.IsEmpty())
+            return _fileName;
         
         return "[Clipboard]";
     }
@@ -239,6 +243,21 @@ public:
     void SetUploadedAt(const wxDateTime &uploadedAt)
     {
         _uploadedAt = uploadedAt;
+    }
+    
+    map<wxString, wxString> &GetExtraInfo()
+    {
+        return _extraInfo;
+    }
+    
+    void SetExtraInfo(map<wxString, wxString> extraInfo)
+    {
+        _extraInfo = extraInfo;
+    }
+    
+    void AddExtraInfo(const wxString &name, const wxString &value)
+    {
+        _extraInfo[name] = value;
     }
     
     static void SaveImage(const wxBitmap &bmp, const wxBitmapType type, const wxString &path)

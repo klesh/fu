@@ -8,30 +8,15 @@
 
 class Local : public Ptc
 {
-private:
-    wxString _path;
-    wxFileOutputStream *_file = NULL;
-    
-    
 public:
-    void SetPath(wxString &path)
+    Local(map<wxString, wxString> settings) : Ptc(settings)
     {
-        _path = path;
     }
     
-    bool Connect()
+protected:
+    virtual wxOutputStream *OnOpenStream(const wxString &fileName, const wxString &remoteName)
     {
-        return true;
-    }
-    
-    void Disconnect()
-    {
-        
-    }
-    
-    wxOutputStream *OpenStream(const wxString &remoteName)
-    {
-        wxFileName path(_path, remoteName);
+        wxFileName path(_settings["path"], remoteName);
         return new wxFileOutputStream(path.GetFullPath());
     }
 };

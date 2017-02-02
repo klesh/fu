@@ -7,7 +7,7 @@
 class LocalProvider : public PtcProvider
 {
 public:
-    virtual wxString &GetName()
+    virtual const wxString &GetName()
     {
         static wxString name = "local";
         return name;
@@ -16,15 +16,15 @@ public:
     virtual const vector<PtcSettingMeta*> &GetSettingMetas()
     {
         static vector<PtcSettingMeta*> metas = {
-            new PtcSettingMeta("path", "Target", true, PtcSettingMeta::TYPE_DIR)
+            new PtcSettingMeta("path", "Target", true, PtcSettingMeta::TYPE_DIR),
+            new PtcSettingMeta("urlFormat", "URL format", true)
         };
         return metas;
     }
     
     virtual Ptc *CreateInstance(map<wxString, wxString> &settings)
     {
-        auto local = new Local();
-        local->SetPath(settings["path"]);
+        auto local = new Local(settings);
         return (Ptc*)local;
     }
 };

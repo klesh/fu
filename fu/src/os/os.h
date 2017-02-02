@@ -3,6 +3,8 @@
 
 #include <wx/wx.h>
 
+void Init();
+
 bool IsClipboardChanged();
 
 void BringAppToTop();

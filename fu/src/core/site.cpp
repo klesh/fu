@@ -43,16 +43,6 @@ public:
         _name = name;
     }
     
-    wxString &GetUrlFormat()
-    {
-        return _urlFormat;
-    }
-    
-    void SetUrlFormat(wxString &urlFormat)
-    {
-        _urlFormat = urlFormat;
-    }
-    
     wxString &GetProtocol()
     {
         return _protocol;

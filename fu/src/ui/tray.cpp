@@ -241,6 +241,20 @@ public:
     void OnError(wxCommandEvent &evt)
     {
         Toast("Error", evt.GetString(), true);
+        
+        vector<File*> uploading;
+        for (auto const &file : _uploading)
+        {
+            if (file->GetStatus() == PENDING)
+            {
+                TheClip.Add(file);
+            }
+            else if (file->GetStatus() == UPLOADING)
+            {
+                uploading.push_back(file);
+            }
+        }
+        _uploading = uploading;
     }
     
     void OnUploadSuccess(wxCommandEvent &evt)
@@ -254,13 +268,14 @@ public:
             {
                 uploaded.push_back(file);
             }
-            else
+            else if (file->GetStatus() == UPLOADING)
             {
                 uploading.push_back(file);
             }
         }
         TheHistory.Push(uploaded);
         _uploading = uploading;
+        Toast("Uploaded successfully", wxString::Format("Total %zd files uploaded", uploaded.size()));
     }
 };
 

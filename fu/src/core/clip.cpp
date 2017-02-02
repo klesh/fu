@@ -89,6 +89,11 @@ public:
         _files.clear();
     }
     
+    void Add(File* file)
+    {
+        _files.push_back(file);
+    }
+    
     void SetText(const wxString &text)
     {
         if (!wxTheClipboard->Open())
@@ -132,7 +137,11 @@ public:
     wxString GetFileUrl(File* file)
     {
         Site *site = TheConfig.FindSiteById(file->GetSiteId());
-        return wxString::Format(site->GetUrlFormat(), file->GetRemoteName());
+        PtcProvider *provider = ThePtcFactory.Get(site->GetProtocol());
+        Ptc *ptc = provider->CreateInstance(site->GetSettings());
+        auto url = ptc->FormatUrl(file->GetRemoteName(), file->GetExtraInfo());
+        delete ptc;
+        return url;
     }
     
     static Clip &Inst()

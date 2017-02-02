@@ -12,6 +12,23 @@
 #import <AppKit/NSRunningApplication.h>
 #import <AppKit/NSApplication.h>
 
+@interface NotificationCenterDelegate : NSObject <NSUserNotificationCenterDelegate>
+@end
+
+@implementation NotificationCenterDelegate
+- (BOOL)userNotificationCenter:(NSUserNotificationCenter *)center
+   shouldPresentNotification:(NSUserNotification *)notification
+{
+    return YES;
+}
+@end
+
+void Init()
+{
+//    NotificationCenterDelegate *d = [[NotificationCenterDelegate alloc] init];
+//    [[NSUserNotificationCenter defaultUserNotificationCenter] setDelegate:d];
+}
+
 static NSInteger lastChangeCount = 0;
 
 bool IsClipboardChanged()
@@ -28,6 +45,8 @@ void BringAppToTop()
     [[NSRunningApplication currentApplication] activateWithOptions:(NSApplicationActivateAllWindows | NSApplicationActivateIgnoringOtherApps)];
 }
 
+
+
 void Toast(const wxString &title, const wxString &message, bool isError)
 {
     NSUserNotification *notification = [[NSUserNotification alloc] init];
@@ -40,7 +59,7 @@ void Toast(const wxString &title, const wxString &message, bool isError)
     [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
     if (!isError)
     {
-        NSTimeInterval delay = 2;
+        NSTimeInterval delay = 3;
         [[NSUserNotificationCenter defaultUserNotificationCenter] performSelector:@selector(removeDeliveredNotification:)
                                                                        withObject:notification
                                                                        afterDelay:delay];

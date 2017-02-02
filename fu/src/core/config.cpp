@@ -116,7 +116,6 @@ private:
                     
                     wxString id = siteNode->GetAttribute("id");
                     wxString name = siteNode->GetAttribute("name");
-                    wxString urlFormat = siteNode->GetAttribute("urlFormat");
                     wxString protocol = siteNode->GetAttribute("protocol");
                     PtcProvider *provider = PtcFactory::Inst().Get(protocol);
                     map<wxString, wxString> settings;
@@ -130,7 +129,6 @@ private:
                     Site *site = new Site();
                     site->SetId(id);
                     site->SetName(name);
-                    site->SetUrlFormat(urlFormat);
                     site->SetProtocol(protocol);
                     site->SetSettings(settings);
                     
@@ -299,7 +297,6 @@ public:
             wxXmlNode *siteNode = new wxXmlNode(wxXML_ELEMENT_NODE, "site");
             siteNode->AddAttribute("id", site->GetId());
             siteNode->AddAttribute("name", site->GetName());
-            siteNode->AddAttribute("urlFormat", site->GetUrlFormat());
             siteNode->AddAttribute("protocol", site->GetProtocol());
             
             for (auto const &setting : site->GetSettings())

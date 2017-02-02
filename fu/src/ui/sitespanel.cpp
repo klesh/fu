@@ -19,7 +19,6 @@ private:
     wxPanel *_panel;
     wxListBox *_lsbSites;
     wxTextCtrl *_txtName;
-    wxTextCtrl *_txtUrlFormat;
     wxChoice *_chcProtocol;
     map<wxString, wxControl*> _settings;
     wxPanel *_pnlSettings = NULL;
@@ -43,7 +42,6 @@ public:
         
         _panel = new wxPanel(this, wxID_ANY);
         _txtName = new wxTextCtrl(_panel, wxID_ANY);
-        _txtUrlFormat = new wxTextCtrl(_panel, wxID_ANY);
         _chcProtocol = new wxChoice(_panel, ctlID_PROTOCOL);
         _pnlSettings = new wxPanel(_panel, wxID_ANY);
         _btnSubmit = new wxButton(_panel, ctlID_SUBMIT, "Save");
@@ -64,7 +62,6 @@ public:
         
         wxSizer *rightSizer = new wxBoxSizer(wxVERTICAL);
         AddRow(rightSizer, "Name", _txtName);
-        AddRow(rightSizer, "Url Format", _txtUrlFormat);
         AddRow(rightSizer, "Protocol", _chcProtocol);
         AddRow(rightSizer, _pnlSettings);
         AddRow(rightSizer, wxEmptyString, _btnSubmit);
@@ -198,12 +195,14 @@ public:
     wxControl *CreateStringCtrl(wxString &value, PtcSettingMeta *meta)
     {
         auto ctrl = new wxTextCtrl(_pnlSettings, wxID_ANY, value);
+        ctrl->SetHint(meta->GetHint());
         return ctrl;
     }
     
     wxControl *CreatePasswordCtrl(wxString &value, PtcSettingMeta *meta)
     {
         auto ctrl = new wxTextCtrl(_pnlSettings, wxID_ANY, value, wxDefaultPosition, wxDefaultSize, wxTE_PASSWORD);
+        ctrl->SetHint(meta->GetHint());
         return ctrl;
     }
     
@@ -212,6 +211,7 @@ public:
         wxIntegerValidator<unsigned int> validator;
         validator.SetMin(1);
         auto ctrl = new wxTextCtrl(_pnlSettings, wxID_ANY, value, wxDefaultPosition, wxDefaultSize, 0, validator);
+        ctrl->SetHint(meta->GetHint());
         return ctrl;
     }
     
@@ -237,7 +237,6 @@ public:
         
         _panel->Show();
         _txtName->SetValue(_site->GetName());
-        _txtUrlFormat->SetValue(_site->GetUrlFormat());
         _chcProtocol->SetStringSelection(_site->GetProtocol());
         RecreateSettingPanel();
     }
@@ -248,13 +247,6 @@ public:
         if (name.IsEmpty())
         {
             _txtName->SetFocus();
-            return;
-        }
-        
-        auto urlFormat = _txtUrlFormat->GetValue();
-        if (urlFormat.IsEmpty())
-        {
-            _txtUrlFormat->SetFocus();
             return;
         }
         
@@ -299,7 +291,6 @@ public:
         }
         
         _site->SetName(name);
-        _site->SetUrlFormat(urlFormat);
         _site->SetProtocol(_chcProtocol->GetStringSelection());
         _site->SetSettings(settings);
         
