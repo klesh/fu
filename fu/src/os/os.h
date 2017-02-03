@@ -11,4 +11,8 @@ void BringAppToTop();
 
 void Toast(const wxString &title, const wxString& message, bool isError = false);
 
+bool GetAutoStart();
+
+void SetAutoStart(bool enabled);
+
 #endif

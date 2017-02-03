@@ -148,7 +148,13 @@ private:
             
             child = child->GetNext();
         }
-        
+        if (_sites.empty())
+        {
+            auto smms = new Site();
+            smms->SetName("sm.ms");
+            smms->SetProtocol("smms");
+            _sites.push_back(smms);
+        }
     }
     
     ~Config()
