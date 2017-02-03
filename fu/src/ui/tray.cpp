@@ -10,6 +10,7 @@
 #include <vector>
 
 #include "icon.xpm"
+#include "icon_uploading.xpm"
 #include "../core/config.cpp"
 #include "../core/file.cpp"
 #include "../core/clip.cpp"
@@ -23,6 +24,8 @@
 #include "browseform.cpp"
 
 using namespace std;
+
+static wxIcon _icon(icon), _icon_uploading(icon_uploading);
 
 class Tray : public wxTaskBarIcon
 {
@@ -46,17 +49,37 @@ private:
     BrowseForm *_browser = NULL;
     
     vector<File*> _pending, _uploading, _uploaded;
+    int uploadingCount = 0;
     
 public:
     Tray()
     {
-        wxIcon _icon = wxIcon(icon);
         SetIcon(_icon);
+//        SetIcon(_icon_uploading);
         _pref = new PrefForm(TheConfig.Position, TheConfig.Size);
         
         Bind(wxEVT_COMMAND_MENU_SELECTED, &Tray::OnMenuItemSelected, this);
         Bind(EVT_UPLOAD_ERROR, &Tray::OnError, this);
         Bind(EVT_UPLOAD_SUCCESS, &Tray::OnUploadSuccess, this);
+        Bind(EVT_UPLOAD_START, &Tray::OnUploadStart, this);
+        Bind(EVT_UPLOAD_END, &Tray::OnUploadEnd, this);
+    }
+    
+    void OnUploadStart(wxCommandEvent &evt)
+    {
+        uploadingCount++;
+        RefreshIcon();
+    }
+    
+    void OnUploadEnd(wxCommandEvent &evt)
+    {
+        uploadingCount--;
+        RefreshIcon();
+    }
+    
+    void RefreshIcon()
+    {
+        SetIcon(uploadingCount ? _icon_uploading : _icon);
     }
     
     void CreateFileMenuItems(wxMenu *menu, const wxString &hintText, vector<File*> &files, int start)

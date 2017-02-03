@@ -1,11 +1,11 @@
-#ifndef H_PROTOCOLS_IMGURP
-#define H_PROTOCOLS_IMGURP
+#ifndef H_PROTOCOLS_SMMSP
+#define H_PROTOCOLS_SMMSP
 
 #include "../ptc.h"
 #include "../ptcp.h"
-#include "imgur.cpp"
+#include "smms.cpp"
 
-class ImgurProvider : public PtcProvider
+class SmmsProvider : public PtcProvider
 {
 public:
     virtual const wxString &GetName()
@@ -18,7 +18,6 @@ public:
     {
         static vector<PtcSettingMeta*> metas =
         {
-            new PtcSettingMeta("clientId", "Client-ID", true),
             new PtcSettingMeta("proxy", "Proxy", false, PtcSettingMeta::TYPE_STRING, "http://localhost:8080 or socks5://localhost:1080")
         };
         return metas;
@@ -26,8 +25,8 @@ public:
     
     virtual Ptc *CreateInstance(map<wxString, wxString> &settings)
     {
-        auto imgur = new Imgur(settings);
-        return (Ptc*)imgur;
+        auto smms = new Smms(settings);
+        return (Ptc*)smms;
     }
     
     virtual const bool IsImageOnly()

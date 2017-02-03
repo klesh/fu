@@ -25,14 +25,14 @@
 
 void Init()
 {
-//    NotificationCenterDelegate *d = [[NotificationCenterDelegate alloc] init];
-//    [[NSUserNotificationCenter defaultUserNotificationCenter] setDelegate:d];
+    static NotificationCenterDelegate *d = [[NotificationCenterDelegate alloc] init];
+    [[NSUserNotificationCenter defaultUserNotificationCenter] setDelegate:d];
 }
 
-static NSInteger lastChangeCount = 0;
 
 bool IsClipboardChanged()
 {
+    static NSInteger lastChangeCount = 0;
     NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
     NSInteger currChangeCount = [pasteboard changeCount];
     bool isChanged = currChangeCount != lastChangeCount;

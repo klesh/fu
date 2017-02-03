@@ -49,10 +49,18 @@ protected:
         
         wxString siteId = site->GetId();
         
-        wxCommandEvent start(EVT_UPLOAD_START);
-        wxPostEvent(_handler, start);
+        EmitStart();
         
         auto ptcProvider = ThePtcFactory.Get(site->GetProtocol());
+        
+        if (ptcProvider->IsImageOnly())
+        {
+            for (auto &file : _files)
+            {
+                if (!file->IsImage())
+                    return EmitError("Selected site support image format only.");
+            }
+        }
         auto ptc = ptcProvider->CreateInstance(site->GetSettings());
         if (ptc->Connect() == false)
         {
@@ -101,9 +109,6 @@ protected:
         delete ptc;
         
         wxString output = TheClip.FormatFiles(_files);
-        
-        wxCommandEvent end(EVT_UPLOAD_END);
-        wxPostEvent(_handler, end);
         
         return EmitSuccess(output);
     }
@@ -180,6 +185,7 @@ protected:
         wxCommandEvent evt(EVT_UPLOAD_ERROR);
         evt.SetString(message);
         wxPostEvent(_handler, evt);
+        EmitEnd();
         return (ExitCode)1;
     }
     
@@ -188,7 +194,21 @@ protected:
         wxCommandEvent evt(EVT_UPLOAD_SUCCESS);
         evt.SetString(text);
         wxPostEvent(_handler, evt);
+        
+        EmitEnd();
         return 0;
+    }
+    
+    void EmitStart()
+    {
+        wxCommandEvent start(EVT_UPLOAD_START);
+        wxPostEvent(_handler, start);
+    }
+    
+    void EmitEnd()
+    {
+        wxCommandEvent end(EVT_UPLOAD_END);
+        wxPostEvent(_handler, end);
     }
 };
 

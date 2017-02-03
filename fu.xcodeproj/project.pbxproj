@@ -25,6 +25,11 @@
 		C38D26711E1E7AFB00FB6802 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C38D26701E1E7AFB00FB6802 /* main.cpp */; };
 		C38D267B1E1E832E00FB6802 /* tray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C38D26781E1E832E00FB6802 /* tray.cpp */; };
 		C39340361E30EF8B00D8870F /* history.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C39340351E30EF8B00D8870F /* history.cpp */; };
+		C39E51AF1E444965001D86DE /* request.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C39E51AE1E444965001D86DE /* request.cpp */; };
+		C39E51B41E447F2E001D86DE /* smms.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C39E51B11E447F2E001D86DE /* smms.cpp */; };
+		C39E51B51E447F2E001D86DE /* smmsmos.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C39E51B21E447F2E001D86DE /* smmsmos.cpp */; };
+		C39E51B61E447F2E001D86DE /* smmsp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C39E51B31E447F2E001D86DE /* smmsp.cpp */; };
+		C39E51B81E448D84001D86DE /* icon_uploading.xpm in Resources */ = {isa = PBXBuildFile; fileRef = C39E51B71E448D84001D86DE /* icon_uploading.xpm */; };
 		C3B69F5B1E41AD5A00BD1791 /* sftpfos.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C3B69F5A1E41AD5A00BD1791 /* sftpfos.cpp */; };
 		C3B69F5E1E42E8E800BD1791 /* imgur.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C3B69F5D1E42E8E800BD1791 /* imgur.cpp */; };
 		C3B69F601E42E8F500BD1791 /* imgurp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C3B69F5F1E42E8F500BD1791 /* imgurp.cpp */; };
@@ -63,6 +68,11 @@
 		C38D26701E1E7AFB00FB6802 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		C38D26781E1E832E00FB6802 /* tray.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tray.cpp; sourceTree = "<group>"; };
 		C39340351E30EF8B00D8870F /* history.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = history.cpp; sourceTree = "<group>"; };
+		C39E51AE1E444965001D86DE /* request.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = request.cpp; sourceTree = "<group>"; };
+		C39E51B11E447F2E001D86DE /* smms.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = smms.cpp; sourceTree = "<group>"; };
+		C39E51B21E447F2E001D86DE /* smmsmos.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = smmsmos.cpp; sourceTree = "<group>"; };
+		C39E51B31E447F2E001D86DE /* smmsp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = smmsp.cpp; sourceTree = "<group>"; };
+		C39E51B71E448D84001D86DE /* icon_uploading.xpm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = icon_uploading.xpm; sourceTree = "<group>"; };
 		C3B69F5A1E41AD5A00BD1791 /* sftpfos.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sftpfos.cpp; sourceTree = "<group>"; };
 		C3B69F5D1E42E8E800BD1791 /* imgur.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = imgur.cpp; sourceTree = "<group>"; };
 		C3B69F5F1E42E8F500BD1791 /* imgurp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = imgurp.cpp; sourceTree = "<group>"; };
@@ -107,12 +117,14 @@
 		C34D2CBE1E25D9A9007EC430 /* protocols */ = {
 			isa = PBXGroup;
 			children = (
+				C39E51B01E447F2E001D86DE /* smms */,
 				C3B69F5C1E42E8D300BD1791 /* imgur */,
 				C3E4524D1E2DFD9800E06640 /* local */,
 				C324E6891E25DE7200AF0080 /* sftp */,
 				C324E68C1E25E78F00AF0080 /* ptc.h */,
 				C324E68E1E25E7CD00AF0080 /* ptcp.h */,
 				C324E6901E26289B00AF0080 /* ptcf.h */,
+				C39E51AE1E444965001D86DE /* request.cpp */,
 			);
 			path = protocols;
 			sourceTree = "<group>";
@@ -175,6 +187,7 @@
 		C38D26751E1E832E00FB6802 /* ui */ = {
 			isa = PBXGroup;
 			children = (
+				C39E51B71E448D84001D86DE /* icon_uploading.xpm */,
 				C309ACE01E1F23C100CA2138 /* icon.xpm */,
 				C38D26781E1E832E00FB6802 /* tray.cpp */,
 				C325F8D21E23D6E20094D893 /* sitespanel.cpp */,
@@ -185,6 +198,16 @@
 				C32D48321E31B9D7008C7605 /* browseform.cpp */,
 			);
 			path = ui;
+			sourceTree = "<group>";
+		};
+		C39E51B01E447F2E001D86DE /* smms */ = {
+			isa = PBXGroup;
+			children = (
+				C39E51B11E447F2E001D86DE /* smms.cpp */,
+				C39E51B21E447F2E001D86DE /* smmsmos.cpp */,
+				C39E51B31E447F2E001D86DE /* smmsp.cpp */,
+			);
+			path = smms;
 			sourceTree = "<group>";
 		};
 		C3B69F5C1E42E8D300BD1791 /* imgur */ = {
@@ -284,6 +307,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C309ACE21E1F23C100CA2138 /* icon.xpm in Resources */,
+				C39E51B81E448D84001D86DE /* icon_uploading.xpm in Resources */,
 				C38D26631E1E747500FB6802 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -310,10 +334,12 @@
 				C38D26711E1E7AFB00FB6802 /* main.cpp in Sources */,
 				C324E68D1E25E78F00AF0080 /* ptc.h in Sources */,
 				C38D267B1E1E832E00FB6802 /* tray.cpp in Sources */,
+				C39E51B61E447F2E001D86DE /* smmsp.cpp in Sources */,
 				C324E68B1E25DEE800AF0080 /* sftpp.cpp in Sources */,
 				C325F8D51E23ED330094D893 /* prefform.cpp in Sources */,
 				C325F8CB1E239A4B0094D893 /* converter.cpp in Sources */,
 				C3E4524F1E2DFDA900E06640 /* local.cpp in Sources */,
+				C39E51B51E447F2E001D86DE /* smmsmos.cpp in Sources */,
 				C3B69F5B1E41AD5A00BD1791 /* sftpfos.cpp in Sources */,
 				C3FFC5881E2F134A0054719F /* osx.mm in Sources */,
 				C324E68F1E25E7CD00AF0080 /* ptcp.h in Sources */,
@@ -321,8 +347,10 @@
 				C39340361E30EF8B00D8870F /* history.cpp in Sources */,
 				C3BD02EF1E21F812004B8CD4 /* clip.cpp in Sources */,
 				C324E6911E26289B00AF0080 /* ptcf.h in Sources */,
+				C39E51B41E447F2E001D86DE /* smms.cpp in Sources */,
 				C3E452511E2DFDB600E06640 /* localp.cpp in Sources */,
 				C3C66D4A1E2F70EB00782D02 /* uploader.cpp in Sources */,
+				C39E51AF1E444965001D86DE /* request.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -53,6 +53,7 @@ public:
     virtual const wxString &GetName() = 0;
     virtual const vector<PtcSettingMeta*> &GetSettingMetas() = 0;
     virtual Ptc *CreateInstance(map<wxString, wxString> &settings) = 0;
+    virtual const bool IsImageOnly() { return false; }
 };
 
 

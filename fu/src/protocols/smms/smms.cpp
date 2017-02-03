@@ -1,18 +1,18 @@
-#ifndef H_PROTOCOLS_IMGUR
-#define H_PROTOCOLS_IMGUR
+#ifndef H_PROTOCOLS_SMMS
+#define H_PROTOCOLS_SMMS
 
 #include "../ptc.h"
-#include "imgurmos.cpp"
+#include "smmsmos.cpp"
 #include <curl/curl.h>
 #include <map>
 
 
 using namespace std;
 
-class Imgur : public Ptc
+class Smms : public Ptc
 {
 public:
-    Imgur(map<wxString, wxString> settings) : Ptc(settings)
+    Smms(map<wxString, wxString> settings) : Ptc(settings)
     {
     }
     
@@ -25,7 +25,7 @@ protected:
     virtual wxOutputStream *OnOpenStream(const wxString &fileName, const wxString &remoteName)
     {
         _lastExtraInfo.clear();
-        auto stream = new ImgurMemoryOutputStream(fileName, _settings, &_message, &_lastExtraInfo);
+        auto stream = new SmmsMemoryOutputStream(fileName, _settings, &_message, &_lastExtraInfo);
         return (wxOutputStream*)stream;
     }
 };

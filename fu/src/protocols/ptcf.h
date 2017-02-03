@@ -10,6 +10,7 @@
 #include "sftp/sftpp.cpp"
 #include "local/localp.cpp"
 #include "imgur/imgurp.cpp"
+#include "smms/smmsp.cpp"
 
 #define ThePtcFactory PtcFactory::Inst()
 
@@ -22,9 +23,11 @@ private:
     
     PtcFactory()
     {
-        _all.insert(pair<wxString, PtcProvider*>("local", (PtcProvider*)new LocalProvider()));
-        _all.insert(pair<wxString, PtcProvider*>("sftp", (PtcProvider*)new SftpProvider()));
-        _all.insert(pair<wxString, PtcProvider*>("imgur.com", (PtcProvider*)new ImgurProvider()));
+        _all["local"] = new LocalProvider();
+        _all["sftp"] = new SftpProvider();
+        _all["imgur.com"] = new ImgurProvider();
+        _all["sm.ms"] = new SmmsProvider();
+        
         for (auto const &it : _all)
             _allKeys.push_back(it.first);
     }
