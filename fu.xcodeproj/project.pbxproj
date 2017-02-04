@@ -30,11 +30,11 @@
 		C39E51B51E447F2E001D86DE /* smmsmos.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C39E51B21E447F2E001D86DE /* smmsmos.cpp */; };
 		C39E51B61E447F2E001D86DE /* smmsp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C39E51B31E447F2E001D86DE /* smmsp.cpp */; };
 		C39E51B81E448D84001D86DE /* icon_uploading.xpm in Resources */ = {isa = PBXBuildFile; fileRef = C39E51B71E448D84001D86DE /* icon_uploading.xpm */; };
+		C3AADC781E45C77400F18060 /* libcurl.4.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C3B69F631E435ABD00BD1791 /* libcurl.4.dylib */; };
 		C3B69F5B1E41AD5A00BD1791 /* sftpfos.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C3B69F5A1E41AD5A00BD1791 /* sftpfos.cpp */; };
 		C3B69F5E1E42E8E800BD1791 /* imgur.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C3B69F5D1E42E8E800BD1791 /* imgur.cpp */; };
 		C3B69F601E42E8F500BD1791 /* imgurp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C3B69F5F1E42E8F500BD1791 /* imgurp.cpp */; };
 		C3B69F621E42F2C700BD1791 /* imgurmos.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C3B69F611E42F2C700BD1791 /* imgurmos.cpp */; };
-		C3B69F661E435AF900BD1791 /* libcurl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C3B69F651E435AF900BD1791 /* libcurl.a */; };
 		C3BD02EF1E21F812004B8CD4 /* clip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C3BD02EE1E21F812004B8CD4 /* clip.cpp */; };
 		C3C66D4A1E2F70EB00782D02 /* uploader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C3C66D491E2F70EB00782D02 /* uploader.cpp */; };
 		C3E4524F1E2DFDA900E06640 /* local.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C3E4524E1E2DFDA900E06640 /* local.cpp */; };
@@ -78,7 +78,6 @@
 		C3B69F5F1E42E8F500BD1791 /* imgurp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = imgurp.cpp; sourceTree = "<group>"; };
 		C3B69F611E42F2C700BD1791 /* imgurmos.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = imgurmos.cpp; sourceTree = "<group>"; };
 		C3B69F631E435ABD00BD1791 /* libcurl.4.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcurl.4.dylib; path = ../../../../../usr/local/Cellar/curl/7.51.0/lib/libcurl.4.dylib; sourceTree = "<group>"; };
-		C3B69F651E435AF900BD1791 /* libcurl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcurl.a; path = ../../../../../usr/local/Cellar/curl/7.51.0/lib/libcurl.a; sourceTree = "<group>"; };
 		C3BD02EE1E21F812004B8CD4 /* clip.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = clip.cpp; sourceTree = "<group>"; };
 		C3C66D491E2F70EB00782D02 /* uploader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = uploader.cpp; sourceTree = "<group>"; };
 		C3E4524E1E2DFDA900E06640 /* local.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = local.cpp; sourceTree = "<group>"; };
@@ -96,7 +95,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C3B69F661E435AF900BD1791 /* libcurl.a in Frameworks */,
+				C3AADC781E45C77400F18060 /* libcurl.4.dylib in Frameworks */,
 				C3FE19691E40D832009D1F9B /* libssh.4.4.1.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -232,7 +231,6 @@
 		C3FE19671E40D832009D1F9B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				C3B69F651E435AF900BD1791 /* libcurl.a */,
 				C3B69F631E435ABD00BD1791 /* libcurl.4.dylib */,
 				C3FE19681E40D832009D1F9B /* libssh.4.4.1.dylib */,
 			);
@@ -398,7 +396,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = /usr/local/include;
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
@@ -440,7 +438,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = /usr/local/include;
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
 			};
@@ -457,13 +455,13 @@
 					"$(inherited)",
 					/usr/local/Cellar/libssh/0.7.3/lib,
 					/usr/local/Cellar/curl/7.51.0/lib,
+					/usr/local/Cellar/wxmac/3.0.2_4/lib,
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OTHER_CPLUSPLUSFLAGS = (
-					"$(OTHER_CFLAGS)",
-					"-I/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"-I/usr/local/lib/wx/include/osx_cocoa-unicode-static-3.0",
 					"-I/usr/local/include/wx-3.0",
 					"-D_FILE_OFFSET_BITS=64",
-					"-DWXUSINGDLL",
 					"-D__WXMAC__",
 					"-D__WXOSX__",
 					"-D__WXOSX_COCOA__",
@@ -482,15 +480,25 @@
 					System,
 					"-framework",
 					OpenGL,
-					"-lwx_osx_cocoau_xrc-3.0",
-					"-lwx_osx_cocoau_webview-3.0",
-					"-lwx_osx_cocoau_html-3.0",
-					"-lwx_osx_cocoau_qa-3.0",
-					"-lwx_osx_cocoau_adv-3.0",
-					"-lwx_osx_cocoau_core-3.0",
-					"-lwx_baseu_xml-3.0",
-					"-lwx_baseu_net-3.0",
-					"-lwx_baseu-3.0",
+					"/usr/local/lib/libwx_osx_cocoau_xrc-3.0.a",
+					"/usr/local/lib/libwx_osx_cocoau_webview-3.0.a",
+					"/usr/local/lib/libwx_osx_cocoau_qa-3.0.a",
+					"/usr/local/lib/libwx_baseu_net-3.0.a",
+					"/usr/local/lib/libwx_osx_cocoau_html-3.0.a",
+					"/usr/local/lib/libwx_osx_cocoau_adv-3.0.a",
+					"/usr/local/lib/libwx_osx_cocoau_core-3.0.a",
+					"/usr/local/lib/libwx_baseu_xml-3.0.a",
+					"/usr/local/lib/libwx_baseu-3.0.a",
+					"-lpng",
+					"-ljpeg",
+					"-ltiff",
+					"-framework",
+					WebKit,
+					"-lexpat",
+					"-lwxregexu-3.0",
+					"-lz",
+					"-lpthread",
+					"-liconv",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = kleshwong.fu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -508,13 +516,13 @@
 					"$(inherited)",
 					/usr/local/Cellar/libssh/0.7.3/lib,
 					/usr/local/Cellar/curl/7.51.0/lib,
+					/usr/local/Cellar/wxmac/3.0.2_4/lib,
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OTHER_CPLUSPLUSFLAGS = (
-					"$(OTHER_CFLAGS)",
-					"-I/usr/local/lib/wx/include/osx_cocoa-unicode-3.0",
+					"-I/usr/local/lib/wx/include/osx_cocoa-unicode-static-3.0",
 					"-I/usr/local/include/wx-3.0",
 					"-D_FILE_OFFSET_BITS=64",
-					"-DWXUSINGDLL",
 					"-D__WXMAC__",
 					"-D__WXOSX__",
 					"-D__WXOSX_COCOA__",
@@ -533,15 +541,25 @@
 					System,
 					"-framework",
 					OpenGL,
-					"-lwx_osx_cocoau_xrc-3.0",
-					"-lwx_osx_cocoau_webview-3.0",
-					"-lwx_osx_cocoau_html-3.0",
-					"-lwx_osx_cocoau_qa-3.0",
-					"-lwx_osx_cocoau_adv-3.0",
-					"-lwx_osx_cocoau_core-3.0",
-					"-lwx_baseu_xml-3.0",
-					"-lwx_baseu_net-3.0",
-					"-lwx_baseu-3.0",
+					"/usr/local/lib/libwx_osx_cocoau_xrc-3.0.a",
+					"/usr/local/lib/libwx_osx_cocoau_webview-3.0.a",
+					"/usr/local/lib/libwx_osx_cocoau_qa-3.0.a",
+					"/usr/local/lib/libwx_baseu_net-3.0.a",
+					"/usr/local/lib/libwx_osx_cocoau_html-3.0.a",
+					"/usr/local/lib/libwx_osx_cocoau_adv-3.0.a",
+					"/usr/local/lib/libwx_osx_cocoau_core-3.0.a",
+					"/usr/local/lib/libwx_baseu_xml-3.0.a",
+					"/usr/local/lib/libwx_baseu-3.0.a",
+					"-lpng",
+					"-ljpeg",
+					"-ltiff",
+					"-framework",
+					WebKit,
+					"-lexpat",
+					"-lwxregexu-3.0",
+					"-lz",
+					"-lpthread",
+					"-liconv",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = kleshwong.fu;
 				PRODUCT_NAME = "$(TARGET_NAME)";

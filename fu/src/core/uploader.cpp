@@ -148,6 +148,8 @@ protected:
                 }
             }
             File::SaveImage(bg, type, oStream);
+            file->GetOriginal().Destroy();
+            bg.Destroy();
         }
         else
         {
@@ -161,6 +163,7 @@ protected:
             {
                 wxImage bg = file->GetOriginal();
                 bg.SaveFile(*oStream, wxBITMAP_TYPE_JPEG); // clipboard bitmap should always be saved as jpg
+                bg.Destroy();
             }
         }
     }

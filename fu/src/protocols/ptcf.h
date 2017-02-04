@@ -23,13 +23,16 @@ private:
     
     PtcFactory()
     {
-        _all["local"] = new LocalProvider();
-        _all["sftp"] = new SftpProvider();
-        _all["imgur.com"] = new ImgurProvider();
-        _all["sm.ms"] = new SmmsProvider();
-        
-        for (auto const &it : _all)
-            _allKeys.push_back(it.first);
+        AddProvider(new LocalProvider());
+        AddProvider(new SftpProvider());
+        AddProvider(new ImgurProvider());
+        AddProvider(new SmmsProvider());
+    }
+    
+    void AddProvider(PtcProvider *provider)
+    {
+        _all[provider->GetName()] = provider;
+        _allKeys.push_back(provider->GetName());
     }
     
 public:

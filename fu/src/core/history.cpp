@@ -180,7 +180,7 @@ public:
             if (file->IsImage())
             {
                 wxString path = GetThumbFullPath(file->GetRemoteName());
-                File::SaveImage(file->GetThumbnail(), file->GetOriginal().GetType(), path);
+                File::SaveImage(file->GetThumbnail(), file->GetType(), path);
             }
             _all.push_back(file);
         }

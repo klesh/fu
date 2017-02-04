@@ -10,7 +10,7 @@ class SmmsProvider : public PtcProvider
 public:
     virtual const wxString &GetName()
     {
-        static wxString name = "imgur.com";
+        static wxString name = "sm.ms";
         return name;
     }
     

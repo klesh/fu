@@ -148,13 +148,6 @@ private:
             
             child = child->GetNext();
         }
-        if (_sites.empty())
-        {
-            auto smms = new Site();
-            smms->SetName("sm.ms");
-            smms->SetProtocol("smms");
-            _sites.push_back(smms);
-        }
     }
     
     ~Config()
@@ -215,6 +208,14 @@ public:
     
     const vector<Site*> GetSites()
     {
+        if (_sites.empty())
+        {
+            auto smms = new Site();
+            smms->SetName("sm.ms");
+            smms->SetProtocol("sm.ms");
+            _sites.push_back(smms);
+            SiteSelected = smms;
+        }
         return _sites;
     }
     

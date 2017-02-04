@@ -35,6 +35,7 @@ private:
     FileStatus _status;
     map<wxString, wxString> _extraInfo;
     bool _isImage = false;
+    wxBitmapType _type;
     
 public:
     File() {}
@@ -42,6 +43,7 @@ public:
     File(wxBitmap &original)
     {
         _imgOriginal = original.ConvertToImage();
+        _type = wxBITMAP_TYPE_JPEG;
         _fileName = _name = "Copied";
         _ext = "jpg";
         _isImage = true;
@@ -67,6 +69,7 @@ public:
         {
             wxLogNull suppress;
             _imgOriginal.LoadFile(_originalPath);
+            _type = _imgOriginal.GetType();
         }
         return _imgOriginal;
     }
@@ -74,6 +77,11 @@ public:
     void SetOriginal(const wxImage &img)
     {
         _imgOriginal = img;
+    }
+    
+    wxBitmapType GetType()
+    {
+        return _type;
     }
     
     wxBitmap &GetThumbnail()
