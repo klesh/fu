@@ -2,7 +2,7 @@
 #define H_PROTOCOLS_SMMS
 
 #include "../ptc.h"
-#include "smmsmos.cpp"
+#include "smmsos.cpp"
 #include <curl/curl.h>
 #include <map>
 
@@ -25,7 +25,7 @@ protected:
     virtual wxOutputStream *OnOpenStream(const wxString &fileName, const wxString &remoteName)
     {
         _lastExtraInfo.clear();
-        auto stream = new SmmsMemoryOutputStream(fileName, _settings, &_message, &_lastExtraInfo);
+        auto stream = new SmmsOutputStream(fileName, _settings, &_message, &_lastExtraInfo);
         return (wxOutputStream*)stream;
     }
 };

@@ -7,7 +7,7 @@
 #include <wx/sstream.h>
 #include <map>
 
-#define TheHttp HttpClient::Inst()
+#define TheRequestFactory RequestFactory::Inst()
 
 using namespace std;
 
@@ -22,12 +22,14 @@ protected:
     int _statusCode;
     
 public:
-    Request(const wxString &url)
+    Request()
     {
         _curl = curl_easy_init();
+    }
+
+    Request(const wxString &url) : Request()
+    {
         _url = url;
-        if (_curl != NULL)
-            curl_easy_setopt(_curl, CURLOPT_URL, url.mb_str().data());
     }
     
     ~Request()
@@ -85,6 +87,9 @@ public:
         
         if (_headers != NULL)
             curl_easy_setopt(_curl, CURLOPT_HTTPHEADER, _headers);
+
+        curl_easy_setopt(_curl, CURLOPT_URL, _url.mb_str().data());
+
         
         curl_easy_setopt(_curl, CURLOPT_WRITEFUNCTION, &writeResponse);
         curl_easy_setopt(_curl, CURLOPT_VERBOSE, 1L);
@@ -192,22 +197,86 @@ public:
     virtual const bool Execute()
     {
         if (_post == NULL)
+        {
+            _errorMessage = "nothing to post";
             return false;
+        }
         
         curl_easy_setopt(_curl, CURLOPT_HTTPPOST, _post);
         return Request::Execute();
     }
 };
 
-class HttpClient
+class SftpPutRequest : public Request
 {
 private:
-    HttpClient()
+    wxStreamBuffer *_buffer = NULL;
+
+public:
+    SftpPutRequest(const wxString &url) : Request(url) {}
+
+    virtual void AuthByKey()
+    {
+        curl_easy_setopt(_curl, CURLOPT_SSH_AUTH_TYPES, CURLSSH_AUTH_PUBLICKEY);
+    }
+
+    virtual void AuthByPass()
+    {
+        curl_easy_setopt(_curl, CURLOPT_SSH_AUTH_TYPES, CURLSSH_AUTH_PASSWORD);
+    }
+
+    virtual void SetPrivateKeyPath(const wxString &path)
+    {
+        curl_easy_setopt(_curl, CURLOPT_SSH_PRIVATE_KEYFILE, path.mb_str().data());
+    }
+
+    virtual void SetPublicKeyPath(const wxString &path)
+    {
+        curl_easy_setopt(_curl, CURLOPT_SSH_PUBLIC_KEYFILE, path.mb_str().data());
+    }
+
+    virtual void SetPrivateKeyPass(const wxString &pass)
+    {
+        curl_easy_setopt(_curl, CURLOPT_KEYPASSWD, pass.mb_str().data());
+    }
+
+    virtual void SetBuffer(wxStreamBuffer *buf)
+    {
+        _buffer = buf;
+    }
+
+    static size_t readData(char *buffer, size_t size, size_t nitems, void *instream)
+    {
+        auto buf = (wxStreamBuffer*)instream;
+        return buf->Read(buffer, size * nitems);
+    }
+
+    virtual const bool Execute()
+    {
+        if (_buffer == NULL)
+        {
+            _errorMessage = "nothing to upload";
+            return false;
+        }
+            
+
+        curl_easy_setopt(_curl, CURLOPT_PROTOCOLS, CURLPROTO_SFTP);
+        curl_easy_setopt(_curl, CURLOPT_UPLOAD, 1L);
+        curl_easy_setopt(_curl, CURLOPT_READFUNCTION, &readData);
+        curl_easy_setopt(_curl, CURLOPT_READDATA, _buffer);
+        return Request::Execute();
+    }
+};
+
+class RequestFactory
+{
+private:
+    RequestFactory()
     {
         curl_global_init(CURL_GLOBAL_DEFAULT);
     }
     
-    ~HttpClient()
+    ~RequestFactory()
     {
         curl_global_cleanup();
     }
@@ -227,10 +296,15 @@ public:
     {
         return new MultipartRequest(url);
     }
-    
-    static HttpClient &Inst()
+
+    SftpPutRequest *NewSftpPut(const wxString &url)
     {
-        static HttpClient client;
+        return new SftpPutRequest(url);
+    }
+    
+    static RequestFactory &Inst()
+    {
+        static RequestFactory client;
         return client;
     }
 };

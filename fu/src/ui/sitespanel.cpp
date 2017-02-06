@@ -149,7 +149,10 @@ public:
     {
         _settings.clear();
         _pnlSettings->DestroyChildren();
-        
+
+        if (_chcProtocol->GetSelection() < 0)
+            _chcProtocol->SetSelection(0);
+
         auto protocol = _chcProtocol->GetStringSelection();
         _provider = PtcFactory::Inst().Get(protocol);
         wxSizer *sizer = new wxBoxSizer(wxVERTICAL);

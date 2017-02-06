@@ -3,6 +3,7 @@
 #include <wx/wx.h>
 #include <vector>
 #include <map>
+#include <wx/graphics.h>
 #include "../protocols/ptc.h"
 #include "../protocols/ptcp.h"
 #include "../protocols/ptcf.h"

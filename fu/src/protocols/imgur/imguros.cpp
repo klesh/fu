@@ -1,19 +1,16 @@
-#ifndef H_PROTOCOLS_SMMSMOS
-#define H_PROTOCOLS_SMMSMOS
+#ifndef H_PROTOCOLS_IMGUROS
+#define H_PROTOCOLS_IMGUROS
 
 #include <wx/wx.h>
 #include <wx/mstream.h>
+#include <wx/xml/xml.h>
 #include <curl/curl.h>
 #include <map>
-#include <wx/xml/xml.h>
-#include <wx/sstream.h>
 #include "../request.cpp"
-
-#define UPLOAD_URL "https://sm.ms/api/upload"
 
 using namespace std;
 
-class SmmsMemoryOutputStream : wxMemoryOutputStream
+class ImgurOutputStream : wxMemoryOutputStream
 {
 private:
     wxString _fileName;
@@ -22,7 +19,7 @@ private:
     map<wxString, wxString> *_extraInfo;
     
 public:
-    SmmsMemoryOutputStream(const wxString &fileName, const map<wxString, wxString> &settings, wxString *message, map<wxString, wxString> *extraInfo)
+    ImgurOutputStream(const wxString &fileName, const map<wxString, wxString> &settings, wxString *message, map<wxString, wxString> *extraInfo)
     {
         _fileName = fileName;
         _settings = settings;
@@ -34,10 +31,10 @@ public:
     virtual bool Close()
     {
         *_message = "";
-        auto multipart = TheHttp.NewMultipart(UPLOAD_URL);
+        auto multipart = TheRequestFactory.NewMultipart("https://api.imgur.com/3/image.xml");
         multipart->SetProxy(_settings["proxy"]);
-        multipart->AddField("smfile", _fileName, GetOutputStreamBuffer());
-        multipart->AddField("format", "xml");
+        multipart->AddHeader("Authorization", "Client-ID " + _settings["clientId"]);
+        multipart->AddField("image", _fileName, GetOutputStreamBuffer());
         
         if (multipart->Execute())
         {
@@ -49,16 +46,15 @@ public:
                 while (child)
                 {
                     auto name = child->GetName();
-                    if (name == "url")
-                        (*_extraInfo)["url"] = child->GetNodeContent();
-                    else if (name == "hash")
-                        (*_extraInfo)["hash"] = child->GetNodeContent();
-                    else if (name == "delete")
-                        (*_extraInfo)["delete"] = child->GetNodeContent();
-                    else if (name == "code" && child->GetNodeContent() == "success")
+                    if (name == "link")
+                    {
                         success = true;
-                    else if (name == "msg")
-                        *_message = child->GetNodeContent();
+                        (*_extraInfo)["url"] = child->GetNodeContent();
+                    }
+                    else if (name == "id")
+                        (*_extraInfo)["id"] = child->GetNodeContent();
+                    else if (name == "deletehash")
+                        (*_extraInfo)["deletehash"] = child->GetNodeContent();
                     
                     child = child->GetNext();
                 }

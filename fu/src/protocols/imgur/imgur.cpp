@@ -2,7 +2,7 @@
 #define H_PROTOCOLS_IMGUR
 
 #include "../ptc.h"
-#include "imgurmos.cpp"
+#include "imguros.cpp"
 #include <curl/curl.h>
 #include <map>
 
@@ -25,7 +25,7 @@ protected:
     virtual wxOutputStream *OnOpenStream(const wxString &fileName, const wxString &remoteName)
     {
         _lastExtraInfo.clear();
-        auto stream = new ImgurMemoryOutputStream(fileName, _settings, &_message, &_lastExtraInfo);
+        auto stream = new ImgurOutputStream(fileName, _settings, &_message, &_lastExtraInfo);
         return (wxOutputStream*)stream;
     }
 };
