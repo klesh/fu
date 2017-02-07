@@ -37,6 +37,7 @@ public:
         
         if (wxTheClipboard->IsSupported(wxDF_FILENAME))
         {
+            wxLogDebug("clipboard data format: wxDF_FILENAME");
             Clear();
             wxFileDataObject data;
             if (wxTheClipboard->GetData(data))
@@ -55,6 +56,7 @@ public:
         } 
         else if (wxTheClipboard->IsSupported(wxDF_BITMAP))
         {
+            wxLogDebug("clipboard data format: wxDF_BITMAP");
             Clear();
             wxBitmapDataObject data;
             if (wxTheClipboard->GetData(data))

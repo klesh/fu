@@ -24,6 +24,7 @@ private:
     wxString _path;
     vector<Site*> _sites;
     vector<wxEvtHandler*> _listeners;
+    wxString _executeDir;
     
     Config()
     {
@@ -181,7 +182,7 @@ public:
     int JPGQuality = 75;
     int PNGDepth = 8;
     int PNGCompressionLevel = 9;
-    int MaxLatest = 3;
+    size_t MaxLatest = 3;
     wxString WatermarkPath = wxEmptyString;
     int WatermarkPosition = 0;
     

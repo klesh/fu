@@ -2,10 +2,11 @@
 #define H_OS_WIN32
 
 #include "os.h"
+#include <wx/notifmsg.h>
 
-void Init()
+void Init(wxTaskBarIcon *tray)
 {
-
+    wxNotificationMessage::UseTaskBarIcon(tray);
 }
 
 bool IsClipboardChanged()
@@ -19,12 +20,17 @@ bool IsClipboardChanged()
 
 void BringAppToTop()
 {
-
+     
 }
 
 void Toast(const wxString &title, const wxString& message, bool isError)
 {
-    wxMessageBox(message, title);
+    auto notification = new wxNotificationMessage(title, message);
+    if (isError)
+    {
+        notification->SetFlags(wxICON_ERROR);
+    }
+    notification->Show(isError ? wxNotificationMessage::Timeout_Never : 3);
 }
 
 bool GetAutoStart()

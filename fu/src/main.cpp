@@ -20,7 +20,7 @@ public:
         wxInitAllImageHandlers();
         _tray = new Tray();
         
-        Init();
+        Init(_tray);
         return true;
     }
 };

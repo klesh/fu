@@ -92,7 +92,9 @@ public:
         {
             wxMenuItem *item = new wxMenuItem(menu, start++, file->GetName(), "", wxITEM_CHECK);
             if (file->HasThumbnail())
+            {
                 item->SetBitmap(file->GetThumbnail());
+            }
             
             menu->Append(item);
         }
@@ -234,10 +236,12 @@ public:
         else if (itemId >= itemID_SITE_START)
         {
             TheConfig.SiteSelected = TheConfig.GetSite(itemId - itemID_SITE_START);
+            TheConfig.Save();
         }
         else if (itemId >= itemID_FORMAT_START)
         {
             TheConfig.FormatSelected = TheConfig.Formats[itemId - itemID_FORMAT_START];
+            TheConfig.Save();
         }
         else if (itemId >= itemID_UPLOADED_START)
         {

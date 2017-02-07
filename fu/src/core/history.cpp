@@ -36,6 +36,7 @@ private:
         
         _path = path.GetFullPath();
         
+        wxLogDebug("history path: %s", _path);
         if (!wxFileExists(_path))
         {
             return;

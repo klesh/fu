@@ -57,10 +57,12 @@ public:
         _fileName = _name = wxFileNameFromPath(path);
         _ext = path.AfterLast('.').Lower();
         _isImage = IMG_PATTERN.Matches(path);
+#ifndef _WIN32
         if (_name.Length() > 10)
         {
-            _name = _name.SubString(0, 5) + "…." + _ext;
+            _name = _name.SubString(0, 5) + "...." + _ext;
         }
+#endif
     }
     
     wxImage &GetOriginal()

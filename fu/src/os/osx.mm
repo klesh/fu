@@ -23,7 +23,7 @@
 }
 @end
 
-void Init()
+void Init(wxTaskBarIcon *tray)
 {
     static NotificationCenterDelegate *d = [[NotificationCenterDelegate alloc] init];
     [[NSUserNotificationCenter defaultUserNotificationCenter] setDelegate:d];

@@ -49,10 +49,10 @@ public:
         auto sttSite = new wxStaticText(this, wxID_ANY, site->GetName());
         auto sttName = new wxStaticText(this, wxID_ANY, file->GetLongName());
         sttSite->SetForegroundColour("dark grey");
-        sttSite->GetFont().Scale(0.8);
-        auto sttDate = new wxStaticText(this, wxID_ANY, file->GetUploadedAt().Format("%Y-%m-%d %H:%M:%s"));
+        sttSite->GetFont().Scale(0.8f);
+        auto sttDate = new wxStaticText(this, wxID_ANY, file->GetUploadedAt().Format());
         sttDate->SetForegroundColour("dark grey");
-        sttDate->GetFont().Scale(0.8);
+        sttDate->GetFont().Scale(0.8f);
         
         _normalBgColor.Set("white");
         _selectedBgColor.Set("sky blue");
@@ -226,6 +226,17 @@ class BrowseForm : public wxDialog
         else
             wxMessageBox("Please click to select items you want to copy", "Error", wxOK, this);
     }
+
+
+
+    void OnClose(wxCloseEvent &evt)
+    {
+        TheConfig.BrowseFormPosition = this->GetPosition();
+        TheConfig.BrowseFormSize = this->GetSize();
+        TheConfig.Save();
+        Show(false);
+    }
+
     
 public:
     BrowseForm(wxPoint &pos, wxSize &size) : wxDialog(NULL, wxID_ANY, "History", pos, size, wxCAPTION | wxMAXIMIZE_BOX | wxRESIZE_BORDER | wxCLOSE_BOX)
@@ -251,14 +262,16 @@ public:
         Bind(wxEVT_BUTTON, &BrowseForm::OnCopyClicked, this, ctlID_COPY);
         Bind(fuEVT_SITES_CHANGED, &BrowseForm::OnSitesChanged, this);
         Bind(fuEVT_HISTORY_CHANGED, &BrowseForm::OnFilterChanged, this);
+        Bind(wxEVT_CLOSE_WINDOW, &BrowseForm::OnClose, this);
+
         TheConfig.Subscribe(this);
         TheHistory.Subscribe(this);
         
         wxSizer *toolbarSizer = new wxBoxSizer(wxHORIZONTAL);
         toolbarSizer->Add(_chcSite);
         toolbarSizer->AddStretchSpacer();
-        toolbarSizer->Add(_txtKeyword);
-        toolbarSizer->Add(_btnSearch, wxSizerFlags().Border(wxLEFT, 5));
+        toolbarSizer->Add(_txtKeyword, wxSizerFlags().Expand());
+        toolbarSizer->Add(_btnSearch, wxSizerFlags().Expand().Border(wxLEFT, 5));
         
         wxSizer *operationSizer = new wxBoxSizer(wxHORIZONTAL);
         operationSizer->Add(_btnClear, wxSizerFlags().Border(wxLEFT, 5));

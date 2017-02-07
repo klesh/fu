@@ -7,6 +7,11 @@
 #include <wx/sstream.h>
 #include <map>
 
+#ifdef _WIN32
+#include <wx/stdpaths.h>
+#include <wx/filename.h>
+#endif
+
 #define TheRequestFactory RequestFactory::Inst()
 
 using namespace std;
@@ -30,6 +35,16 @@ public:
     Request(const wxString &url) : Request()
     {
         _url = url;
+
+#ifdef _WIN32
+        static wxString executeDir = wxFileName(wxStandardPaths::Get().GetExecutablePath()).GetPath();
+        static wxString caPath = wxFileName(executeDir, "cacert.pem").GetFullPath();
+
+        if (_url.StartsWith("https://"))
+        {
+            SetCAPath(caPath);
+        }
+#endif // _WIN32
     }
     
     ~Request()
@@ -67,7 +82,7 @@ public:
     
     virtual void SetCAPath(const wxString &caPath)
     {
-        curl_easy_setopt(_curl, CURLOPT_PROXY, caPath.mb_str().data());
+        curl_easy_setopt(_curl, CURLOPT_CAINFO, caPath.mb_str().data());
     }
     
     static size_t writeResponse(char *buf, size_t size, size_t nmemb, void *pBody) {

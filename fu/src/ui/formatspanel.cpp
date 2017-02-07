@@ -133,6 +133,7 @@ public:
             TheConfig.Formats.push_back(_format);
             index = (int)(_lsbFormats->GetStrings().GetCount());
         }
+        TheConfig.FormatSelected = _format;
         TheConfig.Save();
         PopulateList();
         _lsbFormats->SetSelection(index);

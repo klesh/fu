@@ -306,6 +306,7 @@ public:
         {
             TheConfig.UpdateSite(_site);
         }
+        TheConfig.SiteSelected = _site;
         PopulateList();
         _lsbSites->Select(index);
     }

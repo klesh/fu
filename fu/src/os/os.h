@@ -2,8 +2,9 @@
 #define H_OS_OS 
 
 #include <wx/wx.h>
+#include <wx/taskbar.h>
 
-void Init();
+void Init(wxTaskBarIcon *tray);
 
 bool IsClipboardChanged();
 
