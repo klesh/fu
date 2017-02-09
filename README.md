@@ -5,22 +5,18 @@
 
 I once needed a tool to upload images/files in Clipboard and generate a URL back to it for me. So I looked for such a tool, I found iPic which quite awesome. But unfortunately, it supported image only and wouldn't let me upload to own server. It would be greate to have a another option, wasn't it?   
 
-The plan was to make a CrossPlatform app for (Windows/MacOS/Linux), I will work on those platform one by one. fu can also processes Captured Bitmap Data in Clipboard, but itself doesn't have any Screen Capturing functionality. You may need other tool to do the job.
-
-# Implemented Platforms:
-
-  * MacOS (.dmg)
-  * Windows (*.7z) win10 tested
+The plan was to make a CrossPlatform app for (Windows/MacOS/Linux), currently, only MacOS version is ready. fu can also processes Captured Bitmap Data in Clipboard, but itself doesn't have any Screen Capturing functionality. You may need other tool to do the job.
 
 # Installation
 
-[Go to releases page](https://github.com/klesh/fu/releases) download and install it.    
+[Go to releases page](https://github.com/klesh/fu/releases) download the dmg file, and install it.    
 If you want it to be launched at login, please go to `System Preferences > Users & Groups > Login Items` and add it to your list.
 
 # Build Dependencies
 
   * wxWidgets 3.0
   * libcurl
+  * libssh
   * boost
 
 # Like it ?
