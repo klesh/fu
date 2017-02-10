@@ -263,7 +263,9 @@ public:
     static size_t readData(char *buffer, size_t size, size_t nitems, void *instream)
     {
         auto buf = (wxStreamBuffer*)instream;
-        return buf->Read(buffer, size * nitems);
+        auto ret = buf->Read(buffer, size * nitems);
+        wxLogDebug("size: %zd, nitems: %zd, ret: %zd", size, nitems, ret);
+        return ret;
     }
 
     virtual const bool Execute()
@@ -274,7 +276,7 @@ public:
             return false;
         }
             
-
+        _buffer->SetIntPosition(0);
         curl_easy_setopt(_curl, CURLOPT_PROTOCOLS, CURLPROTO_SFTP);
         curl_easy_setopt(_curl, CURLOPT_UPLOAD, 1L);
         curl_easy_setopt(_curl, CURLOPT_READFUNCTION, &readData);
