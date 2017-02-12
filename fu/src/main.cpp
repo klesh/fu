@@ -3,10 +3,11 @@
 #include "ui/tray.cpp"
 #include "os/os.h"
 
+#include <wx/artprov.h>
+
 class App : public wxApp
 {
 private:
-    Tray *_tray;
     wxSingleInstanceChecker _singleInstChecker;
     
 public:
@@ -17,10 +18,15 @@ public:
             return false;
         }
         
-        wxInitAllImageHandlers();
-        _tray = new Tray();
+        if (!Tray::IsAvailable())
+        {
+            wxMessageBox("Your OS doesn't support Task Bar Icon.");
+            return false;
+        }
         
-        Init(_tray);
+        wxInitAllImageHandlers();
+
+        Init(&Tray::Inst());
         return true;
     }
 };

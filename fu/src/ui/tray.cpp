@@ -5,7 +5,6 @@
 #include <wx/wx.h>
 #include <wx/icon.h>
 #include <wx/taskbar.h>
-#include <wx/notifmsg.h>
 #include <map>
 #include <vector>
 
@@ -21,9 +20,19 @@
 #include "prefform.cpp"
 #include "browseform.cpp"
 
+#ifdef _UNITY
+extern "C"
+{
+#include <libappindicator/app-indicator.h>
+}
+#endif
+
 using namespace std;
 
 static wxIcon _icon, _icon_uploading;
+
+
+
 
 class Tray : public wxTaskBarIcon
 {
@@ -48,15 +57,36 @@ private:
     
     vector<File*> _pending, _uploading, _uploaded;
     int uploadingCount = 0;
-    wxIcon _icon, _icon_uploading;
+    wxString _iconPath;
+    wxString _iconUploadingPath;
+        
+#ifdef _UNITY
+    AppIndicator* _indicator;
+    wxMenu *_menu = NULL;
     
-public:
+    static void gtk_menu_item_selected(GtkMenuItem *menu_item, gpointer user_data)
+    {
+        //wxLogDebug("item id : %d", GPOINTER_TO_INT(user_data));
+        wxCommandEvent evt(wxEVT_MENU);
+        evt.SetId(GPOINTER_TO_INT(user_data));
+        wxPostEvent(&Tray::Inst(), evt);
+    }
+    
+    static void g_connect(wxMenuItem *item)
+    {
+        g_signal_connect((GObject*)item->GetMenuItem(), "activate", G_CALLBACK(gtk_menu_item_selected), GINT_TO_POINTER(item->GetId()));
+    }
+#else
+    wxIcon _icon;
+    wxIcon _iconUploading;
+#endif
+
     Tray()
     {
-        _icon.LoadFile(TheConfig.GetIconPath("16x16", "icon.png"), wxBITMAP_TYPE_PNG);
-        _icon_uploading.LoadFile(TheConfig.GetIconPath("16x16", "icon_uploading.png"), wxBITMAP_TYPE_PNG);
-        SetIcon(_icon);
-//        SetIcon(_icon_uploading);
+        _iconPath = TheConfig.GetIconPath("16x16", "icon.png");
+        _iconUploadingPath = TheConfig.GetIconPath("16x16", "icon_uploading.png");
+        
+        
         _pref = new PrefForm(TheConfig.Position, TheConfig.Size);
         
         Bind(wxEVT_COMMAND_MENU_SELECTED, &Tray::OnMenuItemSelected, this);
@@ -64,6 +94,64 @@ public:
         Bind(EVT_UPLOAD_SUCCESS, &Tray::OnUploadSuccess, this);
         Bind(EVT_UPLOAD_START, &Tray::OnUploadStart, this);
         Bind(EVT_UPLOAD_END, &Tray::OnUploadEnd, this);
+       
+#ifdef _UNITY
+        _indicator = app_indicator_new("fu", "indicator-messages", APP_INDICATOR_CATEGORY_APPLICATION_STATUS);
+        app_indicator_set_status(_indicator, APP_INDICATOR_STATUS_ACTIVE);
+        CreateIndicatorMenu();
+        Bind(wxEVT_UPDATE_UI, &Tray::OnUpdateMenu, this);
+#else
+        _icon.LoadFile(_iconPath, wxBITMAP_TYPE_PNG);
+        _iconUploading.LoadFile(_iconUploadingPath, wxBITMAP_TYPE_PNG);
+#endif
+        NormalIcon();
+    }
+        
+public:
+
+    
+#ifdef _UNITY
+    void CreateIndicatorMenu()
+    {
+        if (_menu)
+            delete _menu;
+        _menu = CreatePopupMenu();
+        app_indicator_set_menu(_indicator, GTK_MENU(_menu->m_menu));
+    }
+    
+    void OnUpdateMenu(wxUpdateUIEvent &evt)
+    {
+        CreateIndicatorMenu();
+    }
+    
+    void NormalIcon()
+    {
+        app_indicator_set_icon(_indicator, _iconPath.c_str());
+    }
+    
+    void UploadingIcon()
+    {
+        app_indicator_set_icon(_indicator, _iconUploadingPath.c_str());
+    }
+#else
+        
+    void NormalIcon()
+    {
+        SetIcon(_icon);
+    }
+    
+    void UploadingIcon()
+    {
+        SetIcon(_iconUploading);
+    }
+
+#endif
+
+    void FixMenuItem(wxMenuItem *item)
+    {
+#ifdef _UNITY
+        g_connect(item);
+#endif
     }
     
     void OnUploadStart(wxCommandEvent &evt)
@@ -80,24 +168,28 @@ public:
     
     void RefreshIcon()
     {
-        SetIcon(uploadingCount ? _icon_uploading : _icon);
+        if (uploadingCount)
+            UploadingIcon();
+        else
+            NormalIcon();
     }
     
     void CreateFileMenuItems(wxMenu *menu, const wxString &hintText, vector<File*> &files, int start)
     {
         wxMenuItem *hint = new wxMenuItem(menu, itemID_HINT, hintText);
-        hint->Enable(false);
         menu->Append(hint);
+        hint->Enable(false);
         
         for (File *file : files)
         {
-            wxMenuItem *item = new wxMenuItem(menu, start++, file->GetName(), "", wxITEM_CHECK);
+            wxMenuItem *item = new wxMenuItem(menu, start++, file->GetName());
             if (file->HasThumbnail())
             {
                 item->SetBitmap(file->GetThumbnail());
             }
             
             menu->Append(item);
+            FixMenuItem(item);
         }
     }
     
@@ -112,7 +204,7 @@ public:
             CreateFileMenuItems(menu, "Pending", _pending, itemID_PENDING_START);
             if (_pending.size() > 1)
             {
-                menu->Append(itemID_UPLOAD_ALL, "[Upload all]");
+                FixMenuItem(menu->Append(itemID_UPLOAD_ALL, "[Upload all]"));
             }
         }
         
@@ -128,18 +220,18 @@ public:
             menu->AppendSeparator();
             CreateFileMenuItems(menu, "Uploaded", _uploaded, itemID_UPLOADED_START);
             if (TheHistory.HasMore())
-                menu->Append(itemID_BROWSE_HISTORY, "[More...]");
+                FixMenuItem(menu->Append(itemID_BROWSE_HISTORY, "[More...]"));
         }
         
         // build sites;
         menu->AppendSeparator();
         wxMenuItem *siteHint = new wxMenuItem(menu, itemID_HINT, "Server");
-        siteHint->Enable(false);
         menu->Append(siteHint);
+        siteHint->Enable(false);
         vector<Site*> sites = TheConfig.GetSites();
         if (sites.empty())
         {
-            menu->Append(itemID_ADD_SITE, "[ADD A UPLOAD SERVER]");
+            FixMenuItem(menu->Append(itemID_ADD_SITE, "[ADD A UPLOAD SERVER]"));
         }
         else
         {
@@ -147,7 +239,7 @@ public:
             for (Site *site : sites)
             {
                 wxMenuItem *item = new wxMenuItem(menu, siteMenuId++, site->GetName(), "", wxITEM_RADIO);
-                menu->Append(item);
+                FixMenuItem(menu->Append(item));
                 item->Check(site == TheConfig.SiteSelected);
             }
         }
@@ -155,13 +247,13 @@ public:
         // build up output format menuitems;
         menu->AppendSeparator();
         wxMenuItem *formatHint = new wxMenuItem(menu, itemID_HINT, "Output format");
-        formatHint->Enable(false);
         menu->Append(formatHint);
+        formatHint->Enable(false);
         
         vector<Format*> formats = TheConfig.Formats;
         if (formats.empty())
         {
-            menu->Append(itemID_ADD_FORMAT, "[ADD A NEW FORMAT]");
+            FixMenuItem(menu->Append(itemID_ADD_FORMAT, "[ADD A NEW FORMAT]"));
         }
         else
         {
@@ -169,14 +261,14 @@ public:
             for (Format *format : formats)
             {
                 wxMenuItem *item = new wxMenuItem(menu, formatMenuId++, format->GetName(), "", wxITEM_RADIO);
-                menu->Append(item);
+                FixMenuItem(menu->Append(item));
                 item->Check(format == TheConfig.FormatSelected);
             }
         }
         
         menu->AppendSeparator();
-        menu->Append(itemID_PREFERENCES, "Preferences");
-        menu->Append(itemID_EXIT, "Exit");
+        FixMenuItem(menu->Append(itemID_PREFERENCES, "Preferences"));
+        FixMenuItem(menu->Append(itemID_EXIT, "Exit"));
         
         return menu;
     }
@@ -304,6 +396,12 @@ public:
         TheHistory.Push(uploaded);
         _uploading = uploading;
         Toast("Uploaded successfully", wxString::Format("Total %zd files uploaded", uploaded.size()));
+    }
+    
+    static Tray &Inst()
+    {
+        static Tray inst;
+        return inst;
     }
 };
 

@@ -1,8 +1,9 @@
 #ifndef H_OS_OS
-#define H_OS_OS 
+#define H_OS_OS
 
 #include <wx/wx.h>
 #include <wx/taskbar.h>
+#include <wx/notifmsg.h>
 
 void Init(wxTaskBarIcon *tray);
 

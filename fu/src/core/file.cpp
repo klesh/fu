@@ -57,7 +57,7 @@ public:
         _fileName = _name = wxFileNameFromPath(path);
         _ext = path.AfterLast('.').Lower();
         _isImage = IMG_PATTERN.Matches(path);
-#ifndef _WIN32
+#ifdef __WXOSX__
         if (_name.Length() > 10)
         {
             _name = _name.SubString(0, 5) + "...." + _ext;
