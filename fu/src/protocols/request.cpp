@@ -47,7 +47,7 @@ public:
 #endif // _WIN32
     }
     
-    ~Request()
+    virtual ~Request()
     {
         if (_headers != NULL)
         {
