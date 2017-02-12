@@ -82,10 +82,13 @@
       <AdditionalDependencies>wxmsw31ud_core.lib;wxbase31ud.lib;libcurl_a.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>del $(Configuration)\main.obj</Command>
+      <Command>del $(Configuration)\main.obj
+</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>copy $(SolutionDir)deps\* $(OutDir)</Command>
+      <Command>copy $(SolutionDir)deps\* $(OutDir)
+del $(OutDir)resources /q /s
+xcopy $(ProjectDir)resources $(OutDir)resources /y /e /i</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -115,7 +118,9 @@
       <Command>del $(Configuration)\main.obj</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>copy $(SolutionDir)deps\* $(OutDir)</Command>
+      <Command>copy $(SolutionDir)deps\* $(OutDir)
+del $(OutDir)resources /q /s
+xcopy $(ProjectDir)resources $(OutDir)resources /y /e /i</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

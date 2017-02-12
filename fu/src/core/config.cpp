@@ -28,6 +28,9 @@ private:
     
     Config()
     {
+        wxFileName exec = 
+        _executeDir = wxFileName( wxStandardPaths::Get().GetExecutablePath() ).GetPath();
+
         wxString folder = wxStandardPaths::Get().GetUserDataDir();
         if (!wxDirExists(folder))
             wxMkdir(folder);
@@ -189,6 +192,14 @@ public:
     void Subscribe(wxEvtHandler *listener)
     {
         _listeners.push_back(listener);
+    }
+
+    wxString GetIconPath(const wxString &subfolder, const wxString &iconName)
+    {
+        wxFileName tmp(_executeDir, iconName);
+        tmp.AppendDir("resources");
+        tmp.AppendDir(subfolder);
+        return tmp.GetFullPath();
     }
     
     void AddSite(Site *site)

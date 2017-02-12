@@ -9,8 +9,6 @@
 #include <map>
 #include <vector>
 
-#include "icon.xpm"
-#include "icon_uploading.xpm"
 #include "../core/config.cpp"
 #include "../core/file.cpp"
 #include "../core/clip.cpp"
@@ -25,7 +23,7 @@
 
 using namespace std;
 
-static wxIcon _icon(icon), _icon_uploading(icon_uploading);
+static wxIcon _icon, _icon_uploading;
 
 class Tray : public wxTaskBarIcon
 {
@@ -50,10 +48,13 @@ private:
     
     vector<File*> _pending, _uploading, _uploaded;
     int uploadingCount = 0;
+    wxIcon _icon, _icon_uploading;
     
 public:
     Tray()
     {
+        _icon.LoadFile(TheConfig.GetIconPath("16x16", "icon.png"), wxBITMAP_TYPE_PNG);
+        _icon_uploading.LoadFile(TheConfig.GetIconPath("16x16", "icon_uploading.png"), wxBITMAP_TYPE_PNG);
         SetIcon(_icon);
 //        SetIcon(_icon_uploading);
         _pref = new PrefForm(TheConfig.Position, TheConfig.Size);

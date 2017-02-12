@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?><XnView_script version="1.0" name="win_icon_16">
+    <Resize mode="0" width="16" height="16" unit="0" ratio="true" orientation="false" enlarge="0" resample="7" gamma_correct="false"/>
+    <Output folder="D:/Projects/Github/fu/fu/resources/16x16" filename="{Filename}" case="0">
+        <Options overwrite="0" orgDate="false" keepMeta="true" keepICC="false" keepFolder="false" keepParentFolder="false" delOrg="false" multipage="false" allPages="false" openExplorer="false" openBrowser="false" clearItems="false"/>
+        <JPEG quality="80" progressive="false" optimizeHuffman="false" rebuildThumb="true" orgQuality="false" DCTMethod="0" subSampling="0" smoothFactor="0"/>
+        <TGA compress="false" bottomUp="false"/>
+        <TIFF compress="0" quality="80" compressBW="0" oneStrip="false"/>
+        <BMP compress="false" hdrOS2="false"/>
+        <PNG level="6" interlaced="false" filter="0"/>
+        <GIF interlaced="false" hdr87a="false"/>
+        <PCX compress="false"/>
+        <WEBP method="0" quality="80" filesize="128" compress="4" strength="60" sharpness="0"/>
+        <JP2 mode="0" quality="80" ratio="4" fileSize="100"/>
+        <PDF compress="0" compressGrey="0" compressBW="0" quality="80"/>
+        <JXR quality="80" colorFormat="0" filter="0"/>
+    </Output>
+</XnView_script>
