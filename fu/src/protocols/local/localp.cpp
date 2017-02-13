@@ -17,7 +17,7 @@ public:
     {
         static vector<PtcSettingMeta*> metas = {
             new PtcSettingMeta("path", "Target", true, PtcSettingMeta::TYPE_DIR),
-            new PtcSettingMeta("urlFormat", "URL format", true)
+            new PtcSettingMeta("urlFormat", "URL format", true, PtcSettingMeta::TYPE_STRING, "http://localhost/%s (where %s will be replaced with URL)")
         };
         return metas;
     }

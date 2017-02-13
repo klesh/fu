@@ -13,6 +13,8 @@ private:
 public:
     virtual bool OnInit()
     {
+        wxString tmp = "abc";
+        wxLogDebug("tmp size: %zd", tmp.size());
         if (_singleInstChecker.IsAnotherRunning())
         {
             return false;
@@ -26,6 +28,7 @@ public:
         
         wxInitAllImageHandlers();
 
+        wxLogDebug("app start");
         Init(&Tray::Inst());
         return true;
     }

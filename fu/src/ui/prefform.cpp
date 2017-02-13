@@ -26,6 +26,7 @@ private:
 public:
     PrefForm(wxPoint &pos, wxSize &size) : wxDialog(NULL, wxID_ANY, "Preferences", pos, size, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
     {
+        SetIcon(TheConfig.GetAppIcon());
         _tabs = new wxNotebook(this, wxID_ANY);
         _pnlSites = new SitesPanel(_tabs);
         _pnlPreproc = new PreProcPanel(_tabs);

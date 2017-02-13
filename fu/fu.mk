@@ -2,12 +2,12 @@
 ## Auto Generated makefile by CodeLite IDE
 ## any manual changes will be erased      
 ##
-## Debug
+## Release
 ProjectName            :=fu
-ConfigurationName      :=Debug
+ConfigurationName      :=Release
 WorkspacePath          :=/home/kleshwong/Projects/Github/fu/fu
 ProjectPath            :=/home/kleshwong/Projects/Github/fu/fu
-IntermediateDirectory  :=./Debug
+IntermediateDirectory  :=./Release
 OutDir                 := $(IntermediateDirectory)
 CurrentFileName        :=
 CurrentFilePath        :=
@@ -28,19 +28,19 @@ LibraryPathSwitch      :=-L
 PreprocessorSwitch     :=-D
 SourceSwitch           :=-c 
 OutputFile             :=$(IntermediateDirectory)/$(ProjectName)
-Preprocessors          :=$(PreprocessorSwitch)__WXDEBUG__ $(PreprocessorSwitch)DEBUG $(PreprocessorSwitch)_DEBUG $(PreprocessorSwitch)_UNITY 
+Preprocessors          :=$(PreprocessorSwitch)NDEBUG $(PreprocessorSwitch)_UNITY 
 ObjectSwitch           :=-o 
 ArchiveOutputSwitch    := 
 PreprocessOnlySwitch   :=-E
 ObjectsFileList        :="fu.txt"
 PCHCompileFlags        :=
 MakeDirCommand         :=mkdir -p
-LinkOptions            :=  $(shell wx-config   --libs --unicode=yes) $(shell pkg-config --libs appindicator-0.1)
+LinkOptions            :=  -s $(shell wx-config --debug=no --libs --unicode=yes) $(shell pkg-config --libs appindicator-0.1)
 IncludePath            :=  $(IncludeSwitch). 
 IncludePCH             := 
 RcIncludePath          := 
-Libs                   := $(LibrarySwitch)curl 
-ArLibs                 :=  "libcurl" 
+Libs                   := $(LibrarySwitch)curl $(LibrarySwitch)ssh2 
+ArLibs                 :=  "libcurl" "libssh2" 
 LibPath                := $(LibraryPathSwitch). 
 
 ##
@@ -50,8 +50,8 @@ LibPath                := $(LibraryPathSwitch).
 AR       := /usr/bin/ar rcu
 CXX      := /usr/bin/g++
 CC       := /usr/bin/gcc
-CXXFLAGS :=  -g -O0 -Wall $(shell wx-config --cxxflags --unicode=yes  ) $(shell pkg-config --cflags appindicator-0.1) $(Preprocessors)
-CFLAGS   :=  -g -O0 -Wall $(shell wx-config --cxxflags --unicode=yes  ) $(shell pkg-config --cflags appindicator-0.1) $(Preprocessors)
+CXXFLAGS :=  -O2 -Wall $(shell wx-config --cxxflags --unicode=yes --debug=no) $(shell pkg-config --cflags appindicator-0.1) $(Preprocessors)
+CFLAGS   :=  -O2 -Wall $(shell wx-config --cxxflags --unicode=yes --debug=no) $(shell pkg-config --cflags appindicator-0.1) $(Preprocessors)
 ASFLAGS  := 
 AS       := /usr/bin/as
 
@@ -82,15 +82,15 @@ $(OutputFile): $(IntermediateDirectory)/.d $(Objects)
 
 PostBuild:
 	@echo Executing Post Build commands ...
-	cp -R resources Debug/
+	cp -R resources Release/
 	@echo Done
 
 MakeIntermediateDirs:
-	@test -d ./Debug || $(MakeDirCommand) ./Debug
+	@test -d ./Release || $(MakeDirCommand) ./Release
 
 
 $(IntermediateDirectory)/.d:
-	@test -d ./Debug || $(MakeDirCommand) ./Debug
+	@test -d ./Release || $(MakeDirCommand) ./Release
 
 PreBuild:
 
@@ -336,6 +336,6 @@ $(IntermediateDirectory)/src_protocols_sftp_sftpp.cpp$(PreprocessSuffix): src/pr
 ## Clean
 ##
 clean:
-	$(RM) -r ./Debug/
+	$(RM) -r ./Release/
 
 

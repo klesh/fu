@@ -77,6 +77,7 @@
       </Compiler>
       <Linker Options="$(shell wx-config   --libs --unicode=yes);$(shell pkg-config --libs appindicator-0.1)" Required="yes">
         <Library Value="libcurl"/>
+        <Library Value="libssh2"/>
       </Linker>
       <ResourceCompiler Options="$(shell wx-config --rcflags)" Required="no"/>
       <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="./Debug" Command="./$(ProjectName)" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
@@ -115,11 +116,13 @@
       </Completion>
     </Configuration>
     <Configuration Name="Release" CompilerType="GCC" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
-      <Compiler Options="-O2;-Wall;$(shell wx-config --cxxflags --unicode=yes --debug=no)" C_Options="-O2;-Wall;$(shell wx-config --cxxflags --unicode=yes --debug=no)" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
+      <Compiler Options="-O2;-Wall;$(shell wx-config --cxxflags --unicode=yes --debug=no);$(shell pkg-config --cflags appindicator-0.1)" C_Options="-O2;-Wall;$(shell wx-config --cxxflags --unicode=yes --debug=no);$(shell pkg-config --cflags appindicator-0.1)" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
         <Preprocessor Value="NDEBUG"/>
+        <Preprocessor Value="_UNITY"/>
       </Compiler>
-      <Linker Options="-s;$(shell wx-config --debug=no --libs --unicode=yes)" Required="yes">
+      <Linker Options="-s;$(shell wx-config --debug=no --libs --unicode=yes);$(shell pkg-config --libs appindicator-0.1)" Required="yes">
         <Library Value="libcurl"/>
+        <Library Value="libssh2"/>
       </Linker>
       <ResourceCompiler Options="$(shell wx-config --rcflags)" Required="no"/>
       <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="./Release" Command="./$(ProjectName)" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
@@ -133,7 +136,9 @@
         <StartupCommands/>
       </Debugger>
       <PreBuild/>
-      <PostBuild/>
+      <PostBuild>
+        <Command Enabled="yes">cp -R resources Release/</Command>
+      </PostBuild>
       <CustomBuild Enabled="no">
         <RebuildCommand/>
         <CleanCommand/>

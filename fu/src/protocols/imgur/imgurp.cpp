@@ -18,7 +18,7 @@ public:
     {
         static vector<PtcSettingMeta*> metas =
         {
-            new PtcSettingMeta("clientId", "Client-ID", true),
+            new PtcSettingMeta("clientId", "Client-ID", true, PtcSettingMeta::TYPE_STRING, "obtain from http://api.imgur.com"),
             new PtcSettingMeta("proxy", "Proxy", false, PtcSettingMeta::TYPE_STRING, "http://localhost:8080 or socks5://localhost:1080")
         };
         return metas;

@@ -1,6 +1,7 @@
 #ifndef H_CORE_CONFIG
 #define H_CORE_CONFIG 
 
+#include <wx/wx.h>
 #include <wx/stdpaths.h>
 #include <wx/filename.h>
 #include <wx/xml/xml.h>
@@ -25,7 +26,8 @@ private:
     vector<Site*> _sites;
     vector<wxEvtHandler*> _listeners;
     wxString _executeDir;
-    
+    wxIcon _appIcon;
+
     Config()
     {
         wxFileName exec = 
@@ -152,6 +154,8 @@ private:
             
             child = child->GetNext();
         }
+        
+        _appIcon.LoadFile(GetIconPath("128x128", "icon.png"), wxBITMAP_TYPE_PNG);
     }
     
     ~Config()
@@ -200,6 +204,11 @@ public:
         tmp.AppendDir("resources");
         tmp.AppendDir(subfolder);
         return tmp.GetFullPath();
+    }
+    
+    wxIcon &GetAppIcon()
+    {
+        return _appIcon;
     }
     
     void AddSite(Site *site)
@@ -298,7 +307,7 @@ public:
         if (FormatSelected != NULL)
             formats->AddAttribute("selected", FormatSelected->GetName());
         
-        for (Format *format : Formats)
+        for (auto const &format : Formats)
         {
             wxXmlNode *formatNode = new wxXmlNode(wxXML_ELEMENT_NODE, "format");
             formatNode->AddAttribute("name", format->GetName());
@@ -311,7 +320,7 @@ public:
         if (SiteSelected != NULL)
             sites->AddAttribute("selected", SiteSelected->GetName());
         
-        for (Site *site : _sites)
+        for (auto const &site : _sites)
         {
             wxXmlNode *siteNode = new wxXmlNode(wxXML_ELEMENT_NODE, "site");
             siteNode->AddAttribute("id", site->GetId());

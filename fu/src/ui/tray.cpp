@@ -29,11 +29,6 @@ extern "C"
 
 using namespace std;
 
-static wxIcon _icon, _icon_uploading;
-
-
-
-
 class Tray : public wxTaskBarIcon
 {
 private:
@@ -83,6 +78,8 @@ private:
 
     Tray()
     {
+        wxLogDebug("tray icon ready");
+
         _iconPath = TheConfig.GetIconPath("16x16", "icon.png");
         _iconUploadingPath = TheConfig.GetIconPath("16x16", "icon_uploading.png");
         
@@ -105,6 +102,7 @@ private:
         _iconUploading.LoadFile(_iconUploadingPath, wxBITMAP_TYPE_PNG);
 #endif
         NormalIcon();
+        wxLogDebug("tray icon ready");
     }
         
 public:
@@ -126,6 +124,7 @@ public:
     
     void NormalIcon()
     {
+        wxLogDebug("_iconPath: %s", _iconPath);
         app_indicator_set_icon(_indicator, _iconPath.c_str());
     }
     
@@ -137,6 +136,7 @@ public:
         
     void NormalIcon()
     {
+        wxLogDebug("set icon: %s", _iconPath);
         SetIcon(_icon);
     }
     
@@ -151,6 +151,13 @@ public:
     {
 #ifdef _UNITY
         g_connect(item);
+#endif
+    }
+    
+    void RefreshMenu()
+    {
+#ifdef _UNITY
+        CreateIndicatorMenu();
 #endif
     }
     
@@ -235,12 +242,14 @@ public:
         }
         else
         {
+            wxLogDebug("sites size: %zd", sites.size());
             int siteMenuId = itemID_SITE_START;
-            for (Site *site : sites)
+            for (auto const &site : sites)
             {
-                wxMenuItem *item = new wxMenuItem(menu, siteMenuId++, site->GetName(), "", wxITEM_RADIO);
-                FixMenuItem(menu->Append(item));
+                wxMenuItem *item = new wxMenuItem(menu, siteMenuId++, site->GetName(), "", wxITEM_CHECK);
+                menu->Append(item);
                 item->Check(site == TheConfig.SiteSelected);
+                FixMenuItem(item);
             }
         }
         
@@ -258,11 +267,12 @@ public:
         else
         {
             int formatMenuId = itemID_FORMAT_START;
-            for (Format *format : formats)
+            for (auto const &format : formats)
             {
-                wxMenuItem *item = new wxMenuItem(menu, formatMenuId++, format->GetName(), "", wxITEM_RADIO);
-                FixMenuItem(menu->Append(item));
+                wxMenuItem *item = new wxMenuItem(menu, formatMenuId++, format->GetName(), "", wxITEM_CHECK);
+                menu->Append(item);
                 item->Check(format == TheConfig.FormatSelected);
+                FixMenuItem(item);
             }
         }
         
@@ -356,6 +366,7 @@ public:
         {
             wxLogDebug("unknown menu id : %d", itemId);
         }
+        RefreshMenu();
     }
     
     void OnError(wxCommandEvent &evt)
@@ -375,6 +386,7 @@ public:
             }
         }
         _uploading = uploading;
+        RefreshMenu();
     }
     
     void OnUploadSuccess(wxCommandEvent &evt)
@@ -396,6 +408,7 @@ public:
         TheHistory.Push(uploaded);
         _uploading = uploading;
         Toast("Uploaded successfully", wxString::Format("Total %zd files uploaded", uploaded.size()));
+        RefreshMenu();
     }
     
     static Tray &Inst()
