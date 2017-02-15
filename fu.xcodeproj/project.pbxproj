@@ -7,13 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		C309ACE21E1F23C100CA2138 /* icon.xpm in Resources */ = {isa = PBXBuildFile; fileRef = C309ACE01E1F23C100CA2138 /* icon.xpm */; };
 		C309ACE71E1F386000CA2138 /* file.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C309ACE61E1F386000CA2138 /* file.cpp */; };
+		C30E5E5D1E541A2800E6438B /* libssh2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C30E5E5C1E541A2800E6438B /* libssh2.a */; };
+		C30E5E5F1E541A4B00E6438B /* libcurl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C30E5E5E1E541A4B00E6438B /* libcurl.a */; };
+		C30E5E6C1E541C0000E6438B /* 16x16 in Resources */ = {isa = PBXBuildFile; fileRef = C30E5E6B1E541C0000E6438B /* 16x16 */; };
 		C324E68B1E25DEE800AF0080 /* sftpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C324E68A1E25DEE800AF0080 /* sftpp.cpp */; };
 		C324E68D1E25E78F00AF0080 /* ptc.h in Sources */ = {isa = PBXBuildFile; fileRef = C324E68C1E25E78F00AF0080 /* ptc.h */; };
 		C324E68F1E25E7CD00AF0080 /* ptcp.h in Sources */ = {isa = PBXBuildFile; fileRef = C324E68E1E25E7CD00AF0080 /* ptcp.h */; };
 		C324E6911E26289B00AF0080 /* ptcf.h in Sources */ = {isa = PBXBuildFile; fileRef = C324E6901E26289B00AF0080 /* ptcf.h */; };
-		C325F8CB1E239A4B0094D893 /* converter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C325F8CA1E239A4B0094D893 /* converter.cpp */; };
 		C325F8CD1E239B060094D893 /* format.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C325F8CC1E239B060094D893 /* format.cpp */; };
 		C325F8D11E23A2DF0094D893 /* site.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C325F8D01E23A2DF0094D893 /* site.cpp */; };
 		C325F8D31E23D6E20094D893 /* sitespanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C325F8D21E23D6E20094D893 /* sitespanel.cpp */; };
@@ -29,14 +30,12 @@
 		C39E51B41E447F2E001D86DE /* smms.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C39E51B11E447F2E001D86DE /* smms.cpp */; };
 		C39E51B51E447F2E001D86DE /* smmsos.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C39E51B21E447F2E001D86DE /* smmsos.cpp */; };
 		C39E51B61E447F2E001D86DE /* smmsp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C39E51B31E447F2E001D86DE /* smmsp.cpp */; };
-		C39E51B81E448D84001D86DE /* icon_uploading.xpm in Resources */ = {isa = PBXBuildFile; fileRef = C39E51B71E448D84001D86DE /* icon_uploading.xpm */; };
 		C3B69F5B1E41AD5A00BD1791 /* sftpos.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C3B69F5A1E41AD5A00BD1791 /* sftpos.cpp */; };
 		C3B69F5E1E42E8E800BD1791 /* imgur.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C3B69F5D1E42E8E800BD1791 /* imgur.cpp */; };
 		C3B69F601E42E8F500BD1791 /* imgurp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C3B69F5F1E42E8F500BD1791 /* imgurp.cpp */; };
 		C3B69F621E42F2C700BD1791 /* imguros.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C3B69F611E42F2C700BD1791 /* imguros.cpp */; };
 		C3BD02EF1E21F812004B8CD4 /* clip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C3BD02EE1E21F812004B8CD4 /* clip.cpp */; };
 		C3C66D4A1E2F70EB00782D02 /* uploader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C3C66D491E2F70EB00782D02 /* uploader.cpp */; };
-		C3E2F0B51E49C1200011C183 /* libcurl.4.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C3E2F0B41E49C1200011C183 /* libcurl.4.dylib */; };
 		C3E4524F1E2DFDA900E06640 /* local.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C3E4524E1E2DFDA900E06640 /* local.cpp */; };
 		C3E452511E2DFDB600E06640 /* localp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C3E452501E2DFDB600E06640 /* localp.cpp */; };
 		C3EDAF521E288BAF00BE92AB /* formatspanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C3EDAF511E288BAF00BE92AB /* formatspanel.cpp */; };
@@ -46,13 +45,15 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		C309ACE01E1F23C100CA2138 /* icon.xpm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = icon.xpm; sourceTree = "<group>"; };
 		C309ACE61E1F386000CA2138 /* file.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = file.cpp; sourceTree = "<group>"; };
+		C30E5E5A1E541A0B00E6438B /* libssh2.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libssh2.1.dylib; path = ../../../../../usr/local/Cellar/libssh2/1.8.0/lib/libssh2.1.dylib; sourceTree = "<group>"; };
+		C30E5E5C1E541A2800E6438B /* libssh2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssh2.a; path = ../../../../../usr/local/Cellar/libssh2/1.8.0/lib/libssh2.a; sourceTree = "<group>"; };
+		C30E5E5E1E541A4B00E6438B /* libcurl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcurl.a; path = ../../../../../usr/local/Cellar/curl/7.52.1/lib/libcurl.a; sourceTree = "<group>"; };
+		C30E5E6B1E541C0000E6438B /* 16x16 */ = {isa = PBXFileReference; lastKnownFileType = folder; name = 16x16; path = fu/resources/16x16; sourceTree = "<group>"; };
 		C324E68A1E25DEE800AF0080 /* sftpp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sftpp.cpp; sourceTree = "<group>"; };
 		C324E68C1E25E78F00AF0080 /* ptc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ptc.h; sourceTree = "<group>"; };
 		C324E68E1E25E7CD00AF0080 /* ptcp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ptcp.h; sourceTree = "<group>"; };
 		C324E6901E26289B00AF0080 /* ptcf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ptcf.h; sourceTree = "<group>"; };
-		C325F8CA1E239A4B0094D893 /* converter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = converter.cpp; sourceTree = "<group>"; };
 		C325F8CC1E239B060094D893 /* format.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = format.cpp; sourceTree = "<group>"; };
 		C325F8D01E23A2DF0094D893 /* site.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = site.cpp; sourceTree = "<group>"; };
 		C325F8D21E23D6E20094D893 /* sitespanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sitespanel.cpp; sourceTree = "<group>"; };
@@ -71,7 +72,6 @@
 		C39E51B11E447F2E001D86DE /* smms.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = smms.cpp; sourceTree = "<group>"; };
 		C39E51B21E447F2E001D86DE /* smmsos.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = smmsos.cpp; sourceTree = "<group>"; };
 		C39E51B31E447F2E001D86DE /* smmsp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = smmsp.cpp; sourceTree = "<group>"; };
-		C39E51B71E448D84001D86DE /* icon_uploading.xpm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = icon_uploading.xpm; sourceTree = "<group>"; };
 		C3B69F5A1E41AD5A00BD1791 /* sftpos.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sftpos.cpp; sourceTree = "<group>"; };
 		C3B69F5D1E42E8E800BD1791 /* imgur.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = imgur.cpp; sourceTree = "<group>"; };
 		C3B69F5F1E42E8F500BD1791 /* imgurp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = imgurp.cpp; sourceTree = "<group>"; };
@@ -93,7 +93,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C3E2F0B51E49C1200011C183 /* libcurl.4.dylib in Frameworks */,
+				C30E5E5F1E541A4B00E6438B /* libcurl.a in Frameworks */,
+				C30E5E5D1E541A2800E6438B /* libssh2.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -128,6 +129,7 @@
 		C38D26501E1E747400FB6802 = {
 			isa = PBXGroup;
 			children = (
+				C30E5E6B1E541C0000E6438B /* 16x16 */,
 				C38D265B1E1E747500FB6802 /* fu */,
 				C38D265A1E1E747500FB6802 /* Products */,
 				C3FE19671E40D832009D1F9B /* Frameworks */,
@@ -172,7 +174,6 @@
 				C309ACE61E1F386000CA2138 /* file.cpp */,
 				C3366B911E1FEC4C005F2100 /* config.cpp */,
 				C3BD02EE1E21F812004B8CD4 /* clip.cpp */,
-				C325F8CA1E239A4B0094D893 /* converter.cpp */,
 				C325F8D01E23A2DF0094D893 /* site.cpp */,
 				C3FFC5891E2F5C2D0054719F /* func.cpp */,
 				C39340351E30EF8B00D8870F /* history.cpp */,
@@ -183,8 +184,6 @@
 		C38D26751E1E832E00FB6802 /* ui */ = {
 			isa = PBXGroup;
 			children = (
-				C39E51B71E448D84001D86DE /* icon_uploading.xpm */,
-				C309ACE01E1F23C100CA2138 /* icon.xpm */,
 				C38D26781E1E832E00FB6802 /* tray.cpp */,
 				C325F8D21E23D6E20094D893 /* sitespanel.cpp */,
 				C325F8D41E23ED330094D893 /* prefform.cpp */,
@@ -228,6 +227,9 @@
 		C3FE19671E40D832009D1F9B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C30E5E5E1E541A4B00E6438B /* libcurl.a */,
+				C30E5E5C1E541A2800E6438B /* libssh2.a */,
+				C30E5E5A1E541A0B00E6438B /* libssh2.1.dylib */,
 				C3E2F0B41E49C1200011C183 /* libcurl.4.dylib */,
 			);
 			name = Frameworks;
@@ -300,9 +302,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C309ACE21E1F23C100CA2138 /* icon.xpm in Resources */,
-				C39E51B81E448D84001D86DE /* icon_uploading.xpm in Resources */,
 				C38D26631E1E747500FB6802 /* Assets.xcassets in Resources */,
+				C30E5E6C1E541C0000E6438B /* 16x16 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -331,7 +332,6 @@
 				C39E51B61E447F2E001D86DE /* smmsp.cpp in Sources */,
 				C324E68B1E25DEE800AF0080 /* sftpp.cpp in Sources */,
 				C325F8D51E23ED330094D893 /* prefform.cpp in Sources */,
-				C325F8CB1E239A4B0094D893 /* converter.cpp in Sources */,
 				C3E4524F1E2DFDA900E06640 /* local.cpp in Sources */,
 				C39E51B51E447F2E001D86DE /* smmsos.cpp in Sources */,
 				C3B69F5B1E41AD5A00BD1791 /* sftpos.cpp in Sources */,
@@ -453,6 +453,7 @@
 					/usr/local/Cellar/curl/7.51.0/lib,
 					/usr/local/Cellar/wxmac/3.0.2_4/lib,
 					/usr/local/Cellar/curl/7.52.1/lib,
+					/usr/local/Cellar/libssh2/1.8.0/lib,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OTHER_CPLUSPLUSFLAGS = (
@@ -515,6 +516,7 @@
 					/usr/local/Cellar/curl/7.51.0/lib,
 					/usr/local/Cellar/wxmac/3.0.2_4/lib,
 					/usr/local/Cellar/curl/7.52.1/lib,
+					/usr/local/Cellar/libssh2/1.8.0/lib,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OTHER_CPLUSPLUSFLAGS = (

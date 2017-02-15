@@ -202,18 +202,25 @@ public:
         _listeners.push_back(listener);
     }
 
-    //wxString GetIconPath(const wxString &subfolder, const wxString &iconName)
-    //{
-        //wxFileName tmp(_executeDir, iconName);
-        //tmp.AppendDir("resources");
-        //tmp.AppendDir(subfolder);
-        //return tmp.GetFullPath();
-    //}
+#ifndef __WXGTK__
+    wxString GetIconPath(const wxString &subfolder, const wxString &iconName)
+    {
+        wxFileName tmp(_executeDir, iconName);
+#ifdef __WXOSX__
+        tmp.AppendDir("..");
+        tmp.AppendDir("Resources");
+#else
+        tmp.AppendDir("resources");
+#endif
+        tmp.AppendDir(subfolder);
+        return tmp.GetFullPath();
+    }
 
-    //wxIcon &GetAppIcon()
-    //{
-        //return _appIcon;
-    //}
+    wxIcon &GetAppIcon()
+    {
+        return _appIcon;
+    }
+#endif
 
     void AddSite(Site *site)
     {

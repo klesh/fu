@@ -97,6 +97,8 @@ private:
 #else
         _iconPath = TheConfig.GetIconPath("16x16", "icon.png");
         _iconUploadingPath = TheConfig.GetIconPath("16x16", "icon_uploading.png");
+        
+        wxLogDebug("_iconPath: %s", _iconPath);
         _icon.LoadFile(_iconPath, wxBITMAP_TYPE_PNG);
         _iconUploading.LoadFile(_iconUploadingPath, wxBITMAP_TYPE_PNG);
 #endif
