@@ -369,3 +369,5 @@ Makefile.in
 Makefile
 config.h
 config.status
+INSTALL
+COPYING
