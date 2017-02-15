@@ -28,7 +28,7 @@ The plan was to make a CrossPlatform app for (Windows/MacOS/Linux), and it can a
 
 ### Ubuntu
   ```bash
-sudo apt install libssh2-1-dev libboost1.61-dev libappindicator3-dev
+sudo apt install libwxgtk3.0-dev libcurl4-openssl-dev ibssh2-1-dev libboost1.61-dev libappindicator3-dev
 make
   ```
 

@@ -12,7 +12,7 @@ public:
     Local(map<wxString, wxString> settings) : Ptc(settings)
     {
     }
-    
+
 protected:
     virtual wxOutputStream *OnOpenStream(const wxString &fileName, const wxString &remoteName)
     {

@@ -14,7 +14,7 @@ void handle_owner_change(GtkClipboard *clipboard,
 
     wxLogDebug("==== clipboard changed");
     clipChanged = true;
-        
+
     wxUpdateUIEvent evt;
     wxPostEvent(_tray, evt);
 }
@@ -36,7 +36,7 @@ bool IsClipboardChanged()
 
 void BringAppToTop()
 {
-     
+
 }
 
 void Toast(const wxString &title, const wxString& message, bool isError)

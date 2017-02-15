@@ -36,7 +36,7 @@ private:
     map<wxString, wxString> _extraInfo;
     bool _isImage = false;
     wxBitmapType _type;
-    
+
 public:
     File() {}
     // initialized by Bitmap from Clipboard
@@ -49,7 +49,7 @@ public:
         _isImage = true;
         _imgOriginal.SetType(wxBITMAP_TYPE_JPEG);
     }
-    
+
     // initialized by Files from Clipboard or History
     File(wxString &path)
     {
@@ -64,7 +64,7 @@ public:
         }
 #endif
     }
-    
+
     wxImage &GetOriginal()
     {
         if (!_imgOriginal.IsOk() && _isImage && !_originalPath.IsEmpty())
@@ -75,47 +75,47 @@ public:
         }
         return _imgOriginal;
     }
-    
+
     void SetOriginal(const wxImage &img)
     {
         _imgOriginal = img;
     }
-    
+
     wxBitmapType GetType()
     {
         return _type;
     }
-    
+
     wxBitmap &GetThumbnail()
     {
         if (_bmpThumbnail.IsOk() || !_isImage)
             return _bmpThumbnail;
-        
+
         // load cached thumbnail
         if (!_thumbnailPath.IsEmpty())
         {
             _bmpThumbnail = wxBitmap(wxImage(_thumbnailPath));
             return _bmpThumbnail;
         }
-        
+
         wxImage thumbnail = Thumbnailize(GetOriginal(), TheConfig.MaxPreviewWidth, TheConfig.MaxPreviewHeight);
         _bmpThumbnail = wxBitmap(thumbnail);
         return _bmpThumbnail;
     }
-    
+
     static wxImage Thumbnailize(const wxImage &original, const int maxWidth, const int maxHeight)
     {
         int oldWidth = original.GetWidth();
         int oldHeight = original.GetHeight();
-        
+
         if (oldWidth <= maxWidth && oldHeight <= maxHeight)
         {
             return original;
         }
-        
+
         float maxRatio = (float)maxWidth / (float)maxHeight;
         float oldRatio = (float)oldWidth / (float)oldHeight;
-        
+
         int newWidth, newHeight;
         if (oldRatio > maxRatio)
         {
@@ -129,147 +129,147 @@ public:
         }
         return original.Scale(newWidth, newHeight, wxIMAGE_QUALITY_BOX_AVERAGE);
     }
-    
+
     void SetThumbnail(const wxBitmap &bitmap)
     {
         _bmpThumbnail = bitmap;
     }
-    
+
     wxString& GetOriginalPath()
     {
         return _originalPath;
     }
-    
+
     void SetOriginalPath(const wxString &path)
     {
         _originalPath = path;
     }
-    
+
     wxString &GetThumbnailPath()
     {
         return _thumbnailPath;
     }
-    
+
     void SetThumbnailPath(const wxString &path)
     {
         _thumbnailPath = path;
     }
-    
+
     wxString &GetName()
     {
         return _name;
     }
-    
+
     void SetName(const wxString &name)
     {
         _name = name;
     }
-    
+
     wxString &GetFileName()
     {
         return _fileName;
     }
-    
+
     void SetFileName(const wxString &fileName)
     {
         _fileName = fileName;
     }
-    
+
     wxString GetLongName()
     {
         if (!_fileName.IsEmpty())
             return _fileName;
-        
+
         return "[Clipboard]";
     }
-    
+
     wxString &GetExt()
     {
         return _ext;
     }
-    
+
     void SetExt(const wxString &ext)
     {
         _ext = ext;
     }
-    
+
     bool HasThumbnail()
     {
         return _isImage;
     }
-    
+
     bool IsImage()
     {
         return _isImage;
     }
-    
+
     void IsImage(bool isImage)
     {
         _isImage = isImage;
     }
-    
+
     void SetRemoteName(const wxString &remoteName)
     {
         _remoteName = remoteName;
     }
-    
+
     wxString &GetRemoteName()
     {
         if (_remoteName == wxEmptyString)
         {
             _remoteName = Uuid() + "." + _ext;
         }
-        
+
         return _remoteName;
     }
-    
+
     void SetSiteId(const wxString &siteId)
     {
         _siteId = siteId;
     }
-    
+
     wxString &GetSiteId()
     {
         return _siteId;
     }
-    
+
     void SetStatus(const FileStatus status)
     {
         if (status == UPLOADED)
             _uploadedAt = wxDateTime::Now();
         _status = status;
     }
-    
+
     FileStatus GetStatus()
     {
         return _status;
     }
-    
+
     wxDateTime &GetUploadedAt()
     {
         return _uploadedAt;
     }
-    
+
     void SetUploadedAt(const wxDateTime &uploadedAt)
     {
         _uploadedAt = uploadedAt;
     }
-    
+
     map<wxString, wxString> &GetExtraInfo()
     {
         return _extraInfo;
     }
-    
+
     void SetExtraInfo(map<wxString, wxString> extraInfo)
     {
         _extraInfo = extraInfo;
     }
-    
+
     void AddExtraInfo(const wxString &name, const wxString &value)
     {
         _extraInfo[name] = value;
     }
-    
+
     static void SaveImage(const wxBitmap &bmp, const wxBitmapType type, const wxString &path)
     {
         wxOutputStream *stream = new wxFileOutputStream(path);
@@ -277,7 +277,7 @@ public:
         stream->Close();
         delete stream;
     }
-    
+
     static void SaveImage(const wxImage &img, const wxBitmapType type, wxOutputStream *oStream)
     {
         if (type == wxBITMAP_TYPE_GIF && !img.HasPalette())

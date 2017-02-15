@@ -13,7 +13,7 @@ public:
         static wxString name = "imgur.com";
         return name;
     }
-    
+
     virtual const vector<PtcSettingMeta*> &GetSettingMetas()
     {
         static vector<PtcSettingMeta*> metas =
@@ -23,13 +23,13 @@ public:
         };
         return metas;
     }
-    
+
     virtual Ptc *CreateInstance(map<wxString, wxString> &settings)
     {
         auto imgur = new Imgur(settings);
         return (Ptc*)imgur;
     }
-    
+
     virtual const bool IsImageOnly()
     {
         return true;

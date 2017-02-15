@@ -18,6 +18,7 @@
       <File Name="src/core/site.cpp"/>
       <File Name="src/core/converter.cpp"/>
       <File Name="src/core/file.cpp"/>
+      <File Name="src/core/func.cpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="os">
       <File Name="src/os/os.h"/>

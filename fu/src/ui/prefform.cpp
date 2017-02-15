@@ -31,7 +31,7 @@ public:
         _pnlSites = new SitesPanel(_tabs);
         _pnlPreproc = new PreProcPanel(_tabs);
         _pnlFormats = new FormatsPanel(_tabs);
-        
+
         _tabs->AddPage(_pnlSites, "Servers");
         _tabs->AddPage(_pnlPreproc, "Preprocess");
         _tabs->AddPage(_pnlFormats, "Output Formats");
@@ -50,7 +50,7 @@ public:
         _pnlSites->StartCreating();
         return this;
     }
-    
+
     PrefForm *GoFormatCreating()
     {
         _tabs->SetSelection(2);

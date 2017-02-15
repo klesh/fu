@@ -20,31 +20,31 @@ private:
     wxString _thumbsPath;
     vector<File*> _all;
     vector<wxEvtHandler*> _listeners;
-    
+
     History()
     {
         wxString folder = wxStandardPaths::Get().GetUserDataDir();
         if (!wxDirExists(folder))
             wxMkdir(folder);
-        
+
         wxFileName thumbsPath(folder, "thumbnail");
         _thumbsPath = thumbsPath.GetFullPath();
         if (!wxDirExists(_thumbsPath))
             wxMkdir(_thumbsPath);
-        
+
         wxFileName path(folder, "history.xml");
-        
+
         _path = path.GetFullPath();
-        
+
         wxLogDebug("history path: %s", _path);
         if (!wxFileExists(_path))
         {
             return;
         }
-        
+
         wxXmlDocument _xml;
         _xml.Load(_path);
-        
+
         wxXmlNode *child = _xml.GetRoot()->GetChildren();
         while (child) {
             wxString nodeName = child->GetName();
@@ -60,28 +60,28 @@ private:
                 file->GetUploadedAt().ParseISOCombined(child->GetAttribute("uploadedAt"));
                 file->SetThumbnailPath(GetThumbFullPath(file->GetRemoteName()));
                 file->IsImage(child->GetAttribute("isImage") == "true");
-                
+
                 auto *extra = child->GetChildren();
                 while (extra)
                 {
                     file->AddExtraInfo(extra->GetName(), extra->GetNodeContent());
                     extra = extra->GetNext();
                 }
-                
+
                 _all.push_back(file);
             }
-            
+
             child = child->GetNext();
         }
     }
-    
+
     wxString GetThumbFullPath(const wxString &remoteName)
     {
         wxFileName f(_thumbsPath, remoteName);
         return f.GetFullPath();
     }
 public:
-    
+
     void Save()
     {
         wxXmlNode *root = new wxXmlNode(wxXML_ELEMENT_NODE, "root");
@@ -96,41 +96,41 @@ public:
             fileNode->AddAttribute("siteId", file->GetSiteId());
             fileNode->AddAttribute("isImage", file->IsImage() ? "true" : "false");
             fileNode->AddAttribute("uploadedAt", file->GetUploadedAt().FormatISOCombined());
-            
+
             for (auto const &extra : file->GetExtraInfo())
             {
                 auto extraNode = new wxXmlNode(wxXML_ELEMENT_NODE, extra.first);
                 auto extraTextNode = new wxXmlNode(wxXML_TEXT_NODE, "");
                 extraTextNode->SetContent(extra.second);
                 extraNode->AddChild(extraTextNode);
-                
+
                 fileNode->AddChild(extraNode);
             }
-            
+
             root->AddChild(fileNode);
         }
-        
+
         wxXmlDocument _xml;
         _xml.SetRoot(root);
         _xml.Save(_path);
-        
-        
+
+
         wxCommandEvent evt(fuEVT_HISTORY_CHANGED);
         for (auto const &listener : _listeners)
             wxPostEvent(listener, evt);
     }
-    
+
     void Clear()
     {
         for (auto it = _all.begin(); it != _all.end(); ++it)
         {
             wxRemoveFile(GetThumbFullPath((*it)->GetRemoteName()));
         }
-        
+
         _all.clear();
         Save();
     }
-    
+
     void RemoveBySiteId(const wxString &siteId)
     {
         vector<File*> left;
@@ -147,11 +147,11 @@ public:
                 left.push_back(file);
             }
         }
-        
+
         _all = left;
         Save();
     }
-    
+
     vector<File*> GetLatest()
     {
         vector<File*> latest;
@@ -162,17 +162,17 @@ public:
         }
         return latest;
     }
-    
+
     vector<File*> &GetAll()
     {
         return _all;
     }
-    
+
     bool HasMore()
     {
         return _all.size() > TheConfig.MaxLatest;
     }
-    
+
     void Push(const vector<File*> files)
     {
         for (auto it = files.rbegin(); it != files.rend(); ++it)
@@ -187,12 +187,12 @@ public:
         }
         Save();
     }
-    
+
     void Subscribe(wxEvtHandler *listener)
     {
         _listeners.push_back(listener);
     }
-    
+
     static History &Inst()
     {
         static History history;

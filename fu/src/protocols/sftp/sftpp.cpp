@@ -16,7 +16,7 @@ public:
         static wxString name = "sftp";
         return name;
     }
-    
+
     virtual const vector<PtcSettingMeta*> &GetSettingMetas()
     {
         static vector<PtcSettingMeta*> metas =
@@ -31,7 +31,7 @@ public:
         };
         return metas;
     }
-    
+
     virtual Ptc *CreateInstance(map<wxString, wxString> &settings)
     {
         auto sftp = new Sftp(settings);

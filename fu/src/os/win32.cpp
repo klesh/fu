@@ -20,7 +20,6 @@ bool IsClipboardChanged()
 
 void BringAppToTop()
 {
-     
 }
 
 void Toast(const wxString &title, const wxString& message, bool isError)
@@ -40,7 +39,6 @@ bool GetAutoStart()
 
 void SetAutoStart(bool enabled)
 {
-
 }
 
 #endif // !H_OS_WIN32

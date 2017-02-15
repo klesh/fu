@@ -9,23 +9,21 @@ class App : public wxApp
 {
 private:
     wxSingleInstanceChecker _singleInstChecker;
-    
+
 public:
     virtual bool OnInit()
     {
-        wxString tmp = "abc";
-        wxLogDebug("tmp size: %zd", tmp.size());
         if (_singleInstChecker.IsAnotherRunning())
         {
             return false;
         }
-        
+
         if (!Tray::IsAvailable())
         {
             wxMessageBox("Your OS doesn't support Task Bar Icon.");
             return false;
         }
-        
+
         wxInitAllImageHandlers();
 
         wxLogDebug("app start");

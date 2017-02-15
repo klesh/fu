@@ -15,43 +15,43 @@ protected:
     wxString _message;
     map<wxString, wxString> _lastExtraInfo;
     virtual wxOutputStream *OnOpenStream(const wxString &fileName, const wxString &remoteName) = 0;
-    
+
 public:
     Ptc(map<wxString, wxString> &settings)
     {
         _settings = settings;
     }
-    
+
     virtual ~Ptc()
     {
         Disconnect();
     }
-    
+
     virtual bool Connect()
     {
         return true;
     }
-    
+
     virtual void Disconnect()
     {
     }
-    
-    
+
+
     virtual const wxString &GetErrorMessage()
     {
         return _message;
     };
-    
+
     virtual const wxString FormatUrl(const wxString &remoteName, map<wxString, wxString> &extraInfo)
     {
         return wxString::Format(_settings["urlFormat"], remoteName);
     }
-    
+
     virtual const map<wxString, wxString> &GetLastExtraInfo()
     {
         return _lastExtraInfo;
     }
-    
+
     wxOutputStream *OpenStream(const wxString &fileName, const wxString &remoteName)
     {
         return OnOpenStream(fileName, remoteName);

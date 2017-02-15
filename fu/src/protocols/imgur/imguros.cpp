@@ -17,7 +17,7 @@ private:
     wxString *_message;
     map<wxString, wxString> _settings;
     map<wxString, wxString> *_extraInfo;
-    
+
 public:
     ImgurOutputStream(const wxString &fileName, const map<wxString, wxString> &settings, wxString *message, map<wxString, wxString> *extraInfo)
     {
@@ -26,8 +26,8 @@ public:
         _message = message;
         _extraInfo = extraInfo;
     }
-    
-    
+
+
     virtual bool Close()
     {
         *_message = "";
@@ -35,7 +35,7 @@ public:
         multipart->SetProxy(_settings["proxy"]);
         multipart->AddHeader("Authorization", "Client-ID " + _settings["clientId"]);
         multipart->AddField("image", _fileName, GetOutputStreamBuffer());
-        
+
         if (multipart->Execute())
         {
             wxXmlDocument xml;
@@ -55,7 +55,7 @@ public:
                         (*_extraInfo)["id"] = child->GetNodeContent();
                     else if (name == "deletehash")
                         (*_extraInfo)["deletehash"] = child->GetNodeContent();
-                    
+
                     child = child->GetNext();
                 }
                 if (!success)
@@ -70,9 +70,9 @@ public:
         {
             *_message = multipart->GetLastError();
         }
-        
+
         delete multipart;
-        
+
         return wxMemoryOutputStream::Close();
     }
 };

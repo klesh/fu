@@ -28,32 +28,32 @@ class Uploader : public wxThread
 private:
     wxEvtHandler *_handler;
     vector<File*> _files;
-    
+
 public:
     Uploader(wxEvtHandler *handler, vector<File*> files)
     {
         _handler = handler;
         _files = files;
     }
-    
+
     ~Uploader()
     {
     }
-    
+
 protected:
-    
+
     virtual ExitCode Entry()
     {
         Site *site = TheConfig.SiteSelected;
         if (site == NULL)
             return EmitError("None of site is selected");
-        
+
         wxString siteId = site->GetId();
-        
+
         EmitStart();
-        
+
         auto ptcProvider = ThePtcFactory.Get(site->GetProtocol());
-        
+
         if (ptcProvider->IsImageOnly())
         {
             for (auto &file : _files)
@@ -67,28 +67,28 @@ protected:
         {
             return EmitError(wxString::Format("Connect to server fail: %s", ptc->GetErrorMessage()));
         }
-        
+
         wxImage watermark;
         if (TheConfig.EnableWatermark && !TheConfig.WatermarkPath.IsEmpty())
         {
             watermark.LoadFile(TheConfig.WatermarkPath);
         }
         bool imgPreproc = watermark.IsOk() || TheConfig.EnableReduceSize;
-        
+
         for (auto &file : _files)
         {
             auto oStream = ptc->OpenStream(file->GetFileName(), file->GetRemoteName());
             if (oStream == NULL)
                 return EmitError(wxString::Format("Fail to open remote file.\n%s", ptc->GetErrorMessage()));
-            
+
             file->SetStatus(UPLOADING);
-            
+
             ProcessFile(file, imgPreproc, watermark, oStream);
- 
+
             oStream->Close();
-            
+
             delete oStream;
-            
+
             auto message = ptc->GetErrorMessage();
             if (!message.IsEmpty())
             {
@@ -105,15 +105,15 @@ protected:
                 file->SetExtraInfo(ptc->GetLastExtraInfo());
             }
         }
-        
+
         ptc->Disconnect();
         delete ptc;
-        
+
         wxString output = TheClip.FormatFiles(_files);
-        
+
         return EmitSuccess(output);
     }
-    
+
     void ProcessFile(File *file, bool imgPreproc, wxImage &watermark, wxOutputStream *oStream)
     {
         if (file->IsImage() && imgPreproc)
@@ -127,13 +127,13 @@ protected:
                 int x = pos == 3 || pos == 1 ? bg.GetWidth() - wm.GetWidth() : 0;
                 int y = pos == 3 || pos == 2 ? bg.GetHeight() - wm.GetHeight() : 0;
                 bool isGif = type == wxBITMAP_TYPE_GIF;
-                
+
                 if (isGif && wxImage::GetImageCount(file->GetOriginalPath()) > 1)
                 {
                     wxLogDebug("== animated gif");
                     return;
                 }
-                
+
                 bg = Composite(bg, wm, x, y);
             }
             if (TheConfig.EnableReduceSize)
@@ -168,22 +168,22 @@ protected:
             }
         }
     }
-    
+
     wxImage Composite(const wxImage &bg, const wxImage &wm, const int x, const int y)
     {
         wxImage img(bg.GetSize());
         img.InitAlpha();
         unsigned char *alpha = img.GetAlpha();
         memset(alpha, wxIMAGE_ALPHA_TRANSPARENT, bg.GetWidth() * bg.GetHeight());
-        
+
         wxGraphicsContext *gc = wxGraphicsContext::Create(img);
         gc->DrawBitmap(wxBitmap(bg), 0, 0, bg.GetWidth(), bg.GetHeight());
         gc->DrawBitmap(wxBitmap(wm), x, y, wm.GetWidth(), wm.GetHeight());
         delete gc;
- 
+
         return img;
     }
-    
+
     ExitCode EmitError(const wxString &message)
     {
         wxCommandEvent evt(EVT_UPLOAD_ERROR);
@@ -192,23 +192,23 @@ protected:
         EmitEnd();
         return (ExitCode)1;
     }
-    
+
     ExitCode EmitSuccess(const wxString &text)
     {
         wxCommandEvent evt(EVT_UPLOAD_SUCCESS);
         evt.SetString(text);
         wxPostEvent(_handler, evt);
-        
+
         EmitEnd();
         return 0;
     }
-    
+
     void EmitStart()
     {
         wxCommandEvent start(EVT_UPLOAD_START);
         wxPostEvent(_handler, start);
     }
-    
+
     void EmitEnd()
     {
         wxCommandEvent end(EVT_UPLOAD_END);

@@ -20,7 +20,7 @@
 #include "prefform.cpp"
 #include "browseform.cpp"
 
-#ifdef _UNITY
+#ifdef HAVE_APPINDICATOR
 extern "C"
 {
 #include <libappindicator/app-indicator.h>
@@ -46,19 +46,19 @@ private:
         itemID_FORMAT_START = 5000,
         itemID_SITE_START = 7000
     };
-    
+
     PrefForm *_pref;
     BrowseForm *_browser = NULL;
-    
+
     vector<File*> _pending, _uploading, _uploaded;
     int uploadingCount = 0;
     wxString _iconPath;
     wxString _iconUploadingPath;
-        
-#ifdef _UNITY
+
+#ifdef HAVE_APPINDICATOR
     AppIndicator* _indicator;
     wxMenu *_menu = NULL;
-    
+
     static void gtk_menu_item_selected(GtkMenuItem *menu_item, gpointer user_data)
     {
         //wxLogDebug("item id : %d", GPOINTER_TO_INT(user_data));
@@ -66,7 +66,7 @@ private:
         evt.SetId(GPOINTER_TO_INT(user_data));
         wxPostEvent(&Tray::Inst(), evt);
     }
-    
+
     static void g_connect(wxMenuItem *item)
     {
         g_signal_connect((GObject*)item->GetMenuItem(), "activate", G_CALLBACK(gtk_menu_item_selected), GINT_TO_POINTER(item->GetId()));
@@ -82,17 +82,17 @@ private:
 
         _iconPath = TheConfig.GetIconPath("16x16", "icon.png");
         _iconUploadingPath = TheConfig.GetIconPath("16x16", "icon_uploading.png");
-        
-        
+
+
         _pref = new PrefForm(TheConfig.Position, TheConfig.Size);
-        
+
         Bind(wxEVT_COMMAND_MENU_SELECTED, &Tray::OnMenuItemSelected, this);
         Bind(EVT_UPLOAD_ERROR, &Tray::OnError, this);
         Bind(EVT_UPLOAD_SUCCESS, &Tray::OnUploadSuccess, this);
         Bind(EVT_UPLOAD_START, &Tray::OnUploadStart, this);
         Bind(EVT_UPLOAD_END, &Tray::OnUploadEnd, this);
-       
-#ifdef _UNITY
+
+#ifdef HAVE_APPINDICATOR
         _indicator = app_indicator_new("fu", "indicator-messages", APP_INDICATOR_CATEGORY_APPLICATION_STATUS);
         app_indicator_set_status(_indicator, APP_INDICATOR_STATUS_ACTIVE);
         CreateIndicatorMenu();
@@ -104,11 +104,11 @@ private:
         NormalIcon();
         wxLogDebug("tray icon ready");
     }
-        
+
 public:
 
-    
-#ifdef _UNITY
+
+#ifdef HAVE_APPINDICATOR
     void CreateIndicatorMenu()
     {
         if (_menu)
@@ -116,30 +116,30 @@ public:
         _menu = CreatePopupMenu();
         app_indicator_set_menu(_indicator, GTK_MENU(_menu->m_menu));
     }
-    
+
     void OnUpdateMenu(wxUpdateUIEvent &evt)
     {
         CreateIndicatorMenu();
     }
-    
+
     void NormalIcon()
     {
         wxLogDebug("_iconPath: %s", _iconPath);
         app_indicator_set_icon(_indicator, _iconPath.c_str());
     }
-    
+
     void UploadingIcon()
     {
         app_indicator_set_icon(_indicator, _iconUploadingPath.c_str());
     }
 #else
-        
+
     void NormalIcon()
     {
         wxLogDebug("set icon: %s", _iconPath);
         SetIcon(_icon);
     }
-    
+
     void UploadingIcon()
     {
         SetIcon(_iconUploading);
@@ -149,30 +149,30 @@ public:
 
     void FixMenuItem(wxMenuItem *item)
     {
-#ifdef _UNITY
+#ifdef HAVE_APPINDICATOR
         g_connect(item);
 #endif
     }
-    
+
     void RefreshMenu()
     {
-#ifdef _UNITY
+#ifdef HAVE_APPINDICATOR
         CreateIndicatorMenu();
 #endif
     }
-    
+
     void OnUploadStart(wxCommandEvent &evt)
     {
         uploadingCount++;
         RefreshIcon();
     }
-    
+
     void OnUploadEnd(wxCommandEvent &evt)
     {
         uploadingCount--;
         RefreshIcon();
     }
-    
+
     void RefreshIcon()
     {
         if (uploadingCount)
@@ -180,13 +180,13 @@ public:
         else
             NormalIcon();
     }
-    
+
     void CreateFileMenuItems(wxMenu *menu, const wxString &hintText, vector<File*> &files, int start)
     {
         wxMenuItem *hint = new wxMenuItem(menu, itemID_HINT, hintText);
         menu->Append(hint);
         hint->Enable(false);
-        
+
         for (File *file : files)
         {
             wxMenuItem *item = new wxMenuItem(menu, start++, file->GetName());
@@ -194,16 +194,16 @@ public:
             {
                 item->SetBitmap(file->GetThumbnail());
             }
-            
+
             menu->Append(item);
             FixMenuItem(item);
         }
     }
-    
+
     wxMenu *CreatePopupMenu()
     {
         wxMenu *menu = new wxMenu();
-        
+
         // pending
         _pending = TheClip.GetFiles();
         if (!_pending.empty())
@@ -214,13 +214,13 @@ public:
                 FixMenuItem(menu->Append(itemID_UPLOAD_ALL, "[Upload all]"));
             }
         }
-        
+
         if (!_uploading.empty())
         {
             menu->AppendSeparator();
             CreateFileMenuItems(menu, "Uploading", _uploading, itemID_UPLOADING_START);
         }
-        
+
         _uploaded = TheHistory.GetLatest();
         if (!_uploaded.empty())
         {
@@ -229,7 +229,7 @@ public:
             if (TheHistory.HasMore())
                 FixMenuItem(menu->Append(itemID_BROWSE_HISTORY, "[More...]"));
         }
-        
+
         // build sites;
         menu->AppendSeparator();
         wxMenuItem *siteHint = new wxMenuItem(menu, itemID_HINT, "Server");
@@ -252,13 +252,13 @@ public:
                 FixMenuItem(item);
             }
         }
-        
+
         // build up output format menuitems;
         menu->AppendSeparator();
         wxMenuItem *formatHint = new wxMenuItem(menu, itemID_HINT, "Output format");
         menu->Append(formatHint);
         formatHint->Enable(false);
-        
+
         vector<Format*> formats = TheConfig.Formats;
         if (formats.empty())
         {
@@ -275,30 +275,30 @@ public:
                 FixMenuItem(item);
             }
         }
-        
+
         menu->AppendSeparator();
         FixMenuItem(menu->Append(itemID_PREFERENCES, "Preferences"));
         FixMenuItem(menu->Append(itemID_EXIT, "Exit"));
-        
+
         return menu;
     }
-    
+
     void ShowPref()
     {
         _pref->Show();
         BringAppToTop();
     }
-    
+
     void OnMenuItemSelected(wxCommandEvent &evt)
     {
         int itemId = evt.GetId();
-        
+
         if (itemId == itemID_UPLOAD_ALL)
         {
             TheClip.Remove(_pending);
             auto uploader = new Uploader(this, _pending);
             uploader->Run();
-            
+
             for (auto const &tmp : _pending)
                 _uploading.push_back(tmp);
         }
@@ -306,7 +306,7 @@ public:
         {
             if (_browser == NULL)
                 _browser = new BrowseForm(TheConfig.BrowseFormPosition, TheConfig.BrowseFormSize);
-            
+
             _browser->Show();
             BringAppToTop();
         }
@@ -368,11 +368,11 @@ public:
         }
         RefreshMenu();
     }
-    
+
     void OnError(wxCommandEvent &evt)
     {
         Toast("Error", evt.GetString(), true);
-        
+
         vector<File*> uploading;
         for (auto const &file : _uploading)
         {
@@ -388,7 +388,7 @@ public:
         _uploading = uploading;
         RefreshMenu();
     }
-    
+
     void OnUploadSuccess(wxCommandEvent &evt)
     {
         TheClip.SetText(evt.GetString());
@@ -410,7 +410,7 @@ public:
         Toast("Uploaded successfully", wxString::Format("Total %zd files uploaded", uploaded.size()));
         RefreshMenu();
     }
-    
+
     static Tray &Inst()
     {
         static Tray inst;

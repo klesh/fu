@@ -20,7 +20,7 @@ class PtcFactory
 private:
     map<wxString, PtcProvider*> _all;
     vector<wxString> _allKeys;
-    
+
     PtcFactory()
     {
         AddProvider(new LocalProvider());
@@ -28,29 +28,29 @@ private:
         AddProvider(new ImgurProvider());
         AddProvider(new SmmsProvider());
     }
-    
+
     void AddProvider(PtcProvider *provider)
     {
         _all[provider->GetName()] = provider;
         _allKeys.push_back(provider->GetName());
     }
-    
+
 public:
     const map<wxString, PtcProvider*> &All()
     {
         return _all;
     }
-    
+
     const vector<wxString> &AllKeys()
     {
         return _allKeys;
     }
-    
+
     PtcProvider* Get(wxString &name)
     {
         return _all[name];
     }
-    
+
     static PtcFactory &Inst()
     {
         static PtcFactory factory;

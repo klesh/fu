@@ -13,8 +13,8 @@ CurrentFileName        :=
 CurrentFilePath        :=
 CurrentFileFullPath    :=
 User                   :=Klesh Wong
-Date                   :=13/02/17
-CodeLitePath           :=/home/kleshwong/.codelite
+Date                   :=02/13/17
+CodeLitePath           :=
 LinkerName             :=/usr/bin/g++
 SharedObjectLinkerName :=/usr/bin/g++ -shared -fPIC
 ObjectSuffix           :=.o
@@ -59,7 +59,6 @@ AS       := /usr/bin/as
 ##
 ## User defined environment variables
 ##
-CodeLiteDir:=/usr/share/codelite
 Objects0=$(IntermediateDirectory)/src_main.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_core_config.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_core_clip.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_core_format.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_core_uploader.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_core_history.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_core_site.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_core_converter.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_core_file.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_os_linux.cpp$(ObjectSuffix) \
 	$(IntermediateDirectory)/src_protocols_request.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_ui_formatspanel.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_ui_browseform.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_ui_tray.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_ui_prefform.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_ui_sizerhelper.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_ui_sitespanel.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_ui_preprocpanel.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_protocols_smms_smmsp.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_protocols_smms_smms.cpp$(ObjectSuffix) \
 	$(IntermediateDirectory)/src_protocols_smms_smmsos.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_protocols_imgur_imgurp.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_protocols_imgur_imguros.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_protocols_imgur_imgur.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_protocols_local_local.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_protocols_local_localp.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_protocols_sftp_sftp.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_protocols_sftp_sftpos.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_protocols_sftp_sftpp.cpp$(ObjectSuffix) 

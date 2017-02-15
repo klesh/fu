@@ -15,12 +15,12 @@ public:
     Imgur(map<wxString, wxString> settings) : Ptc(settings)
     {
     }
-    
+
     virtual const wxString FormatUrl(const wxString &remoteName, map<wxString, wxString> &extraInfo)
     {
         return extraInfo["url"];
     }
-    
+
 protected:
     virtual wxOutputStream *OnOpenStream(const wxString &fileName, const wxString &remoteName)
     {

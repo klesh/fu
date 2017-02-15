@@ -18,7 +18,7 @@ protected:
     bool _isRequired;
     int _type;
     wxString _hint;
-    
+
 public:
     enum {
         TYPE_STRING,
@@ -27,7 +27,7 @@ public:
         TYPE_FILE,
         TYPE_DIR
     };
-    
+
     PtcSettingMeta(const wxString &name, const wxString &caption, bool isRequired = false, int type = TYPE_STRING, const wxString hint = wxEmptyString)
     {
         _name = name;
@@ -36,7 +36,7 @@ public:
         _type = type;
         _hint = hint;
     }
-    
+
     wxString &GetName() { return _name; }
     wxString &GetCaption() { return _caption; }
     bool IsRequired() { return _isRequired; }
