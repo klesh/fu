@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=fu
+Comment=File to URL
+Icon=fu
+Exec=fu
+Terminal=false
+Type=Application
+Categories=GTK;GNOME;Application;Utility;

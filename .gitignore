@@ -371,3 +371,4 @@ config.h
 config.status
 INSTALL
 COPYING
+/fu-*/

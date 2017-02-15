@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=fu
+Comment=File to URL
+Icon=fu
+Exec=fu
+Terminal=false
+Type=Application
+OnlyShowIn=GNOME;XFCE;LXDE;Unity;
+X-GNOME-Autostart-enabled=true
