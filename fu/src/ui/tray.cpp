@@ -14,7 +14,6 @@
 #include "../core/site.cpp"
 #include "../core/uploader.cpp"
 #include "../core/format.cpp"
-#include "../core/converter.cpp"
 #include "../core/history.cpp"
 #include "../os/os.h"
 #include "prefform.cpp"
@@ -52,8 +51,6 @@ private:
 
     vector<File*> _pending, _uploading, _uploaded;
     int uploadingCount = 0;
-    wxString _iconPath;
-    wxString _iconUploadingPath;
 
 #ifdef HAVE_APPINDICATOR
     AppIndicator* _indicator;
@@ -72,6 +69,8 @@ private:
         g_signal_connect((GObject*)item->GetMenuItem(), "activate", G_CALLBACK(gtk_menu_item_selected), GINT_TO_POINTER(item->GetId()));
     }
 #else
+    wxString _iconPath;
+    wxString _iconUploadingPath;
     wxIcon _icon;
     wxIcon _iconUploading;
 #endif
@@ -80,8 +79,6 @@ private:
     {
         wxLogDebug("tray icon ready");
 
-        _iconPath = TheConfig.GetIconPath("16x16", "icon.png");
-        _iconUploadingPath = TheConfig.GetIconPath("16x16", "icon_uploading.png");
 
 
         _pref = new PrefForm(TheConfig.Position, TheConfig.Size);
@@ -98,6 +95,8 @@ private:
         CreateIndicatorMenu();
         Bind(wxEVT_UPDATE_UI, &Tray::OnUpdateMenu, this);
 #else
+        _iconPath = TheConfig.GetIconPath("16x16", "icon.png");
+        _iconUploadingPath = TheConfig.GetIconPath("16x16", "icon_uploading.png");
         _icon.LoadFile(_iconPath, wxBITMAP_TYPE_PNG);
         _iconUploading.LoadFile(_iconUploadingPath, wxBITMAP_TYPE_PNG);
 #endif
@@ -124,13 +123,12 @@ public:
 
     void NormalIcon()
     {
-        wxLogDebug("_iconPath: %s", _iconPath);
-        app_indicator_set_icon(_indicator, _iconPath.c_str());
+        app_indicator_set_icon(_indicator, "fu");
     }
 
     void UploadingIcon()
     {
-        app_indicator_set_icon(_indicator, _iconUploadingPath.c_str());
+        app_indicator_set_icon(_indicator, "fu_uploading");
     }
 #else
 

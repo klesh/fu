@@ -24,20 +24,29 @@ The plan was to make a CrossPlatform app for (Windows/MacOS/Linux), and it can a
 
 ## Linux
 
-  download the .tar.gz file, extract, make and make install:
+  download the .tar.gz file, extract, make and make install.
+  should be able to work on most distro, let me know if any problem.
 
 ### Ubuntu
-  ```bash
+```bash
 sudo apt install libwxgtk3.0-dev libcurl4-openssl-dev ibssh2-1-dev libboost1.61-dev libappindicator3-dev
+tar zxvf fu-vxxx.tar.gz
+./configure
 make
-  ```
+sudo make install
+```
 
 # Build Dependencies
 
-  * wxWidgets 3.0
+  * wxWidgets 3.0.2
   * libcurl
   * libssh2
   * boost
+
+# FAQ
+
+   Q: How to add imgur.com?
+   A: go to http://api.imgur.com/ register an application, you will receive a Client-ID, put it to Client
 
 # Like it ?
 

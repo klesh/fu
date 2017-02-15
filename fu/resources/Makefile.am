@@ -7,7 +7,7 @@ autostartdir = $(sysconfdir)/xdg/autostart
 autostart_DATA = fu_startup.desktop
 
 pixmapsdir = $(datarootdir)/icons/hicolor/48x48/apps
-pixmaps_DATA = fu.png
+pixmaps_DATA = fu.png fu_uploading.png
 
 EXTRA_DIST = \
   $(desktop_DATA) \

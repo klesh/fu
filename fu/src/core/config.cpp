@@ -159,7 +159,7 @@ private:
             child = child->GetNext();
         }
 
-        _appIcon.LoadFile(GetIconPath("128x128", "icon.png"), wxBITMAP_TYPE_PNG);
+        //_appIcon.LoadFile(GetIconPath("128x128", "icon.png"), wxBITMAP_TYPE_PNG);
     }
 
     ~Config()
@@ -202,18 +202,18 @@ public:
         _listeners.push_back(listener);
     }
 
-    wxString GetIconPath(const wxString &subfolder, const wxString &iconName)
-    {
-        wxFileName tmp(_executeDir, iconName);
-        tmp.AppendDir("resources");
-        tmp.AppendDir(subfolder);
-        return tmp.GetFullPath();
-    }
+    //wxString GetIconPath(const wxString &subfolder, const wxString &iconName)
+    //{
+        //wxFileName tmp(_executeDir, iconName);
+        //tmp.AppendDir("resources");
+        //tmp.AppendDir(subfolder);
+        //return tmp.GetFullPath();
+    //}
 
-    wxIcon &GetAppIcon()
-    {
-        return _appIcon;
-    }
+    //wxIcon &GetAppIcon()
+    //{
+        //return _appIcon;
+    //}
 
     void AddSite(Site *site)
     {

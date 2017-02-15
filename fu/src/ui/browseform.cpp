@@ -241,7 +241,7 @@ class BrowseForm : public wxDialog
 public:
     BrowseForm(wxPoint &pos, wxSize &size) : wxDialog(NULL, wxID_ANY, "History", pos, size, wxCAPTION | wxMAXIMIZE_BOX | wxRESIZE_BORDER | wxCLOSE_BOX)
     {
-        SetIcon(TheConfig.GetAppIcon());
+        //SetIcon(TheConfig.GetAppIcon());
         _chcSite = new wxChoice(this, ctlID_SITE);
         _txtKeyword = new wxTextCtrl(this, wxID_ANY);
         _txtKeyword->SetHint("Keyword");
