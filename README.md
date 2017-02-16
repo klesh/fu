@@ -57,7 +57,7 @@ sudo make install
 # FAQ
 
    Q: How to add imgur.com?
-   A: go to http://api.imgur.com/ register an application, you will receive a Client-ID, put it to Client
+   A: go to http://api.imgur.com/ register an application, you will receive a Client-ID, put it to Client-ID client field and save. You may have to setup proxy field if you happen to receive a "blocked by imgur.com " error.
 
 # Like it ?
 
