@@ -22,6 +22,17 @@ The plan was to make a CrossPlatform app for (Windows/MacOS/Linux), and it can a
   download the .dmg file from releases page, double click it and drag the fu icon into `Applications` folder
   If you want it to be launched at login, please go to `System Preferences > Users & Groups > Login Items` and add it to your list.
 
+  If you receive a error says app 'is damaged, should be moved to trash', and chose to accept the risk, here is the solution:
+
+  ### macOS Sierra
+  run following script in your Terminal
+  ```
+  sudo spctl --master-disable
+  ```
+
+  ### Other OSX
+  go to [System Preferences] -> [Secruity & Privacy] -> [General] -> [Allow apps downloaded from] -> [Anywhere]
+
 ## Linux
 
   download the .tar.gz file, extract, make and make install.
