@@ -73,13 +73,14 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(BOOST);$(WXWIN)\include;$(WXWIN)\include\msvc;$(LIBCURL)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <SDLCheck>
+      </SDLCheck>
+      <AdditionalIncludeDirectories>$(BOOST);$(WXWIN)\include;$(WXWIN)\include\msvc;$(LIBCURL)\include;D:\Projects\Libs\deps\include\libssh2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;__WXMSW__;_WINDOWS;wxUSE_GUI;_UNICODE;_DEBUG;__WXDEBUG__;CURL_STATICLIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(LIBCURL)\lib;$(WXWIN)\lib\vc_lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>wxmsw31ud_core.lib;wxbase31ud.lib;libcurl_a.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\Projects\Libs\deps\lib;$(LIBCURL)\lib;$(WXWIN)\lib\vc_lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>wxmsw31ud_core.lib;wxbase31ud.lib;libcurl_a.lib;libssh2.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;ws2_32.lib;bcrypt.lib;crypt32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>del $(Configuration)\main.obj
@@ -105,14 +106,14 @@ xcopy $(ProjectDir)resources $(OutDir)resources /y /e /i</Command>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(BOOST);$(WXWIN)\include;$(WXWIN)\include\msvc;$(LIBCURL)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;__WXMSW__;_WINDOWS;wxUSE_GUI;_UNICODE;CURL_STATICLIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(BOOST);$(WXWIN)\include;$(WXWIN)\include\msvc;$(LIBCURL)\include;D:\Projects\Libs\deps\include\libssh2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;__WXMSW__;_WINDOWS;wxUSE_GUI;_UNICODE;CURL_STATICLIB;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_WINSOCK_DEPRECATED_NO_WARNINGS</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(LIBCURL)\lib;$(WXWIN)\lib\vc_lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>wxmsw31u_core.lib;wxbase31u.lib;libcurl_a.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\Projects\Libs\deps\lib;$(LIBCURL)\lib;$(WXWIN)\lib\vc_lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>wxmsw31u_core.lib;wxbase31u.lib;libcurl_a.lib;libssh2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>del $(Configuration)\main.obj</Command>
@@ -137,9 +138,9 @@ xcopy $(ProjectDir)resources $(OutDir)resources /y /e /i</Command>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\protocols\sftp\SftpWrapper.cpp" />
     <ClCompile Include="src\core\clip.cpp" />
     <ClCompile Include="src\core\config.cpp" />
-    <ClCompile Include="src\core\converter.cpp" />
     <ClCompile Include="src\core\file.cpp" />
     <ClCompile Include="src\core\format.cpp" />
     <ClCompile Include="src\core\func.cpp" />
@@ -169,13 +170,19 @@ xcopy $(ProjectDir)resources $(OutDir)resources /y /e /i</Command>
     <ClCompile Include="src\ui\tray.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="src\protocols\sftp\SftpWrapper.h" />
     <ClInclude Include="src\os\os.h" />
     <ClInclude Include="src\protocols\ptc.h" />
     <ClInclude Include="src\protocols\ptcf.h" />
     <ClInclude Include="src\protocols\ptcp.h" />
+    <ClInclude Include="src\protocols\sftp\libssh2_config_win32.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="app_icon.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

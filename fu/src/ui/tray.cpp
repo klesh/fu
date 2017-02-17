@@ -75,15 +75,27 @@ private:
     wxIcon _iconUploading;
 #endif
 
-    Tray()
+#ifdef _WIN32
+    void OnLeftClick(wxTaskBarIconEvent& event)
+    {
+        wxTaskBarIconEvent evt(wxEVT_TASKBAR_RIGHT_UP, this);
+        wxPostEvent(this, evt);
+    }
+#endif
+
+
+public:
+
+    Tray() : wxTaskBarIcon()
     {
         wxLogDebug("tray icon ready");
-
-
 
         _pref = new PrefForm(TheConfig.Position, TheConfig.Size);
 
         Bind(wxEVT_COMMAND_MENU_SELECTED, &Tray::OnMenuItemSelected, this);
+#ifdef _WIN32
+        Bind(wxEVT_TASKBAR_LEFT_UP, &Tray::OnLeftClick, this);
+#endif
         Bind(EVT_UPLOAD_ERROR, &Tray::OnError, this);
         Bind(EVT_UPLOAD_SUCCESS, &Tray::OnUploadSuccess, this);
         Bind(EVT_UPLOAD_START, &Tray::OnUploadStart, this);
@@ -105,9 +117,6 @@ private:
         NormalIcon();
         wxLogDebug("tray icon ready");
     }
-
-public:
-
 
 #ifdef HAVE_APPINDICATOR
     void CreateIndicatorMenu()
@@ -409,12 +418,6 @@ public:
         _uploading = uploading;
         Toast("Uploaded successfully", wxString::Format("Total %zd files uploaded", uploaded.size()));
         RefreshMenu();
-    }
-
-    static Tray &Inst()
-    {
-        static Tray inst;
-        return inst;
     }
 };
 
