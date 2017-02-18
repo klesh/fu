@@ -28,6 +28,8 @@ extern "C"
 
 using namespace std;
 
+wxEvtHandler *_this;
+
 class Tray : public wxTaskBarIcon
 {
 private:
@@ -61,7 +63,7 @@ private:
         //wxLogDebug("item id : %d", GPOINTER_TO_INT(user_data));
         wxCommandEvent evt(wxEVT_MENU);
         evt.SetId(GPOINTER_TO_INT(user_data));
-        wxPostEvent(&Tray::Inst(), evt);
+        wxPostEvent(_this, evt);
     }
 
     static void g_connect(wxMenuItem *item)
@@ -90,6 +92,7 @@ public:
     {
         wxLogDebug("tray icon ready");
 
+        _this = this;
         _pref = new PrefForm(TheConfig.Position, TheConfig.Size);
 
         Bind(wxEVT_COMMAND_MENU_SELECTED, &Tray::OnMenuItemSelected, this);

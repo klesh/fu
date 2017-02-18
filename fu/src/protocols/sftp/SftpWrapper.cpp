@@ -1,6 +1,8 @@
 #include "SftpWrapper.h"
 
+#ifdef _WIN32
 #include "libssh2_config_win32.h"
+#endif
 #include <libssh2.h>
 #include <libssh2_sftp.h>
 
