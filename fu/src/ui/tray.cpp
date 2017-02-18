@@ -107,10 +107,13 @@ public:
         CreateIndicatorMenu();
         Bind(wxEVT_UPDATE_UI, &Tray::OnUpdateMenu, this);
 #else
+#ifdef __WXGTK__
+        _iconPath = "icon.png";
+        _iconUploadingPath = "icon_uploading.png";
+#else
         _iconPath = TheConfig.GetIconPath("16x16", "icon.png");
         _iconUploadingPath = TheConfig.GetIconPath("16x16", "icon_uploading.png");
-        
-        wxLogDebug("_iconPath: %s", _iconPath);
+#endif
         _icon.LoadFile(_iconPath, wxBITMAP_TYPE_PNG);
         _iconUploading.LoadFile(_iconUploadingPath, wxBITMAP_TYPE_PNG);
 #endif

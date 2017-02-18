@@ -40,11 +40,14 @@ The plan was to make a CrossPlatform app for (Windows/MacOS/Linux), and it can a
 
 ### Ubuntu
 ```bash
-sudo apt install libwxgtk3.0-dev libcurl4-openssl-dev libssh2-1-dev libboost1.61-dev libappindicator3-dev
+sudo apt install libwxgtk3.0-dev libcurl4-openssl-dev libssh2-1-dev libboost1.61-dev libgtk2.0-dev zlibc zlib1g zlib1g-dev libappindicator3-dev
 tar zxvf fu-vxxx.tar.gz
 ./configure
 make
 sudo make install
+```
+```
+
 ```
 
 # Build Dependencies

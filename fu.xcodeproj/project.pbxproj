@@ -38,6 +38,7 @@
 		C3C66D4A1E2F70EB00782D02 /* uploader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C3C66D491E2F70EB00782D02 /* uploader.cpp */; };
 		C3E4524F1E2DFDA900E06640 /* local.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C3E4524E1E2DFDA900E06640 /* local.cpp */; };
 		C3E452511E2DFDB600E06640 /* localp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C3E452501E2DFDB600E06640 /* localp.cpp */; };
+		C3E830FD1E58689F0095A569 /* SftpWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C3E830FB1E58689F0095A569 /* SftpWrapper.cpp */; };
 		C3EDAF521E288BAF00BE92AB /* formatspanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C3EDAF511E288BAF00BE92AB /* formatspanel.cpp */; };
 		C3EDAF541E28988800BE92AB /* preprocpanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C3EDAF531E28988800BE92AB /* preprocpanel.cpp */; };
 		C3FFC5881E2F134A0054719F /* osx.mm in Sources */ = {isa = PBXBuildFile; fileRef = C3FFC5861E2F134A0054719F /* osx.mm */; };
@@ -81,6 +82,8 @@
 		C3E2F0B41E49C1200011C183 /* libcurl.4.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcurl.4.dylib; path = ../../../../../usr/local/Cellar/curl/7.52.1/lib/libcurl.4.dylib; sourceTree = "<group>"; };
 		C3E4524E1E2DFDA900E06640 /* local.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = local.cpp; sourceTree = "<group>"; };
 		C3E452501E2DFDB600E06640 /* localp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = localp.cpp; sourceTree = "<group>"; };
+		C3E830FB1E58689F0095A569 /* SftpWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SftpWrapper.cpp; sourceTree = "<group>"; };
+		C3E830FC1E58689F0095A569 /* SftpWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SftpWrapper.h; sourceTree = "<group>"; };
 		C3EDAF511E288BAF00BE92AB /* formatspanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = formatspanel.cpp; sourceTree = "<group>"; };
 		C3EDAF531E28988800BE92AB /* preprocpanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = preprocpanel.cpp; sourceTree = "<group>"; };
 		C3FFC5861E2F134A0054719F /* osx.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = osx.mm; sourceTree = "<group>"; };
@@ -104,6 +107,8 @@
 		C324E6891E25DE7200AF0080 /* sftp */ = {
 			isa = PBXGroup;
 			children = (
+				C3E830FB1E58689F0095A569 /* SftpWrapper.cpp */,
+				C3E830FC1E58689F0095A569 /* SftpWrapper.h */,
 				C34D2CBF1E25DA55007EC430 /* sftp.cpp */,
 				C324E68A1E25DEE800AF0080 /* sftpp.cpp */,
 				C3B69F5A1E41AD5A00BD1791 /* sftpos.cpp */,
@@ -345,6 +350,7 @@
 				C39E51B41E447F2E001D86DE /* smms.cpp in Sources */,
 				C3E452511E2DFDB600E06640 /* localp.cpp in Sources */,
 				C3C66D4A1E2F70EB00782D02 /* uploader.cpp in Sources */,
+				C3E830FD1E58689F0095A569 /* SftpWrapper.cpp in Sources */,
 				C39E51AF1E444965001D86DE /* request.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -1,6 +1,8 @@
 #ifndef H_SFTPWRAPPER_H
 #define H_SFTPWRAPPER_H
 
+#include <stdlib.h>
+
 /**
  * These wrapper classes are aim to resolve the lisssh2 and wxwin typdef conflict (SSIZE_T)
  */
