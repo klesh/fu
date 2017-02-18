@@ -1,7 +1,6 @@
 #ifndef UI_TRAY
 #define UI_TRAY
 
-
 #include <wx/wx.h>
 #include <wx/icon.h>
 #include <wx/taskbar.h>
@@ -111,8 +110,9 @@ public:
         Bind(wxEVT_UPDATE_UI, &Tray::OnUpdateMenu, this);
 #else
 #ifdef __WXGTK__
-        _iconPath = "icon.png";
-        _iconUploadingPath = "icon_uploading.png";
+        _iconPath = wxString(ICONS_PREFIX) + "/fu.png";
+        _iconUploadingPath = wxString(ICONS_PREFIX) + "/fu_uploading.png";
+        wxLogDebug(_iconPath);
 #else
         _iconPath = TheConfig.GetIconPath("16x16", "icon.png");
         _iconUploadingPath = TheConfig.GetIconPath("16x16", "icon_uploading.png");

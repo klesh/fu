@@ -34,7 +34,6 @@ private:
 
     Config()
     {
-        wxFileName exec =
         _executeDir = wxFileName( wxStandardPaths::Get().GetExecutablePath() ).GetPath();
 
         wxString folder = wxStandardPaths::Get().GetUserDataDir();
