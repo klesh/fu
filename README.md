@@ -57,6 +57,19 @@ sudo make install
   * libssh2
   * boost
 
+# Development Dependencies
+
+  * automake
+  * autoconf
+
+# Compile
+
+```
+$ aclocal
+$ autoconf
+$ automake --add-missing
+```
+
 # FAQ
 
    Q: How to add imgur.com?

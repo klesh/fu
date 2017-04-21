@@ -15,19 +15,22 @@
 #include "../core/format.cpp"
 #include "../core/history.cpp"
 #include "../os/os.h"
+#include "common.cpp"
 #include "prefform.cpp"
 #include "browseform.cpp"
+#include "aboutform.cpp"
 
 #ifdef HAVE_APPINDICATOR
 extern "C"
 {
 #include <libappindicator/app-indicator.h>
 }
+
+wxEvtHandler *that;
 #endif
 
 using namespace std;
 
-wxEvtHandler *_this;
 
 class Tray : public wxTaskBarIcon
 {
@@ -37,6 +40,7 @@ private:
         itemID_UPLOAD_ALL,
         itemID_BROWSE_HISTORY,
         itemID_PREFERENCES,
+        itemID_ABOUT,
         itemID_EXIT,
         itemID_ADD_SITE,
         itemID_ADD_FORMAT,
@@ -48,6 +52,7 @@ private:
     };
 
     PrefForm *_pref;
+    AboutForm *_about;
     BrowseForm *_browser = NULL;
 
     vector<File*> _pending, _uploading, _uploaded;
@@ -62,18 +67,13 @@ private:
         //wxLogDebug("item id : %d", GPOINTER_TO_INT(user_data));
         wxCommandEvent evt(wxEVT_MENU);
         evt.SetId(GPOINTER_TO_INT(user_data));
-        wxPostEvent(_this, evt);
+        wxPostEvent(that, evt);
     }
 
     static void g_connect(wxMenuItem *item)
     {
         g_signal_connect((GObject*)item->GetMenuItem(), "activate", G_CALLBACK(gtk_menu_item_selected), GINT_TO_POINTER(item->GetId()));
     }
-#else
-    wxString _iconPath;
-    wxString _iconUploadingPath;
-    wxIcon _icon;
-    wxIcon _iconUploading;
 #endif
 
 #ifdef _WIN32
@@ -84,15 +84,16 @@ private:
     }
 #endif
 
-
 public:
 
     Tray() : wxTaskBarIcon()
     {
         wxLogDebug("tray icon ready");
-
-        _this = this;
+#ifdef HAVE_APPINDICATOR
+         that = this;
+#endif
         _pref = new PrefForm(TheConfig.Position, TheConfig.Size);
+        _about = new AboutForm();
 
         Bind(wxEVT_COMMAND_MENU_SELECTED, &Tray::OnMenuItemSelected, this);
 #ifdef _WIN32
@@ -108,17 +109,6 @@ public:
         app_indicator_set_status(_indicator, APP_INDICATOR_STATUS_ACTIVE);
         CreateIndicatorMenu();
         Bind(wxEVT_UPDATE_UI, &Tray::OnUpdateMenu, this);
-#else
-#ifdef __WXGTK__
-        _iconPath = wxString(ICONS_PREFIX) + "/fu.png";
-        _iconUploadingPath = wxString(ICONS_PREFIX) + "/fu_uploading.png";
-        wxLogDebug(_iconPath);
-#else
-        _iconPath = TheConfig.GetIconPath("16x16", "icon.png");
-        _iconUploadingPath = TheConfig.GetIconPath("16x16", "icon_uploading.png");
-#endif
-        _icon.LoadFile(_iconPath, wxBITMAP_TYPE_PNG);
-        _iconUploading.LoadFile(_iconUploadingPath, wxBITMAP_TYPE_PNG);
 #endif
         NormalIcon();
         wxLogDebug("tray icon ready");
@@ -151,13 +141,12 @@ public:
 
     void NormalIcon()
     {
-        wxLogDebug("set icon: %s", _iconPath);
-        SetIcon(_icon);
+        SetIcon(UICommon::Get().Icon());
     }
 
     void UploadingIcon()
     {
-        SetIcon(_iconUploading);
+        SetIcon(UICommon::Get().IconUploading());
     }
 
 #endif
@@ -293,6 +282,7 @@ public:
 
         menu->AppendSeparator();
         FixMenuItem(menu->Append(itemID_PREFERENCES, "Preferences"));
+        FixMenuItem(menu->Append(itemID_ABOUT, "About"));
         FixMenuItem(menu->Append(itemID_EXIT, "Exit"));
 
         return menu;
@@ -301,6 +291,12 @@ public:
     void ShowPref()
     {
         _pref->Show();
+        BringAppToTop();
+    }
+
+    void ShowAbout()
+    {
+        _about->Show();
         BringAppToTop();
     }
 
@@ -328,6 +324,10 @@ public:
         else if (itemId == itemID_PREFERENCES)
         {
             ShowPref();
+        }
+        else if (itemId == itemID_ABOUT)
+        {
+            ShowAbout();
         }
         else if (itemId == itemID_EXIT)
         {

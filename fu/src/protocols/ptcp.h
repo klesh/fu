@@ -25,7 +25,8 @@ public:
         TYPE_PASSWORD,
         TYPE_PINT,
         TYPE_FILE,
-        TYPE_DIR
+        TYPE_DIR,
+        TYPE_BOOL
     };
 
     PtcSettingMeta(const wxString &name, const wxString &caption, bool isRequired = false, int type = TYPE_STRING, const wxString hint = wxEmptyString)

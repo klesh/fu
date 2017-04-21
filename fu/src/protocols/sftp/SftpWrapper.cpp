@@ -165,6 +165,25 @@ SftpWrapperStream *SftpWrapper::Open(const char *path)
 
 SftpWrapperStream::SftpWrapperStream(const char *path, void *sftp)
 {
+    // mkdir
+    size_t len = strlen(path);
+    char p[len + 1];
+    strcpy(p, path);
+    
+    size_t pos = 1;
+    LIBSSH2_SFTP_ATTRIBUTES attr;
+    while (pos++ < len)
+    {
+        if (p[pos] == '/') {
+            p[pos] = '\0';
+            int err = libssh2_sftp_stat((LIBSSH2_SFTP*)sftp, p, &attr);
+            if (err) {
+                libssh2_sftp_mkdir((LIBSSH2_SFTP*)sftp, p, 0755);
+            }
+            p[pos] = '/';
+        }
+    }
+    
     _stream = libssh2_sftp_open((LIBSSH2_SFTP*)sftp, path,
         LIBSSH2_FXF_WRITE | LIBSSH2_FXF_CREAT | LIBSSH2_FXF_TRUNC,
         LIBSSH2_SFTP_S_IRUSR | LIBSSH2_SFTP_S_IWUSR |

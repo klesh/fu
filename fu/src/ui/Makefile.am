@@ -5,5 +5,6 @@ libui_a_SOURCES = browseform.cpp \
 									preprocpanel.cpp \
 									sitespanel.cpp \
 									sizerhelper.cpp \
-									tray.cpp
+									tray.cpp \
+									about.cpp
 libui_a_CPPFLAGS = -DICONS_PREFIX=\"$(ICONS_PREFIX)\"

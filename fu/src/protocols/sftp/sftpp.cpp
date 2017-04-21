@@ -27,6 +27,7 @@ public:
             new PtcSettingMeta("pass", "Password", false, PtcSettingMeta::TYPE_PASSWORD),
             new PtcSettingMeta("key", "Private Key", false, PtcSettingMeta::TYPE_FILE),
             new PtcSettingMeta("path", "Remote Path", false),
+            new PtcSettingMeta("dateFolder", "Misc", false, PtcSettingMeta::TYPE_BOOL, "Organize By Date As Folder"),
             new PtcSettingMeta("urlFormat", "URL format", true, PtcSettingMeta::TYPE_STRING, "http://example.com/%s (where %s will be replaced with URL)")
         };
         return metas;

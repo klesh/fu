@@ -39,6 +39,17 @@ public:
         delete _sftp;
         _sftp = NULL;
     }
+    
+
+    virtual const wxString FormatUrl(const wxString &remoteName, map<wxString, wxString> &extraInfo)
+    {
+        // TODO: patch to use folder
+        if (extraInfo.find("folder") != extraInfo.end()) {
+            return wxString::Format(_settings["urlFormat"], extraInfo["folder"] + "/" + remoteName);
+        }
+        return wxString::Format(_settings["urlFormat"], remoteName);
+    }
+
 
 protected:
 
@@ -47,7 +58,7 @@ protected:
         if (!_message.IsEmpty())
             return NULL;
 
-        SftpOutputStream *stream = new SftpOutputStream(_settings, remoteName, &_message, _sftp);
+        SftpOutputStream *stream = new SftpOutputStream(_settings, remoteName, &_message, _sftp, &_lastExtraInfo);
         return (wxOutputStream*)stream;
     }
 };

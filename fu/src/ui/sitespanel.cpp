@@ -5,6 +5,7 @@
 #include <wx/wx.h>
 #include <wx/valnum.h>
 #include <wx/filepicker.h>
+#include <wx/checkbox.h>
 #include "../core/config.cpp"
 #include "../core/site.cpp"
 #include "sizerhelper.cpp"
@@ -182,6 +183,9 @@ public:
                 case PtcSettingMeta::TYPE_DIR:
                     control = CreateDirCtrl(value, meta);
                     break;
+                case PtcSettingMeta::TYPE_BOOL:
+                    control = CreateBoolCtrl(value, meta);
+                    break;
                 default:
                     control = CreateStringCtrl(value, meta);
                     break;
@@ -193,6 +197,13 @@ public:
         }
         _pnlSettings->SetSizer(sizer);
         Layout();
+    }
+
+    wxControl *CreateBoolCtrl(wxString &value, PtcSettingMeta *meta)
+    {
+        auto ctrl = new wxCheckBox(_pnlSettings, wxID_ANY, meta->GetHint());
+        ctrl->SetValue(value == "true");
+        return ctrl;
     }
 
     wxControl *CreateStringCtrl(wxString &value, PtcSettingMeta *meta)
@@ -269,6 +280,10 @@ public:
             else if (valueType == PtcSettingMeta::TYPE_DIR)
             {
                 value = ((wxDirPickerCtrl*)control)->GetPath();
+            }
+            else if (valueType == PtcSettingMeta::TYPE_BOOL)
+            {
+                value = (((wxCheckBox*)control)->GetValue() ? "true" : "false");
             }
             else
             {
