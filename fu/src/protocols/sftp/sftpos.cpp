@@ -23,17 +23,15 @@ protected:
 public:
     SftpOutputStream(map<wxString, wxString> &settings, const wxString &remoteName, wxString *message, SftpWrapper *sftp, map<wxString, wxString> *extraInfo)
     {
-        wxString path = settings["path"];
-        wxString fullPath = path;
-        if (fullPath.Last() != '/') fullPath.Append('/');
+        wxString remotePath = settings["path"];
+        if (remotePath.Last() != '/') remotePath.Append('/');
         if (settings["dateFolder"] == "true") {
             (*extraInfo)["folder"] = wxDateTime::Today().Format("%F");
-            wxLogDebug((*extraInfo)["folder"]);
-            fullPath += wxDateTime::Today().Format("%F") + "/";
+            remotePath += (*extraInfo)["folder"] + "/";
         }
-        fullPath.Append(remoteName);
+        remotePath.Append(remoteName);
 
-        _sftpStream = sftp->Open(fullPath.mb_str().data());
+        _sftpStream = sftp->Open(remotePath.mb_str().data());
     }
 
     virtual bool IsOK()

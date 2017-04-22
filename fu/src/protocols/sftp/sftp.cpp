@@ -39,17 +39,6 @@ public:
         delete _sftp;
         _sftp = NULL;
     }
-    
-
-    virtual const wxString FormatUrl(const wxString &remoteName, map<wxString, wxString> &extraInfo)
-    {
-        // TODO: patch to use folder
-        if (extraInfo.find("folder") != extraInfo.end()) {
-            return wxString::Format(_settings["urlFormat"], extraInfo["folder"] + "/" + remoteName);
-        }
-        return wxString::Format(_settings["urlFormat"], remoteName);
-    }
-
 
 protected:
 

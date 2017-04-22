@@ -11,6 +11,7 @@
 #include "local/localp.cpp"
 #include "imgur/imgurp.cpp"
 #include "smms/smmsp.cpp"
+#include "ftp/ftpp.cpp"
 
 #define ThePtcFactory PtcFactory::Inst()
 
@@ -27,6 +28,7 @@ private:
         AddProvider(new SftpProvider());
         AddProvider(new ImgurProvider());
         AddProvider(new SmmsProvider());
+        AddProvider(new FtpProvider());
     }
 
     void AddProvider(PtcProvider *provider)

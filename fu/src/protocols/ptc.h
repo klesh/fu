@@ -44,6 +44,9 @@ public:
 
     virtual const wxString FormatUrl(const wxString &remoteName, map<wxString, wxString> &extraInfo)
     {
+        if (extraInfo.find("folder") != extraInfo.end()) {
+            return wxString::Format(_settings["urlFormat"], extraInfo["folder"] + "/" + remoteName);
+        }
         return wxString::Format(_settings["urlFormat"], remoteName);
     }
 

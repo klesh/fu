@@ -3,7 +3,6 @@
 
 #include "../ptc.h"
 #include "imguros.cpp"
-#include <curl/curl.h>
 #include <map>
 
 

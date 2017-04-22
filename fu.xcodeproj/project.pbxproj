@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C3016EAC1EAB7C1500065A1A /* aboutform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C3016EAB1EAB7C1500065A1A /* aboutform.cpp */; };
+		C3016EAE1EAB7C1B00065A1A /* common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C3016EAD1EAB7C1B00065A1A /* common.cpp */; };
+		C3016EB01EAB7D2800065A1A /* 128x128 in Resources */ = {isa = PBXBuildFile; fileRef = C3016EAF1EAB7D2800065A1A /* 128x128 */; };
+		C3016EB81EAB830D00065A1A /* Makefile.am in Resources */ = {isa = PBXBuildFile; fileRef = C3016EB41EAB830D00065A1A /* Makefile.am */; };
+		C3016EB91EAB830D00065A1A /* ftp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C3016EB51EAB830D00065A1A /* ftp.cpp */; };
+		C3016EBA1EAB830D00065A1A /* ftpos.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C3016EB61EAB830D00065A1A /* ftpos.cpp */; };
+		C3016EBB1EAB830D00065A1A /* ftpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C3016EB71EAB830D00065A1A /* ftpp.cpp */; };
 		C309ACE71E1F386000CA2138 /* file.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C309ACE61E1F386000CA2138 /* file.cpp */; };
 		C30E5E5D1E541A2800E6438B /* libssh2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C30E5E5C1E541A2800E6438B /* libssh2.a */; };
 		C30E5E5F1E541A4B00E6438B /* libcurl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C30E5E5E1E541A4B00E6438B /* libcurl.a */; };
@@ -46,6 +53,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		C3016EAB1EAB7C1500065A1A /* aboutform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = aboutform.cpp; sourceTree = "<group>"; };
+		C3016EAD1EAB7C1B00065A1A /* common.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = common.cpp; sourceTree = "<group>"; };
+		C3016EAF1EAB7D2800065A1A /* 128x128 */ = {isa = PBXFileReference; lastKnownFileType = folder; name = 128x128; path = fu/resources/128x128; sourceTree = "<group>"; };
+		C3016EB41EAB830D00065A1A /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
+		C3016EB51EAB830D00065A1A /* ftp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ftp.cpp; sourceTree = "<group>"; };
+		C3016EB61EAB830D00065A1A /* ftpos.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ftpos.cpp; sourceTree = "<group>"; };
+		C3016EB71EAB830D00065A1A /* ftpp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ftpp.cpp; sourceTree = "<group>"; };
 		C309ACE61E1F386000CA2138 /* file.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = file.cpp; sourceTree = "<group>"; };
 		C30E5E5A1E541A0B00E6438B /* libssh2.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libssh2.1.dylib; path = ../../../../../usr/local/Cellar/libssh2/1.8.0/lib/libssh2.1.dylib; sourceTree = "<group>"; };
 		C30E5E5C1E541A2800E6438B /* libssh2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssh2.a; path = ../../../../../usr/local/Cellar/libssh2/1.8.0/lib/libssh2.a; sourceTree = "<group>"; };
@@ -104,6 +118,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C3016EB31EAB830D00065A1A /* ftp */ = {
+			isa = PBXGroup;
+			children = (
+				C3016EB41EAB830D00065A1A /* Makefile.am */,
+				C3016EB51EAB830D00065A1A /* ftp.cpp */,
+				C3016EB61EAB830D00065A1A /* ftpos.cpp */,
+				C3016EB71EAB830D00065A1A /* ftpp.cpp */,
+			);
+			path = ftp;
+			sourceTree = "<group>";
+		};
 		C324E6891E25DE7200AF0080 /* sftp */ = {
 			isa = PBXGroup;
 			children = (
@@ -119,6 +144,7 @@
 		C34D2CBE1E25D9A9007EC430 /* protocols */ = {
 			isa = PBXGroup;
 			children = (
+				C3016EB31EAB830D00065A1A /* ftp */,
 				C39E51B01E447F2E001D86DE /* smms */,
 				C3B69F5C1E42E8D300BD1791 /* imgur */,
 				C3E4524D1E2DFD9800E06640 /* local */,
@@ -134,6 +160,7 @@
 		C38D26501E1E747400FB6802 = {
 			isa = PBXGroup;
 			children = (
+				C3016EAF1EAB7D2800065A1A /* 128x128 */,
 				C30E5E6B1E541C0000E6438B /* 16x16 */,
 				C38D265B1E1E747500FB6802 /* fu */,
 				C38D265A1E1E747500FB6802 /* Products */,
@@ -189,6 +216,8 @@
 		C38D26751E1E832E00FB6802 /* ui */ = {
 			isa = PBXGroup;
 			children = (
+				C3016EAD1EAB7C1B00065A1A /* common.cpp */,
+				C3016EAB1EAB7C1500065A1A /* aboutform.cpp */,
 				C38D26781E1E832E00FB6802 /* tray.cpp */,
 				C325F8D21E23D6E20094D893 /* sitespanel.cpp */,
 				C325F8D41E23ED330094D893 /* prefform.cpp */,
@@ -308,6 +337,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C3016EB01EAB7D2800065A1A /* 128x128 in Resources */,
+				C3016EB81EAB830D00065A1A /* Makefile.am in Resources */,
 				C38D26631E1E747500FB6802 /* Assets.xcassets in Resources */,
 				C30E5E6C1E541C0000E6438B /* 16x16 in Resources */,
 			);
@@ -333,16 +364,21 @@
 				C3EDAF521E288BAF00BE92AB /* formatspanel.cpp in Sources */,
 				C3EDAF541E28988800BE92AB /* preprocpanel.cpp in Sources */,
 				C38D26711E1E7AFB00FB6802 /* main.cpp in Sources */,
+				C3016EB91EAB830D00065A1A /* ftp.cpp in Sources */,
+				C3016EBA1EAB830D00065A1A /* ftpos.cpp in Sources */,
+				C3016EAC1EAB7C1500065A1A /* aboutform.cpp in Sources */,
 				C324E68D1E25E78F00AF0080 /* ptc.h in Sources */,
 				C38D267B1E1E832E00FB6802 /* tray.cpp in Sources */,
 				C39E51B61E447F2E001D86DE /* smmsp.cpp in Sources */,
 				C324E68B1E25DEE800AF0080 /* sftpp.cpp in Sources */,
 				C325F8D51E23ED330094D893 /* prefform.cpp in Sources */,
 				C3E4524F1E2DFDA900E06640 /* local.cpp in Sources */,
+				C3016EBB1EAB830D00065A1A /* ftpp.cpp in Sources */,
 				C39E51B51E447F2E001D86DE /* smmsos.cpp in Sources */,
 				C3B69F5B1E41AD5A00BD1791 /* sftpos.cpp in Sources */,
 				C3FFC5881E2F134A0054719F /* osx.mm in Sources */,
 				C324E68F1E25E7CD00AF0080 /* ptcp.h in Sources */,
+				C3016EAE1EAB7C1B00065A1A /* common.cpp in Sources */,
 				C3B69F5E1E42E8E800BD1791 /* imgur.cpp in Sources */,
 				C39340361E30EF8B00D8870F /* history.cpp in Sources */,
 				C3BD02EF1E21F812004B8CD4 /* clip.cpp in Sources */,
