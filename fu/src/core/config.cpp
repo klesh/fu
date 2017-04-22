@@ -30,7 +30,7 @@ private:
     vector<Site*> _sites;
     vector<wxEvtHandler*> _listeners;
     wxString _executeDir;
-    wxIcon _appIcon;
+    //wxIcon _appIcon;
 
     Config()
     {
@@ -215,10 +215,10 @@ public:
         return tmp.GetFullPath();
     }
 
-    wxIcon &GetAppIcon()
-    {
-        return _appIcon;
-    }
+    //wxIcon &GetAppIcon()
+    //{
+    //    return _appIcon;
+    //}
 #endif
 
     void AddSite(Site *site)

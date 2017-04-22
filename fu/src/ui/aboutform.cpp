@@ -3,7 +3,6 @@
 
 #include <wx/wx.h>
 #include <wx/hyperlink.h>
-#include "../core/file.cpp"
 #include "common.cpp"
 
 class AboutForm : public wxDialog
@@ -18,7 +17,7 @@ public:
     AboutForm() : wxDialog(NULL, wxID_ANY, "About", wxPoint(-1, -1), wxSize(400, 300))
     {
         SetIcon(UICommon::Get().Icon());
-        wxImage img = File::Thumbnailize(wxImage("/home/klesh/Projects/Study/fu/fu/resources/fu.png", wxBITMAP_TYPE_PNG), 100, 100);
+        wxImage img = wxImage(TheConfig.GetIconPath("128x128", "icon.png"), wxBITMAP_TYPE_PNG);
         _icon = new wxStaticBitmap(this, wxID_ANY, wxNullBitmap);
         _icon->SetBitmap(wxBitmap(img));
         

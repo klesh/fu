@@ -89,7 +89,10 @@
     <PostBuildEvent>
       <Command>copy $(SolutionDir)deps\* $(OutDir)
 del $(OutDir)resources /q /s
-xcopy $(ProjectDir)resources $(OutDir)resources /y /e /i</Command>
+mkdir $(OutDir)resources
+xcopy $(ProjectDir)resources\16x16 $(OutDir)resources\16x16 /y /e /i
+xcopy $(ProjectDir)resources\128x128 $(OutDir)resources\128x128 /y /e /i
+del $(OutDir)*.ipdb $(OutDir)*.pdb $(OutDir)*.iobj</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -114,6 +117,8 @@ xcopy $(ProjectDir)resources $(OutDir)resources /y /e /i</Command>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>D:\Projects\Libs\deps\lib;$(LIBCURL)\lib;$(WXWIN)\lib\vc_lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>wxmsw31u_core.lib;wxbase31u.lib;libcurl_a.lib;libssh2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>
+      </IgnoreSpecificDefaultLibraries>
     </Link>
     <PreBuildEvent>
       <Command>del $(Configuration)\main.obj</Command>
@@ -121,7 +126,10 @@ xcopy $(ProjectDir)resources $(OutDir)resources /y /e /i</Command>
     <PostBuildEvent>
       <Command>copy $(SolutionDir)deps\* $(OutDir)
 del $(OutDir)resources /q /s
-xcopy $(ProjectDir)resources $(OutDir)resources /y /e /i</Command>
+mkdir $(OutDir)resources
+xcopy $(ProjectDir)resources\16x16 $(OutDir)resources\16x16 /y /e /i
+xcopy $(ProjectDir)resources\128x128 $(OutDir)resources\128x128 /y /e /i
+del $(OutDir)*.ipdb $(OutDir)*.pdb $(OutDir)*.iobj</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -161,7 +169,9 @@ xcopy $(ProjectDir)resources $(OutDir)resources /y /e /i</Command>
     <ClCompile Include="src\protocols\smms\smms.cpp" />
     <ClCompile Include="src\protocols\smms\smmsos.cpp" />
     <ClCompile Include="src\protocols\smms\smmsp.cpp" />
+    <ClCompile Include="src\ui\aboutform.cpp" />
     <ClCompile Include="src\ui\browseform.cpp" />
+    <ClCompile Include="src\ui\common.cpp" />
     <ClCompile Include="src\ui\formatspanel.cpp" />
     <ClCompile Include="src\ui\prefform.cpp" />
     <ClCompile Include="src\ui\preprocpanel.cpp" />

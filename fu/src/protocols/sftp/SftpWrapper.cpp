@@ -167,7 +167,7 @@ SftpWrapperStream::SftpWrapperStream(const char *path, void *sftp)
 {
     // mkdir
     size_t len = strlen(path);
-    char p[len + 1];
+    char p[1024];
     strcpy(p, path);
     
     size_t pos = 1;

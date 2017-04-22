@@ -1,13 +1,13 @@
 #ifndef H_UI_COMMON
 #define H_UI_COMMON
 
-#ifdef NDEBUG
+#ifdef __WXGTK__
 #define ICONS_PREFIX "/home/klesh/Projects/Study/fu/fu/resources"
 #endif
 
 #include <wx/wx.h>
 #include <wx/icon.h>
-
+#include "../core/config.cpp"
 
 class UICommon
 {
@@ -52,7 +52,6 @@ private:
 #ifdef __WXGTK__
         _iconPath = wxString(ICONS_PREFIX) + "/fu.png";
         _iconUploadingPath = wxString(ICONS_PREFIX) + "/fu_uploading.png";
-        wxLogDebug(_iconPath);
 #else
         _iconPath = TheConfig.GetIconPath("16x16", "icon.png");
         _iconUploadingPath = TheConfig.GetIconPath("16x16", "icon_uploading.png");
