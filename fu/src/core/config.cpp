@@ -201,7 +201,6 @@ public:
         _listeners.push_back(listener);
     }
 
-#ifndef __WXGTK__
     wxString GetIconPath(const wxString &subfolder, const wxString &iconName)
     {
         wxFileName tmp(_executeDir, iconName);
@@ -214,12 +213,6 @@ public:
         tmp.AppendDir(subfolder);
         return tmp.GetFullPath();
     }
-
-    //wxIcon &GetAppIcon()
-    //{
-    //    return _appIcon;
-    //}
-#endif
 
     void AddSite(Site *site)
     {

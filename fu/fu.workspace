@@ -2,11 +2,11 @@
 <CodeLite_Workspace Name="fu" Database="" Version="10.0.0">
   <Project Name="fu" Path="fu.project" Active="Yes"/>
   <BuildMatrix>
-    <WorkspaceConfiguration Name="Debug" Selected="no">
+    <WorkspaceConfiguration Name="Debug" Selected="yes">
       <Environment/>
       <Project Name="fu" ConfigName="Debug"/>
     </WorkspaceConfiguration>
-    <WorkspaceConfiguration Name="Release" Selected="yes">
+    <WorkspaceConfiguration Name="Release" Selected="no">
       <Environment/>
       <Project Name="fu" ConfigName="Release"/>
     </WorkspaceConfiguration>

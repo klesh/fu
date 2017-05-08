@@ -61,11 +61,11 @@ public:
                     child = child->GetNext();
                 }
                 if (!success)
-                    *_message = "Upload to imgur.com fail: \n" + multipart->GetResponseText();
+                    *_message = "Upload to sm.ms fail: \n" + multipart->GetResponseText();
             }
             else
             {
-                *_message = "Seems like your ip has been banned! You may need to use a Proxy. ";
+                *_message = "Upload to sm.ms fail: \n" + multipart->GetResponseText();
             }
         }
         else

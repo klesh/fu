@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CodeLite_Project Name="fu" Version="10.0.0" InternalType="GUI">
+  <Plugins>
+    <Plugin Name="qmake">
+      <![CDATA[00020001N0005Debug0000000000000001N0007Release000000000000]]>
+    </Plugin>
+  </Plugins>
   <VirtualDirectory Name="src">
     <VirtualDirectory Name="protocols">
       <VirtualDirectory Name="imgur">
         <File Name="src/protocols/imgur/imgurp.cpp"/>
         <File Name="src/protocols/imgur/imgur.cpp"/>
         <File Name="src/protocols/imgur/imguros.cpp"/>
+        <File Name="src/protocols/smms/smmsos.cpp"/>
       </VirtualDirectory>
       <VirtualDirectory Name="local">
         <File Name="src/protocols/local/localp.cpp"/>
@@ -20,7 +26,6 @@
         <File Name="src/protocols/sftp/sftp.cpp"/>
       </VirtualDirectory>
       <VirtualDirectory Name="smms">
-        <File Name="src/protocols/smms/smmsos.cpp"/>
         <File Name="src/protocols/smms/smmsp.cpp"/>
         <File Name="src/protocols/smms/smms.cpp"/>
       </VirtualDirectory>
@@ -55,11 +60,6 @@
     </VirtualDirectory>
     <File Name="src/main.cpp"/>
   </VirtualDirectory>
-  <Plugins>
-    <Plugin Name="qmake">
-      <![CDATA[00020001N0005Debug0000000000000001N0007Release000000000000]]>
-    </Plugin>
-  </Plugins>
   <Description/>
   <Dependencies/>
   <Settings Type="Executable">
@@ -73,13 +73,12 @@
       <ResourceCompiler Options=""/>
     </GlobalSettings>
     <Configuration Name="Debug" CompilerType="GCC" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
-      <Compiler Options="-g;-O0;-Wall;$(shell wx-config --cxxflags --unicode=yes  );$(shell pkg-config --cflags appindicator-0.1)" C_Options="-g;-O0;-Wall;$(shell wx-config --cxxflags --unicode=yes  );$(shell pkg-config --cflags appindicator-0.1)" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
+      <Compiler Options="-g;-O0;-Wall;$(shell wx-config --cxxflags --unicode=yes  );$(shell pkg-config --cflags gtk+-2.0)" C_Options="-g;-O0;-Wall;$(shell wx-config --cxxflags --unicode=yes  );$(shell pkg-config --cflags gtk+-2.0)" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
         <Preprocessor Value="__WXDEBUG__"/>
         <Preprocessor Value="DEBUG"/>
         <Preprocessor Value="_DEBUG"/>
-        <Preprocessor Value="_UNITY"/>
       </Compiler>
-      <Linker Options="$(shell wx-config   --libs --unicode=yes);$(shell pkg-config --libs appindicator-0.1)" Required="yes">
+      <Linker Options="$(shell wx-config   --libs --unicode=yes);$(shell pkg-config --libs gtk+-2.0)" Required="yes">
         <Library Value="libcurl"/>
         <Library Value="libssh2"/>
       </Linker>
@@ -120,9 +119,7 @@
       </Completion>
     </Configuration>
     <Configuration Name="Release" CompilerType="GCC" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
-      <Compiler Options="-O2;-Wall;$(shell wx-config --cxxflags --unicode=yes --debug=no);$(shell pkg-config --cflags gtk+-2.0)" C_Options="-O2;-Wall;$(shell wx-config --cxxflags --unicode=yes --debug=no);$(shell pkg-config --cflags gtk+-2.0)" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
-        <Preprocessor Value="NDEBUG"/>
-      </Compiler>
+      <Compiler Options="-O2;-Wall;$(shell wx-config --cxxflags --unicode=yes --debug=no);$(shell pkg-config --cflags gtk+-2.0)" C_Options="-O2;-Wall;$(shell wx-config --cxxflags --unicode=yes --debug=no);$(shell pkg-config --cflags gtk+-2.0)" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0"/>
       <Linker Options="-s;$(shell wx-config --debug=no --libs --unicode=yes);$(shell pkg-config --libs gtk+-2.0)" Required="yes">
         <Library Value="libcurl"/>
         <Library Value="libssh2"/>
@@ -141,6 +138,53 @@
       <PreBuild/>
       <PostBuild>
         <Command Enabled="yes">cp -R resources Release/</Command>
+      </PostBuild>
+      <CustomBuild Enabled="no">
+        <RebuildCommand/>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory/>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+      <Completion EnableCpp11="no" EnableCpp14="no">
+        <ClangCmpFlagsC/>
+        <ClangCmpFlags/>
+        <ClangPP/>
+        <SearchPaths/>
+      </Completion>
+    </Configuration>
+    <Configuration Name="UbuntuDebug" CompilerType="GCC" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="-g;-O0;-Wall;$(shell wx-config --cxxflags --unicode=yes  );$(shell pkg-config --cflags appindicator-0.1)" C_Options="-g;-O0;-Wall;$(shell wx-config --cxxflags --unicode=yes  );$(shell pkg-config --cflags appindicator-0.1)" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
+        <Preprocessor Value="__WXDEBUG__"/>
+        <Preprocessor Value="DEBUG"/>
+        <Preprocessor Value="_DEBUG"/>
+        <Preprocessor Value="_UNITY"/>
+      </Compiler>
+      <Linker Options="$(shell wx-config   --libs --unicode=yes);$(shell pkg-config --libs appindicator-0.1)" Required="yes">
+        <Library Value="libcurl"/>
+        <Library Value="libssh2"/>
+      </Linker>
+      <ResourceCompiler Options="$(shell wx-config --rcflags)" Required="no"/>
+      <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="./Debug" Command="./$(ProjectName)" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
+      <BuildSystem Name="Default"/>
+      <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
+        <![CDATA[]]>
+      </Environment>
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="" IsExtended="no">
+        <DebuggerSearchPaths/>
+        <PostConnectCommands/>
+        <StartupCommands/>
+      </Debugger>
+      <PreBuild/>
+      <PostBuild>
+        <Command Enabled="yes">cp -R resources Debug/</Command>
       </PostBuild>
       <CustomBuild Enabled="no">
         <RebuildCommand/>

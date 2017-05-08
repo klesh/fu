@@ -2,18 +2,18 @@
 ## Auto Generated makefile by CodeLite IDE
 ## any manual changes will be erased      
 ##
-## Release
+## Debug
 ProjectName            :=fu
-ConfigurationName      :=Release
+ConfigurationName      :=Debug
 WorkspacePath          :=/home/klesh/Projects/Study/fu/fu
 ProjectPath            :=/home/klesh/Projects/Study/fu/fu
-IntermediateDirectory  :=./Release
+IntermediateDirectory  :=./Debug
 OutDir                 := $(IntermediateDirectory)
 CurrentFileName        :=
 CurrentFilePath        :=
 CurrentFileFullPath    :=
 User                   :=Klesh Wong
-Date                   :=21/04/17
+Date                   :=08/05/17
 CodeLitePath           :=/home/klesh/.codelite
 LinkerName             :=/usr/bin/g++
 SharedObjectLinkerName :=/usr/bin/g++ -shared -fPIC
@@ -28,14 +28,14 @@ LibraryPathSwitch      :=-L
 PreprocessorSwitch     :=-D
 SourceSwitch           :=-c 
 OutputFile             :=$(IntermediateDirectory)/$(ProjectName)
-Preprocessors          :=$(PreprocessorSwitch)NDEBUG 
+Preprocessors          :=$(PreprocessorSwitch)__WXDEBUG__ $(PreprocessorSwitch)DEBUG $(PreprocessorSwitch)_DEBUG 
 ObjectSwitch           :=-o 
 ArchiveOutputSwitch    := 
 PreprocessOnlySwitch   :=-E
 ObjectsFileList        :="fu.txt"
 PCHCompileFlags        :=
 MakeDirCommand         :=mkdir -p
-LinkOptions            :=  -s $(shell wx-config --debug=no --libs --unicode=yes) $(shell pkg-config --libs gtk+-2.0)
+LinkOptions            :=  $(shell wx-config   --libs --unicode=yes) $(shell pkg-config --libs gtk+-2.0)
 IncludePath            :=  $(IncludeSwitch). 
 IncludePCH             := 
 RcIncludePath          := 
@@ -50,8 +50,8 @@ LibPath                := $(LibraryPathSwitch).
 AR       := /usr/bin/ar rcu
 CXX      := /usr/bin/g++
 CC       := /usr/bin/gcc
-CXXFLAGS := -std=c++14 -O2 -Wall $(shell wx-config --cxxflags --unicode=yes --debug=no) $(shell pkg-config --cflags gtk+-2.0) $(Preprocessors)
-CFLAGS   :=  -O2 -Wall $(shell wx-config --cxxflags --unicode=yes --debug=no) $(shell pkg-config --cflags gtk+-2.0) $(Preprocessors)
+CXXFLAGS := -std=c++14 -g -O0 -Wall $(shell wx-config --cxxflags --unicode=yes  ) $(shell pkg-config --cflags gtk+-2.0) $(Preprocessors)
+CFLAGS   :=  -g -O0 -Wall $(shell wx-config --cxxflags --unicode=yes  ) $(shell pkg-config --cflags gtk+-2.0) $(Preprocessors)
 ASFLAGS  := 
 AS       := /usr/bin/as
 
@@ -83,15 +83,15 @@ $(OutputFile): $(IntermediateDirectory)/.d $(Objects)
 
 PostBuild:
 	@echo Executing Post Build commands ...
-	cp -R resources Release/
+	cp -R resources Debug/
 	@echo Done
 
 MakeIntermediateDirs:
-	@test -d ./Release || $(MakeDirCommand) ./Release
+	@test -d ./Debug || $(MakeDirCommand) ./Debug
 
 
 $(IntermediateDirectory)/.d:
-	@test -d ./Release || $(MakeDirCommand) ./Release
+	@test -d ./Debug || $(MakeDirCommand) ./Debug
 
 PreBuild:
 
@@ -361,6 +361,6 @@ $(IntermediateDirectory)/src_protocols_smms_smms.cpp$(PreprocessSuffix): src/pro
 ## Clean
 ##
 clean:
-	$(RM) -r ./Release/
+	$(RM) -r ./Debug/
 
 
