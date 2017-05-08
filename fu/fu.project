@@ -11,7 +11,6 @@
         <File Name="src/protocols/imgur/imgurp.cpp"/>
         <File Name="src/protocols/imgur/imgur.cpp"/>
         <File Name="src/protocols/imgur/imguros.cpp"/>
-        <File Name="src/protocols/smms/smmsos.cpp"/>
       </VirtualDirectory>
       <VirtualDirectory Name="local">
         <File Name="src/protocols/local/localp.cpp"/>
@@ -28,6 +27,7 @@
       <VirtualDirectory Name="smms">
         <File Name="src/protocols/smms/smmsp.cpp"/>
         <File Name="src/protocols/smms/smms.cpp"/>
+        <File Name="src/protocols/smms/smmsos.cpp"/>
       </VirtualDirectory>
       <File Name="src/protocols/ptcp.h"/>
       <File Name="src/protocols/request.cpp"/>

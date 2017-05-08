@@ -62,7 +62,7 @@ AS       := /usr/bin/as
 CodeLiteDir:=/usr/share/codelite
 Objects0=$(IntermediateDirectory)/src_main.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_protocols_request.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_core_history.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_core_site.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_core_file.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_core_format.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_core_config.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_core_uploader.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_core_func.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_core_clip.cpp$(ObjectSuffix) \
 	$(IntermediateDirectory)/src_ui_prefform.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_ui_browseform.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_ui_tray.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_ui_preprocpanel.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_ui_sitespanel.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_ui_formatspanel.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_ui_sizerhelper.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_ui_common.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_ui_aboutform.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_os_linux.cpp$(ObjectSuffix) \
-	$(IntermediateDirectory)/src_protocols_imgur_imgurp.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_protocols_imgur_imgur.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_protocols_imgur_imguros.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_protocols_local_localp.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_protocols_local_local.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_protocols_sftp_SftpWrapper.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_protocols_sftp_sftpos.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_protocols_sftp_sftpp.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_protocols_sftp_sftp.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_protocols_smms_smmsos.cpp$(ObjectSuffix) \
+	$(IntermediateDirectory)/src_protocols_imgur_imgurp.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_protocols_imgur_imgur.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_protocols_imgur_imguros.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_protocols_smms_smmsos.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_protocols_local_localp.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_protocols_local_local.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_protocols_sftp_SftpWrapper.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_protocols_sftp_sftpos.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_protocols_sftp_sftpp.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_protocols_sftp_sftp.cpp$(ObjectSuffix) \
 	$(IntermediateDirectory)/src_protocols_smms_smmsp.cpp$(ObjectSuffix) $(IntermediateDirectory)/src_protocols_smms_smms.cpp$(ObjectSuffix) 
 
 
@@ -283,6 +283,14 @@ $(IntermediateDirectory)/src_protocols_imgur_imguros.cpp$(DependSuffix): src/pro
 $(IntermediateDirectory)/src_protocols_imgur_imguros.cpp$(PreprocessSuffix): src/protocols/imgur/imguros.cpp
 	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_protocols_imgur_imguros.cpp$(PreprocessSuffix) src/protocols/imgur/imguros.cpp
 
+$(IntermediateDirectory)/src_protocols_smms_smmsos.cpp$(ObjectSuffix): src/protocols/smms/smmsos.cpp $(IntermediateDirectory)/src_protocols_smms_smmsos.cpp$(DependSuffix)
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/klesh/Projects/Study/fu/fu/src/protocols/smms/smmsos.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/src_protocols_smms_smmsos.cpp$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/src_protocols_smms_smmsos.cpp$(DependSuffix): src/protocols/smms/smmsos.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/src_protocols_smms_smmsos.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/src_protocols_smms_smmsos.cpp$(DependSuffix) -MM src/protocols/smms/smmsos.cpp
+
+$(IntermediateDirectory)/src_protocols_smms_smmsos.cpp$(PreprocessSuffix): src/protocols/smms/smmsos.cpp
+	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_protocols_smms_smmsos.cpp$(PreprocessSuffix) src/protocols/smms/smmsos.cpp
+
 $(IntermediateDirectory)/src_protocols_local_localp.cpp$(ObjectSuffix): src/protocols/local/localp.cpp $(IntermediateDirectory)/src_protocols_local_localp.cpp$(DependSuffix)
 	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/klesh/Projects/Study/fu/fu/src/protocols/local/localp.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/src_protocols_local_localp.cpp$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/src_protocols_local_localp.cpp$(DependSuffix): src/protocols/local/localp.cpp
@@ -330,14 +338,6 @@ $(IntermediateDirectory)/src_protocols_sftp_sftp.cpp$(DependSuffix): src/protoco
 
 $(IntermediateDirectory)/src_protocols_sftp_sftp.cpp$(PreprocessSuffix): src/protocols/sftp/sftp.cpp
 	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_protocols_sftp_sftp.cpp$(PreprocessSuffix) src/protocols/sftp/sftp.cpp
-
-$(IntermediateDirectory)/src_protocols_smms_smmsos.cpp$(ObjectSuffix): src/protocols/smms/smmsos.cpp $(IntermediateDirectory)/src_protocols_smms_smmsos.cpp$(DependSuffix)
-	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/klesh/Projects/Study/fu/fu/src/protocols/smms/smmsos.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/src_protocols_smms_smmsos.cpp$(ObjectSuffix) $(IncludePath)
-$(IntermediateDirectory)/src_protocols_smms_smmsos.cpp$(DependSuffix): src/protocols/smms/smmsos.cpp
-	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/src_protocols_smms_smmsos.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/src_protocols_smms_smmsos.cpp$(DependSuffix) -MM src/protocols/smms/smmsos.cpp
-
-$(IntermediateDirectory)/src_protocols_smms_smmsos.cpp$(PreprocessSuffix): src/protocols/smms/smmsos.cpp
-	$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_protocols_smms_smmsos.cpp$(PreprocessSuffix) src/protocols/smms/smmsos.cpp
 
 $(IntermediateDirectory)/src_protocols_smms_smmsp.cpp$(ObjectSuffix): src/protocols/smms/smmsp.cpp $(IntermediateDirectory)/src_protocols_smms_smmsp.cpp$(DependSuffix)
 	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/klesh/Projects/Study/fu/fu/src/protocols/smms/smmsp.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/src_protocols_smms_smmsp.cpp$(ObjectSuffix) $(IncludePath)
