@@ -22,7 +22,7 @@ public:
         _icon->SetBitmap(wxBitmap(img));
         
         _link = new wxHyperlinkCtrl(this, wxID_ANY, "https://github.com/klesh/fu", "https://github.com/klesh/fu");
-        _version = new wxStaticText(this, wxID_ANY, "version: 1.3");
+        _version = new wxStaticText(this, wxID_ANY, "version: 1.3.1");
         _close = new wxButton(this, wxID_ANY, "Close");
         Bind(wxEVT_BUTTON, &AboutForm::OnCloseClicked, this, wxID_ANY);
 
