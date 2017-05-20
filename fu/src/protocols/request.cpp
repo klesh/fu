@@ -80,14 +80,18 @@ public:
         _headers = curl_slist_append(_headers, wxString::Format("%s: %s", name, value).mb_str().data());
     }
     
-    virtual void AddHeader(const wxString header)
+    virtual void AddHeader(const wxString &header)
     {
-        _headers = curl_slist_append(_headers, header);
+        _headers = curl_slist_append(_headers, header.mb_str().data());
     }
 
     virtual void SetCAPath(const wxString &caPath)
     {
         curl_easy_setopt(_curl, CURLOPT_CAINFO, caPath.mb_str().data());
+    }
+
+    virtual void SetUserAgent(const wxString &ua) {
+        curl_easy_setopt(_curl, CURLOPT_USERAGENT, ua.mb_str().data());
     }
 
     static size_t writeResponse(char *buf, size_t size, size_t nmemb, void *pBody) {
