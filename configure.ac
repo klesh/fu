@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT(fu, 1.2.0, https://github.com/klesh/fu/issues)
+AC_INIT(fu, 1.3.1, https://github.com/klesh/fu/issues)
 AC_PROG_RANLIB
 AC_CONFIG_SRCDIR([fu/src/main.cpp])
 AM_CONFIG_HEADER([config.h])
@@ -96,6 +96,7 @@ AC_OUTPUT([Makefile \
            fu/src/protocols/imgur/Makefile \
            fu/src/protocols/local/Makefile \
            fu/src/protocols/sftp/Makefile \
+           fu/src/protocols/ftp/Makefile \
            fu/src/protocols/smms/Makefile \
            fu/src/ui/Makefile \
            fu/resources/Makefile

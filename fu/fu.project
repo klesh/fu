@@ -33,6 +33,11 @@
       <File Name="src/protocols/request.cpp"/>
       <File Name="src/protocols/ptcf.h"/>
       <File Name="src/protocols/ptc.h"/>
+      <VirtualDirectory Name="ftp">
+        <File Name="src/protocols/ftp/ftp.cpp"/>
+        <File Name="src/protocols/ftp/ftpos.cpp"/>
+        <File Name="src/protocols/ftp/ftpp.cpp"/>
+      </VirtualDirectory>
     </VirtualDirectory>
     <VirtualDirectory Name="core">
       <File Name="src/core/history.cpp"/>

@@ -6,8 +6,8 @@ fu_LDADD = core/libcore.a \
 					 protocols/local/liblocal.a \
 					 protocols/sftp/libsftp.a \
 					 protocols/smms/libsmms.a \
-					 protocols/libprotocols.a \
 					 protocols/ftp/libftp.a \
+					 protocols/libprotocols.a \
 					 ui/libui.a
 fu_SOURCES = main.cpp
 fu_CPPFLAGS = -DICONS_PREFIX=\"$(ICONS_PREFIX)\"
