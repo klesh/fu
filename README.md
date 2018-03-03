@@ -3,29 +3,37 @@
 ![demo](https://github.com/klesh/fu/raw/master/example.gif)
 # Introduction
 
-I once needed a tool to upload images/files in Clipboard and generate a URL back to it for me. So I looked for such a tool, I found iPic which quite awesome. But unfortunately, it supported image only and wouldn't let me upload to own server. It would be greate to have a another option, wasn't it?   
+I once needed a tool to convert images/files in Clipboard to URLs, so I looked for such a tool, I found iPic which quite awesome. But unfortunately, it supports image only and wouldn't let me upload to my own server. It would be greate to have a another option, wasn't it?   
 
-The plan was to make a CrossPlatform app for (Windows/MacOS/Linux), and it can also processes Captured Bitmap Data in Clipboard, but itself doesn't have any Screen Capturing functionality. You may need other tool to do the job.
+What can fu capable of?
+  * Upload file to a 3rd-party server and put a URL/Markdown Snippet into your clipboard
+  * Supports both Image and File
+  * Supports both BitmapData (like hitting PrintScreen) and FileData (like Ctrl-C on a file)
+  * Supports uploading to you own server by FTP/SFTP/SSH
+  * CrossPlatform (Windows/MacOS/Linux)
 
 # Installation
 
-[Go to releases page](https://github.com/klesh/fu/releases) download file according to your OS.
+[Go to releases page](https://github.com/klesh/fu/releases) download archive according to your OS.
 
 ## Windows
 
-  download the .7z file from releases page. extract to whereever you want.   
-  You may also need to install vc++ runtime library, it can be download fomr here: http://www.microsoft.com/en-us/download/details.aspx?id=48145   
-  If you want it to be launched at login, please make a shortcut in your `Startup` folder which link to fu.exe.
+  download the `.7z` file from releases page. extract to whereever you want.
+
+  You may need to install vc++ runtime library, it can be downloaded from here: http://www.microsoft.com/en-us/download/details.aspx?id=48145
+
+  If you want it to be launched at login, please make a shortcut in your `Startup` folder.
 
 ## MacOS
 
-  download the .dmg file from releases page, double click it and drag the fu icon into `Applications` folder
+  Download the `.dmg` file from releases page, double click it and drag the fu icon into `Applications` folder
+
   If you want it to be launched at login, please go to `System Preferences > Users & Groups > Login Items` and add it to your list.
 
-  If you receive a error says app 'is damaged, should be moved to trash', and chose to accept the risk, here is the solution:
+  If you receive a error says `app is damaged, should be moved to trash`, that is because, OSX allows only signed app to be launch **by default**, and it's not free even for a open source free app. However, you can change this behavior at your own risk:
 
   ### macOS Sierra
-  run following script in your Terminal
+  run following command in your Terminal
   ```
   sudo spctl --master-disable
   ```
@@ -35,8 +43,8 @@ The plan was to make a CrossPlatform app for (Windows/MacOS/Linux), and it can a
 
 ## Linux
 
-  download the .tar.gz file, extract, make and make install.
-  should be able to work on most distro, let me know if any problem.
+  download the `.tar.gz` file, extract, `make` and `make install`.
+  should be able to work on most distros.
 
 ### Ubuntu
 ```bash
@@ -45,9 +53,6 @@ tar zxvf fu-vxxx.tar.gz
 ./configure
 make
 sudo make install
-```
-```
-
 ```
 
 # Build Dependencies
@@ -73,12 +78,13 @@ $ automake --add-missing
 # FAQ
 
    Q: How to add imgur.com?
-   A: go to http://api.imgur.com/ register an application, you will receive a Client-ID, put it to Client-ID client field and save. You may have to setup proxy field if you happen to receive a "blocked by imgur.com " error.
+
+   A: go to http://api.imgur.com/ register an application, you will receive a Client-ID, then you can create a imgur.com entry in `Preferences`. You may have to setup proxy field if you run into a "blocked by imgur.com " error.
 
 # Like it ?
 
   * Star this respository right away!
-  * Recommand to your friends.
+  * Recommend to your friends.
   * Twitter/Facebook/Reddit it already.
   * Pull Requests are all welcome.
 
