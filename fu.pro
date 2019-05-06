@@ -31,6 +31,7 @@ CONFIG += c++11
 SOURCES += \
         src/aboutdialog.cpp \
         src/components/flowlayout.cpp \
+        src/components/qtag.cpp \
         src/configdialog.cpp \
         src/historywindow.cpp \
         src/main.cpp
@@ -38,6 +39,7 @@ SOURCES += \
 HEADERS += \
         src/aboutdialog.h \
         src/components/flowlayout.h \
+        src/components/qtag.h \
         src/configdialog.h \
         src/historywindow.h
 
