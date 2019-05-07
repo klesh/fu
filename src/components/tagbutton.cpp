@@ -1,14 +1,14 @@
-#include "qtag.h"
+#include "tagbutton.h"
 
 const static QString TAG_STYLE_SHEET = "\
 * { \
         border-radius: 8px; \
         border-style:  solid; \
         border-width:1px; \
-        border-color: #333; \
+        border-color: #999; \
+        color: #666; \
         background: white; \
         padding: 3px 10px; \
-        color: #333; \
 }\n\
 :hover:!pressed { \
         background: #eee; \
@@ -19,15 +19,16 @@ const static QString TAG_STYLE_SHEET = "\
 }\n\
 " ;
 
-QTag::QTag(QWidget *parent)
+TagButton::TagButton(QWidget *parent)
     : QPushButton (parent)
 {
     setStyleSheet(TAG_STYLE_SHEET);
     setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    setMaximumHeight(20);
 }
 
-QTag::QTag(const QString text, QWidget *parent)
-    : QTag(parent)
+TagButton::TagButton(const QString text, QWidget *parent)
+    : TagButton(parent)
 {
     setText(text);
 }

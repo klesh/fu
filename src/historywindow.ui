@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1239</width>
-    <height>777</height>
+    <width>1280</width>
+    <height>800</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>1024</width>
-    <height>768</height>
+    <width>1280</width>
+    <height>800</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -31,7 +31,7 @@
       </property>
       <property name="minimumSize">
        <size>
-        <width>250</width>
+        <width>280</width>
         <height>0</height>
        </size>
       </property>
@@ -94,8 +94,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>208</width>
-               <height>136</height>
+               <width>238</width>
+               <height>148</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -136,8 +136,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>208</width>
-               <height>136</height>
+               <width>238</width>
+               <height>147</height>
               </rect>
              </property>
             </widget>
@@ -219,8 +219,8 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>961</width>
-           <height>702</height>
+           <width>972</width>
+           <height>725</height>
           </rect>
          </property>
          <property name="styleSheet">

@@ -3,6 +3,8 @@
 #include <QApplication>
 #include <QTranslator>
 
+#include "historywindow.h"
+
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
@@ -15,5 +17,6 @@ int main(int argc, char *argv[])
     // create about dialog
     AboutDialog about;
 
+    HistoryWindow::getInstance().show();
     return app.exec();
 }
