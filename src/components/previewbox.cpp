@@ -2,12 +2,16 @@
 #include "flowlayout.h"
 #include "tagbutton.h"
 
+#include <QDebug>
+
 const static QString BOX_STYLE_DEFAULT = "#box{border-style: solid;border-width: 1px;border-color: #eee}";
-const static QString BOX_STYLE_SELECTED = "#box{border-style: solid;border-width: 1px;border-color: #eee}";
+const static QString BOX_STYLE_SELECTED = "* {background: transparent}\n#box{border-style: solid;border-width: 1px;border-color: #eee; background: lightblue}";
 
 PreviewBox::PreviewBox(QWidget *parent)
     : QFrame(parent)
 {
+
+    // setup components
     QVBoxLayout *boxLayout = new QVBoxLayout(this);
     setCursor(Qt::PointingHandCursor);
     setLayout(boxLayout);
@@ -32,11 +36,13 @@ PreviewBox::PreviewBox(QWidget *parent)
 
     tagsFrame = nullptr;
 
+    // initialize properties
+    selected = false;
 }
 
-void PreviewBox::setImage(const QString &url)
+void PreviewBox::setImage(const QPixmap &thumbnail)
 {
-    previewImg->setPixmap(QPixmap(url).scaled(160, 160, Qt::KeepAspectRatio));
+    previewImg->setPixmap(thumbnail);
 }
 
 void PreviewBox::setUploadedTo(const QString &serverName)
@@ -63,6 +69,18 @@ void PreviewBox::setTags(const QStringList &tags)
     layout()->addWidget(tagsFrame);
 }
 
+bool PreviewBox::isSelected()
+{
+    return selected;
+}
+
 void PreviewBox::mousePressEvent(QMouseEvent *evt)
 {
+    if (evt->button() == Qt::LeftButton)
+        selected = !selected ;
+    else if (evt->button() == Qt::RightButton)
+        selected = true;
+
+    setStyleSheet(selected ? BOX_STYLE_SELECTED : BOX_STYLE_DEFAULT);
+    evt->accept();
 }

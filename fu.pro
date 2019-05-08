@@ -43,7 +43,8 @@ HEADERS += \
         src/components/previewbox.h \
         src/components/tagbutton.h \
         src/configdialog.h \
-        src/historywindow.h
+        src/historywindow.h \
+        src/models/record.h
 
 FORMS += \
         src/aboutdialog.ui \

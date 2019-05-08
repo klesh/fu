@@ -5,6 +5,9 @@
 #include <QMenuBar>
 #include <QTranslator>
 #include <QCloseEvent>
+#include <QMenu>
+
+#include "models/record.h"
 
 
 namespace Ui {
@@ -28,6 +31,11 @@ private:
     Ui::HistoryWindow *ui;
     const static QString TAG_STYLE_DEFAULT;
     const static QString TAG_STYLE_ACTIVE;
+
+    void updateRecords(const QList<Record> &records);
+
+private slots:
+    void showRecordsContextMenu(const QPoint &pos);
 };
 
 #endif // HISTORYWINDOW_H

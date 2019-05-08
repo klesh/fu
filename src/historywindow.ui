@@ -205,6 +205,9 @@
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
        <widget class="QScrollArea" name="sclRecords2">
+        <property name="contextMenuPolicy">
+         <enum>Qt::DefaultContextMenu</enum>
+        </property>
         <property name="autoFillBackground">
          <bool>false</bool>
         </property>
@@ -223,9 +226,13 @@
            <height>725</height>
           </rect>
          </property>
+         <property name="contextMenuPolicy">
+          <enum>Qt::CustomContextMenu</enum>
+         </property>
          <property name="styleSheet">
           <string notr="true">background: white</string>
          </property>
+         <layout class="QVBoxLayout" name="verticalLayout_4"/>
         </widget>
        </widget>
       </item>

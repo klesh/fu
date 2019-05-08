@@ -4,6 +4,7 @@
 #include <QFrame>
 #include <QLabel>
 #include <QStringList>
+#include <QMouseEvent>
 
 class PreviewBox : public QFrame
 {
@@ -12,15 +13,17 @@ class PreviewBox : public QFrame
 public:
     PreviewBox(QWidget *parent = nullptr);
 
-    void setImage(const QString &url);
+    void setImage(const QPixmap &thumbnail);
     void setUploadedTo(const QString &serverName);
     void setTags(const QStringList &tags);
+    bool isSelected();
 
 protected:
     void mousePressEvent(QMouseEvent *evt) override;
     QLabel *previewImg;
     QLabel *uploadedTo;
     QFrame *tagsFrame;
+    bool selected;
 };
 
 #endif // PREVIEWBOX_H
