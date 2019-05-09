@@ -33,6 +33,7 @@ SOURCES += \
         src/components/flowlayout.cpp \
         src/components/previewbox.cpp \
         src/components/tagbutton.cpp \
+        src/components/tagsedit.cpp \
         src/configdialog.cpp \
         src/historywindow.cpp \
         src/main.cpp
@@ -42,6 +43,7 @@ HEADERS += \
         src/components/flowlayout.h \
         src/components/previewbox.h \
         src/components/tagbutton.h \
+        src/components/tagsedit.h \
         src/configdialog.h \
         src/historywindow.h \
         src/models/record.h

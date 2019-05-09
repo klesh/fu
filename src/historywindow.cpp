@@ -3,12 +3,11 @@
 #include "components/flowlayout.h"
 #include "components/previewbox.h"
 #include "models/record.h"
+#include "components/tagbutton.h"
 
 #include <QDebug>
 #include <QRandomGenerator>
 
-const QString HistoryWindow::TAG_STYLE_DEFAULT = "border-radius:5px;\nborder-style:solid;\nborder-width:1px;\nborder-color: #999;\nbackground: #eee;\npadding: 3px 5px;\ncolor: #999;";
-const QString HistoryWindow::TAG_STYLE_ACTIVE = "border-radius:5px;\nborder-style:solid;\nborder-width:1px;\nborder-color: #333;\nbackground: #00ff00;\npadding: 3px 5px;";
 HistoryWindow &HistoryWindow::getInstance()
 {
     static HistoryWindow instance;
@@ -23,23 +22,12 @@ HistoryWindow::HistoryWindow(QWidget *parent) :
     setWindowIcon(QIcon(":/icons/icon.png"));
     ui->setupUi(this);
 
-    FlowLayout *tagsLayout = new FlowLayout(ui->sclTags, 10);
 
+    // mock records
     QList<Record> records;
-
     const static QPixmap thumbnail = QPixmap("D:/Nextcloud/kleshwong/wallpapers/6fVBDMW-dark-minimalist-wallpaper.jpg").scaled(160, 160, Qt::KeepAspectRatio);
-
     for (int i = 0; i < 100; i++)
     {
-        QPushButton *btn = new QPushButton(ui->sclTags);
-        btn->setText("hello" + QString("Hello%1").arg(i));
-        if (i % 5 == 0) {
-            btn->setStyleSheet(TAG_STYLE_ACTIVE);
-        } else {
-            btn->setStyleSheet(TAG_STYLE_DEFAULT);
-        }
-        tagsLayout->addWidget(btn);
-
 
         Record record;
         record.setUploadedTo("imgur.com");
@@ -49,9 +37,11 @@ HistoryWindow::HistoryWindow(QWidget *parent) :
         record.setCreatedAt(createdAt);
         records.append(record);
     }
-    ui->sclTags->setLayout(tagsLayout);
-
     updateRecords(records);
+
+    // mock tags
+    ui->cbxAddTags->addItems({"Hello", "world", "Mr.Robot", "idiot", "Funny", "The Expanse"});
+    ui->cbxAddTags->setCurrentIndex(-1);
 
     // set up context menu
     connect(ui->sclRecords, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(showRecordsContextMenu(const QPoint &)));
@@ -126,6 +116,9 @@ void HistoryWindow::showRecordsContextMenu(const QPoint &pos)
 
     QAction deleteAction(tr("&Delete"), this);
     contextMenu.addAction(&deleteAction);
+
+    QAction clearAction(tr("&Clean Up History"), this);
+    contextMenu.addAction(&clearAction);
 
     contextMenu.addSeparator();
 
