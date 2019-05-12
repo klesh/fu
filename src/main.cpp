@@ -4,10 +4,12 @@
 #include <QTranslator>
 
 #include "historywindow.h"
+#include "formdialog.h"
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+    //app.setQuitOnLastWindowClosed(false);
 
     // setup i18n
     QTranslator qTranslator(&app);
@@ -17,6 +19,8 @@ int main(int argc, char *argv[])
     // create about dialog
     AboutDialog about;
 
-    HistoryWindow::getInstance().show();
+    //HistoryWindow::getInstance().show();
+    FormDialog form;
+    form.show();
     return app.exec();
 }

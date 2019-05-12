@@ -2,14 +2,20 @@
 #define TAGSEDIT_H
 
 #include <QFrame>
+#include <QComboBox>
+#include <QScrollArea>
 
 
-class TagsEdit : QFrame
+class TagsEdit : public QFrame
 {
     Q_OBJECT
 
 public:
-    TagsEdit();
+    TagsEdit(QWidget *parnet = nullptr);
+
+protected:
+    QLayout *laySelected;
+    QComboBox *cbxPicker;
 };
 
 #endif // TAGSEDIT_H

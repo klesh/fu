@@ -39,10 +39,6 @@ HistoryWindow::HistoryWindow(QWidget *parent) :
     }
     updateRecords(records);
 
-    // mock tags
-    ui->cbxAddTags->addItems({"Hello", "world", "Mr.Robot", "idiot", "Funny", "The Expanse"});
-    ui->cbxAddTags->setCurrentIndex(-1);
-
     // set up context menu
     connect(ui->sclRecords, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(showRecordsContextMenu(const QPoint &)));
 }

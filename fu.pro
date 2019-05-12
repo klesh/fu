@@ -34,7 +34,9 @@ SOURCES += \
         src/components/previewbox.cpp \
         src/components/tagbutton.cpp \
         src/components/tagsedit.cpp \
+        src/components/thumbnaillabel.cpp \
         src/configdialog.cpp \
+        src/formdialog.cpp \
         src/historywindow.cpp \
         src/main.cpp
 
@@ -44,13 +46,16 @@ HEADERS += \
         src/components/previewbox.h \
         src/components/tagbutton.h \
         src/components/tagsedit.h \
+        src/components/thumbnaillabel.h \
         src/configdialog.h \
+        src/formdialog.h \
         src/historywindow.h \
         src/models/record.h
 
 FORMS += \
         src/aboutdialog.ui \
         src/configdialog.ui \
+        src/formdialog.ui \
         src/historywindow.ui
 
 RESOURCES += \

@@ -1,6 +1,7 @@
 #include "previewbox.h"
 #include "flowlayout.h"
 #include "tagbutton.h"
+#include "thumbnaillabel.h"
 
 #include <QDebug>
 
@@ -21,10 +22,7 @@ PreviewBox::PreviewBox(QWidget *parent)
     setObjectName("box");
     setStyleSheet(BOX_STYLE_DEFAULT);
 
-    previewImg = new QLabel(this);
-    previewImg->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    previewImg->setMinimumSize(160, 160);
-    previewImg->setMaximumSize(160, 160);
+    previewImg = new ThumbnailLabel(this);
     boxLayout->addWidget(previewImg);
 
     uploadedTo = new QLabel(this);
