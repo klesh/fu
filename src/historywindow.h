@@ -19,7 +19,7 @@ class HistoryWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    static HistoryWindow &getInstance();
+    //static HistoryWindow &getInstance();
     HistoryWindow(HistoryWindow const&) = delete;
     void operator=(HistoryWindow const&) = delete;
 

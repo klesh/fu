@@ -8,11 +8,13 @@
 #include <QDebug>
 #include <QRandomGenerator>
 
+/*
 HistoryWindow &HistoryWindow::getInstance()
 {
     static HistoryWindow instance;
     return instance;
 }
+*/
 
 HistoryWindow::HistoryWindow(QWidget *parent) :
     QMainWindow(parent),

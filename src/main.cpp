@@ -3,24 +3,21 @@
 #include <QApplication>
 #include <QTranslator>
 
-#include "historywindow.h"
-#include "formdialog.h"
+#include "application.h"
 
 int main(int argc, char *argv[])
 {
-    QApplication app(argc, argv);
-    //app.setQuitOnLastWindowClosed(false);
+    QApplication qtApp(argc, argv);
+    qtApp.setQuitOnLastWindowClosed(false);
 
     // setup i18n
-    QTranslator qTranslator(&app);
-    qTranslator.load(QLocale::system(), "fu", ".", app.applicationDirPath().append("/i18n"));
-    app.installTranslator(&qTranslator);
+    QTranslator qTranslator(&qtApp);
+    qTranslator.load(QLocale::system(), "fu", ".", qtApp.applicationDirPath().append("/i18n"));
+    qtApp.installTranslator(&qTranslator);
 
-    // create about dialog
-    AboutDialog about;
 
-    //HistoryWindow::getInstance().show();
-    FormDialog form;
-    form.show();
-    return app.exec();
+    // initialize app
+    Application app;
+
+    return qtApp.exec();
 }

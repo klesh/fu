@@ -1,3 +1,4 @@
 *.user
 tmp/
 *.qm
+icons/icon-*.png
