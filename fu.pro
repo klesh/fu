@@ -39,7 +39,9 @@ SOURCES += \
         src/formdialog.cpp \
         src/historywindow.cpp \
         src/application.cpp \
-        src/main.cpp
+        src/main.cpp \
+        src/store/migrator.cpp \
+        src/upgradedialog.cpp
 
 HEADERS += \
         src/aboutdialog.h \
@@ -52,13 +54,17 @@ HEADERS += \
         src/formdialog.h \
         src/historywindow.h \
         src/application.h \
-        src/models/record.h
+        src/models/record.h \
+        src/store/migration.h \
+        src/store/migrator.h \
+        src/upgradedialog.h
 
 FORMS += \
         src/aboutdialog.ui \
         src/configdialog.ui \
         src/formdialog.ui \
-        src/historywindow.ui
+        src/historywindow.ui \
+        src/upgradedialog.ui
 
 RESOURCES += \
         fu.qrc

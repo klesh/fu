@@ -4,6 +4,8 @@
 #include <QTranslator>
 
 #include "application.h"
+#include "store/migrator.h"
+#include "upgradedialog.h"
 
 int main(int argc, char *argv[])
 {
@@ -15,6 +17,18 @@ int main(int argc, char *argv[])
     qTranslator.load(QLocale::system(), "fu", ".", qtApp.applicationDirPath().append("/i18n"));
     qtApp.installTranslator(&qTranslator);
 
+    // run migrations if needed
+    Migrator *migrator = new Migrator();
+    if (migrator->totalPendingMigration() > 0) {
+        UpgradeDialog *upgradeDialog = new UpgradeDialog(migrator);
+        if (upgradeDialog->exec() == QDialog::Rejected) {
+            qDebug() << "rejected";
+            return 0;
+        }
+        delete migrator;
+    }
+
+    qDebug() << "upgraded";
 
     // initialize app
     Application app;
