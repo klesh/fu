@@ -19,15 +19,11 @@
   <property name="windowTitle">
    <string>Configuration</string>
   </property>
-  <property name="windowIcon">
-   <iconset resource="../fu.qrc">
-    <normaloff>:/icons/icon.png</normaloff>:/icons/icon.png</iconset>
-  </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
     <widget class="QTabWidget" name="tabs">
      <property name="currentIndex">
-      <number>3</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tabServers">
       <attribute name="title">
@@ -229,7 +225,7 @@
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap resource="../fu.qrc">:/icons/icon.png</pixmap>
+               <pixmap>:/icons/icon.png</pixmap>
               </property>
               <property name="scaledContents">
                <bool>true</bool>
@@ -621,8 +617,6 @@
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="../fu.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

@@ -1,13 +1,13 @@
 #ifndef HISTORYWINDOW_H
 #define HISTORYWINDOW_H
 
+#include "models/record.h"
+
 #include <QMainWindow>
 #include <QMenuBar>
 #include <QTranslator>
 #include <QCloseEvent>
 #include <QMenu>
-
-#include "models/record.h"
 
 
 namespace Ui {
@@ -19,18 +19,11 @@ class HistoryWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    //static HistoryWindow &getInstance();
-    HistoryWindow(HistoryWindow const&) = delete;
-    void operator=(HistoryWindow const&) = delete;
+    explicit HistoryWindow();
+    ~HistoryWindow();
 
 private:
-    explicit HistoryWindow(QWidget *parent = nullptr);
-    ~HistoryWindow();
-    void closeEvent(QCloseEvent *evt);
-
     Ui::HistoryWindow *ui;
-    const static QString TAG_STYLE_DEFAULT;
-    const static QString TAG_STYLE_ACTIVE;
 
     void updateRecords(const QList<Record> &records);
 

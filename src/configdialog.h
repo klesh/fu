@@ -13,18 +13,13 @@ class ConfigDialog : public QDialog
     Q_OBJECT
 
 public:
-    static ConfigDialog &getInstance();
-    ConfigDialog(ConfigDialog const&) = delete;
-    void operator=(ConfigDialog const&) = delete;
+    explicit ConfigDialog();
+    ~ConfigDialog();
 
 private slots:
     void on_btnOpenDataDir_clicked();
 
 private:
-    explicit ConfigDialog(QWidget *parent = nullptr);
-    ~ConfigDialog();
-    void closeEvent(QCloseEvent *evt);
-
     Ui::ConfigDialog *ui;
 };
 

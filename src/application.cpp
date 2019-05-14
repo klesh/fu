@@ -1,10 +1,14 @@
 #include "application.h"
 #include "aboutdialog.h"
+#include "configdialog.h"
+#include "historywindow.h"
 
 #include <QSystemTrayIcon>
 #include <QMenu>
 
 static AboutDialog *aboutDialog = nullptr;
+static ConfigDialog *configDialog = nullptr;
+static HistoryWindow *historyWindow = nullptr;
 
 Application::Application()
 {
@@ -14,11 +18,11 @@ Application::Application()
 
     QAction *historyAction = new QAction(tr("&History"));
     trayMenu->addAction(historyAction);
-    //connect(historyAction, &QAction::triggered, &HistoryWindow::getInstance(), &HistoryWindow::show);
+    connect(historyAction, &QAction::triggered, this, &Application::showHistoryWindow);
 
     QAction *configAction = new QAction(tr("&Config"));
     trayMenu->addAction(configAction);
-    //connect(configAction, &QAction::triggered, &ConfigDialog::getInstance(), &ConfigDialog::show);
+    connect(configAction, &QAction::triggered, this, &Application::showConfigDialog);
 
     QAction *aboutAction = new QAction(tr("&About"));
     trayMenu->addAction(aboutAction);
@@ -51,15 +55,19 @@ QIcon &Application::windowIcon()
 }
 
 template<typename T>
-void Application::ensureExistence(T **wd, std::function<T*(void)> createWD)
+void Application::showWindowOrDialog(T **wd)
 {
+    // if target window/dialog is already running, bring it to top instead of creating a new instance.
     if (!*wd) {
         qDebug() << "creating window/dialog";
-        *wd = createWD();
+        *wd = new T();
         connect(*wd, &QWidget::destroyed, [=](void){
             qDebug() << "set window/dialog to null";
             *wd = nullptr;
         });
+        (*wd)->setAttribute(Qt::WA_DeleteOnClose);
+        (*wd)->setWindowFlags((*wd)->windowFlags() & ~Qt::WindowContextHelpButtonHint);
+        (*wd)->setWindowIcon(windowIcon());
         (*wd)->show();
         qDebug() << "showing window/dialog";
     } else {
@@ -71,7 +79,15 @@ void Application::ensureExistence(T **wd, std::function<T*(void)> createWD)
 
 void Application::showAboutDialog()
 {
-    ensureExistence<AboutDialog>(&aboutDialog, [this] { return new AboutDialog(this); });
+    showWindowOrDialog<AboutDialog>(&aboutDialog);
 }
 
+void Application::showConfigDialog()
+{
+    showWindowOrDialog<ConfigDialog>(&configDialog);
+}
 
+void Application::showHistoryWindow()
+{
+    showWindowOrDialog<HistoryWindow>(&historyWindow);
+}

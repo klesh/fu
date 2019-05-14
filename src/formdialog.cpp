@@ -6,7 +6,6 @@ FormDialog::FormDialog(QWidget *parent) :
     ui(new Ui::FormDialog)
 {
     ui->setupUi(this);
-    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 }
 
 FormDialog::~FormDialog()

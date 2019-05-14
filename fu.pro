@@ -30,35 +30,35 @@ CONFIG += c++11
 
 SOURCES += \
         src/aboutdialog.cpp \
-#       src/components/flowlayout.cpp \
-#       src/components/previewbox.cpp \
-#       src/components/tagbutton.cpp \
-#       src/components/tagsedit.cpp \
-#       src/components/thumbnaillabel.cpp \
-#       src/configdialog.cpp \
-#       src/formdialog.cpp \
-#       src/historywindow.cpp \
-    src/application.cpp \
+        src/components/flowlayout.cpp \
+        src/components/previewbox.cpp \
+        src/components/tagbutton.cpp \
+        src/components/tagsedit.cpp \
+        src/components/thumbnaillabel.cpp \
+        src/configdialog.cpp \
+        src/formdialog.cpp \
+        src/historywindow.cpp \
+        src/application.cpp \
         src/main.cpp
 
 HEADERS += \
         src/aboutdialog.h \
-#       src/components/flowlayout.h \
-#       src/components/previewbox.h \
-#       src/components/tagbutton.h \
-#       src/components/tagsedit.h \
-#       src/components/thumbnaillabel.h \
-#       src/configdialog.h \
-#       src/formdialog.h \
-#       src/historywindow.h \
-    src/application.h \
+        src/components/flowlayout.h \
+        src/components/previewbox.h \
+        src/components/tagbutton.h \
+        src/components/tagsedit.h \
+        src/components/thumbnaillabel.h \
+        src/configdialog.h \
+        src/formdialog.h \
+        src/historywindow.h \
+        src/application.h \
         src/models/record.h
 
 FORMS += \
         src/aboutdialog.ui \
-#       src/configdialog.ui \
-#       src/formdialog.ui \
-#       src/historywindow.ui
+        src/configdialog.ui \
+        src/formdialog.ui \
+        src/historywindow.ui
 
 RESOURCES += \
         fu.qrc

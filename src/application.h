@@ -1,7 +1,6 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
-#include <functional>
 #include <QApplication>
 #include <QIcon>
 #include <QtDebug>
@@ -13,9 +12,12 @@ public:
 
     QIcon &windowIcon();
     void showAboutDialog();
+    void showConfigDialog();
+    void showHistoryWindow();
+
 private:
     template <typename T>
-    void ensureExistence(T **widget, std::function<T*(void)> createWD);
+    void showWindowOrDialog(T **widget);
 };
 
 #endif // APPLICATION_H

@@ -13,10 +13,6 @@
   <property name="windowTitle">
    <string>Uploading copied</string>
   </property>
-  <property name="windowIcon">
-   <iconset resource="../fu.qrc">
-    <normaloff>:/icons/icon.png</normaloff>:/icons/icon.png</iconset>
-  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QFrame" name="frame_2">
@@ -190,9 +186,7 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="../fu.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>buttonBox</sender>

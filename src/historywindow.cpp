@@ -1,27 +1,19 @@
 #include "historywindow.h"
 #include "ui_historywindow.h"
+#include "models/record.h"
 #include "components/flowlayout.h"
 #include "components/previewbox.h"
-#include "models/record.h"
 #include "components/tagbutton.h"
 
 #include <QDebug>
 #include <QRandomGenerator>
 
-/*
-HistoryWindow &HistoryWindow::getInstance()
-{
-    static HistoryWindow instance;
-    return instance;
-}
-*/
 
-HistoryWindow::HistoryWindow(QWidget *parent) :
-    QMainWindow(parent),
+HistoryWindow::HistoryWindow() :
+    QMainWindow(),
     ui(new Ui::HistoryWindow)
 {
     ;
-    setWindowIcon(QIcon(":/icons/icon.png"));
     ui->setupUi(this);
 
 
@@ -50,11 +42,6 @@ HistoryWindow::~HistoryWindow()
     delete ui;
 }
 
-void HistoryWindow::closeEvent(QCloseEvent *evt)
-{
-    hide();
-    evt->ignore();
-}
 
 void HistoryWindow::updateRecords(const QList<Record> &records)
 {
