@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core
+QT       += core sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -40,6 +40,8 @@ SOURCES += \
         src/historywindow.cpp \
         src/application.cpp \
         src/main.cpp \
+        src/store/migration.cpp \
+        src/store/migrations/migrationv0.cpp \
         src/store/migrator.cpp \
         src/upgradedialog.cpp
 
@@ -56,6 +58,7 @@ HEADERS += \
         src/application.h \
         src/models/record.h \
         src/store/migration.h \
+        src/store/migrations/migrationv0.h \
         src/store/migrator.h \
         src/upgradedialog.h
 

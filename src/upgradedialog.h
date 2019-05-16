@@ -13,7 +13,8 @@ class UpgradeDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit UpgradeDialog(Migrator *m);
+    explicit UpgradeDialog();
+    void setMigrator(Migrator *migrator);
     ~UpgradeDialog();
 
 public slots:

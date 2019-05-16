@@ -2,6 +2,8 @@
 
 #include <QApplication>
 #include <QTranslator>
+#include <QDir>
+#include <QStandardPaths>
 
 #include "application.h"
 #include "store/migrator.h"
@@ -17,21 +19,18 @@ int main(int argc, char *argv[])
     qTranslator.load(QLocale::system(), "fu", ".", qtApp.applicationDirPath().append("/i18n"));
     qtApp.installTranslator(&qTranslator);
 
-    // run migrations if needed
-    Migrator *migrator = new Migrator();
-    if (migrator->totalPendingMigration() > 0) {
-        UpgradeDialog *upgradeDialog = new UpgradeDialog(migrator);
-        if (upgradeDialog->exec() == QDialog::Rejected) {
-            qDebug() << "rejected";
-            return 0;
-        }
-        delete migrator;
-    }
-
-    qDebug() << "upgraded";
-
     // initialize app
-    Application app;
+    QDir dataDir(QStandardPaths::writableLocation(QStandardPaths::DataLocation));
+    if (!dataDir.exists())
+        dataDir.mkdir(".");
+
+    QString dbPath = dataDir.filePath("data.db");
+    Application app(dbPath);
+
+    if (app.showUpgradeWindow() == QDialog::Rejected)
+        return -1;
+
+    app.createTrayIcon();
 
     return qtApp.exec();
 }

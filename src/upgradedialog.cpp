@@ -1,15 +1,20 @@
 #include "upgradedialog.h"
 #include "ui_upgradedialog.h"
 
-UpgradeDialog::UpgradeDialog(Migrator *m) :
+UpgradeDialog::UpgradeDialog() :
     QDialog(),
-    ui(new Ui::UpgradeDialog),
-    migrator(m)
+    ui(new Ui::UpgradeDialog)
 {
     ui->setupUi(this);
 
     setAttribute(Qt::WA_DeleteOnClose);
     connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(startUpgrading()));
+}
+
+void UpgradeDialog::setMigrator(Migrator *m)
+{
+    migrator = m;
+    progressUpdate(1, 0);
 }
 
 UpgradeDialog::~UpgradeDialog()
@@ -21,7 +26,7 @@ void UpgradeDialog::startUpgrading()
 {
     connect(migrator, SIGNAL(progressChanged(int,  double)), this, SLOT(progressUpdate(int, double)));
     connect(migrator, SIGNAL(finished()), this, SLOT(accept()));
-    migrator->start();
+    migrator->run();
     ui->buttonBox->setEnabled(false);
 }
 
