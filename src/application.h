@@ -8,16 +8,22 @@
 class Application : public QObject
 {
 public:
-    Application();
+    Application(const QString &dbPath);
 
-    QIcon &windowIcon();
+    int showUpgradeWindow();
+    void createTrayIcon();
     void showAboutDialog();
     void showConfigDialog();
     void showHistoryWindow();
 
+    const QIcon windowIcon;
+
 private:
     template <typename T>
     void showWindowOrDialog(T **widget);
+    const QString &dbPath;
 };
 
 #endif // APPLICATION_H
+
+
