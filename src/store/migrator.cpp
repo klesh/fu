@@ -5,57 +5,59 @@
 #include <QSqlQuery>
 #include <QDateTime>
 
-Migrator::Migrator()
+Migrator::Migrator(SqlStore &store)
+    : _store(store)
 {
     // construct migration list
-    migrations.append(new MigrationV0);
+    _migrations.append(new MigrationV0());
 
     // find out current database version
     do {
-        QSqlQuery query;
-        query.exec("SELECT name FROM sqlite_aster WHERE type='table' AND name='_migration_history");
-        if (!query.next()) {
-            query.exec("CREATE TABLE _migration_history ("
+        auto historyTableExists = _store.exec(("SELECT name FROM sqlite_master WHERE type='table' AND name='_migration_history'"));
+        if (!historyTableExists.next()) {
+            _store.exec("CREATE TABLE _migration_history ("
                       "version INTEGER PRIMARY KEY, "
                       "appliedAt TEXT"
                       ")");
             break;
         }
 
-        query.exec("SELECT version FROM _migration_history ORDER BY version DESC LIMIT 1");
-        if (!query.next()) {
+        auto latestVersion = _store.exec("SELECT version FROM _migration_history ORDER BY version DESC LIMIT 1");
+        if (!latestVersion.next()) {
             break;
         }
 
-        currentDbVersion = query.value(0).toInt();
+        _currentDbVersion = latestVersion.value(0).toInt();
     } while (false);
 
+    qDebug() << "current database version : " << _currentDbVersion;
+
     // select out all migrations which version number greater than current database version
-    for (Migration *migration : migrations) {
-        if (migration->getVersion() > currentDbVersion)
-            pendingMigrations.append(migration);
+    for (Migration *migration : _migrations) {
+        if (migration->getVersion() > _currentDbVersion)
+            _pendingMigrations.append(migration);
     }
 }
 
 Migrator::~Migrator()
 {
-    for (Migration *migration : migrations) {
+    for (Migration *migration : _migrations) {
         delete migration;
     }
 }
 
 int Migrator::totalPendingMigration()
 {
-    return pendingMigrations.size();
+    return _pendingMigrations.size();
 }
 
 void Migrator::run()
 {
     int i = 1;
-    for (Migration *migration : pendingMigrations) {
+    for (Migration *migration : _pendingMigrations) {
         emit progressChanged(i, 0);
         connect(migration, &Migration::progressChanged, [this, i](double p){ this->progressChanged(i, p);});
-        migration->run();
+        migration->run(_store);
         emit progressChanged(i, 1);
         qDebug() << "finish migration : " << migration->getVersion();
         QSqlQuery query;

@@ -30,12 +30,14 @@ CONFIG += c++11
 
 SOURCES += \
         src/aboutdialog.cpp \
+        src/components/errormessage.cpp \
         src/components/flowlayout.cpp \
         src/components/previewbox.cpp \
         src/components/tagbutton.cpp \
         src/components/tagsedit.cpp \
         src/components/thumbnaillabel.cpp \
         src/configdialog.cpp \
+        src/core/error.cpp \
         src/formdialog.cpp \
         src/historywindow.cpp \
         src/application.cpp \
@@ -43,16 +45,19 @@ SOURCES += \
         src/store/migration.cpp \
         src/store/migrations/migrationv0.cpp \
         src/store/migrator.cpp \
+        src/store/sqlstore.cpp \
         src/upgradedialog.cpp
 
 HEADERS += \
         src/aboutdialog.h \
+        src/components/errormessage.h \
         src/components/flowlayout.h \
         src/components/previewbox.h \
         src/components/tagbutton.h \
         src/components/tagsedit.h \
         src/components/thumbnaillabel.h \
         src/configdialog.h \
+        src/core/error.h \
         src/formdialog.h \
         src/historywindow.h \
         src/application.h \
@@ -60,6 +65,7 @@ HEADERS += \
         src/store/migration.h \
         src/store/migrations/migrationv0.h \
         src/store/migrator.h \
+        src/store/sqlstore.h \
         src/upgradedialog.h
 
 FORMS += \

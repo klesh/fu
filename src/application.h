@@ -1,27 +1,43 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
+#include "upgradedialog.h"
+#include "aboutdialog.h"
+#include "configdialog.h"
+#include "historywindow.h"
+#include "store/sqlstore.h"
+
+#include <QtGlobal>
 #include <QApplication>
 #include <QIcon>
-#include <QtDebug>
 
-class Application : public QObject
+class Application : public QApplication
 {
+    Q_OBJECT
+
 public:
-    Application(const QString &dbPath);
+    Application(int &argc, char **argv);
+    ~Application() override;
 
     int showUpgradeWindow();
     void createTrayIcon();
     void showAboutDialog();
     void showConfigDialog();
     void showHistoryWindow();
+    bool prepare(const QString& dbPath);
 
-    const QIcon windowIcon;
+    const QString &getDbPath();
 
 private:
     template <typename T>
     void showWindowOrDialog(T **widget);
-    const QString &dbPath;
+    QIcon _windowIcon;
+    QString _dbPath;
+
+    UpgradeDialog *upgradeDialog = nullptr;
+    AboutDialog *aboutDialog = nullptr;
+    ConfigDialog *configDialog = nullptr;
+    HistoryWindow *historyWindow = nullptr;
 };
 
 #endif // APPLICATION_H

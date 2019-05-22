@@ -2,6 +2,7 @@
 #define UPGRADEDIALOG_H
 
 #include <QDialog>
+
 #include "store/migrator.h"
 
 namespace Ui {

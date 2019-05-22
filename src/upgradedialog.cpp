@@ -1,5 +1,7 @@
 #include "upgradedialog.h"
 #include "ui_upgradedialog.h"
+#include "core/error.h"
+#include "components/errormessage.h"
 
 UpgradeDialog::UpgradeDialog() :
     QDialog(),
@@ -25,9 +27,14 @@ UpgradeDialog::~UpgradeDialog()
 void UpgradeDialog::startUpgrading()
 {
     connect(migrator, SIGNAL(progressChanged(int,  double)), this, SLOT(progressUpdate(int, double)));
-    connect(migrator, SIGNAL(finished()), this, SLOT(accept()));
-    migrator->run();
     ui->buttonBox->setEnabled(false);
+    try {
+        migrator->run();
+        accept();
+    } catch (Error &e) {
+        ErrorMessage::showFatal(e.text(), this);
+        exit(-1);
+    }
 }
 
 void UpgradeDialog::progressUpdate(int step, double percent)

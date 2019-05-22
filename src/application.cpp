@@ -1,27 +1,17 @@
 #include "application.h"
-#include "upgradedialog.h"
-#include "aboutdialog.h"
-#include "configdialog.h"
-#include "historywindow.h"
 
 #include <QSystemTrayIcon>
 #include <QMenu>
-#include <QSqlDatabase>
 
-static UpgradeDialog *upgradeDialog = nullptr;
-static AboutDialog *aboutDialog = nullptr;
-static ConfigDialog *configDialog = nullptr;
-static HistoryWindow *historyWindow = nullptr;
-static QSqlDatabase db;
 
-Application::Application(const QString &dbPath)
-    : windowIcon(":icons/icon-32.png"), dbPath(dbPath)
+Application::Application(int &argc, char **argv)
+    : QApplication(argc, argv), _windowIcon(":icons/icon-32.png")
 {
-    qDebug() << "setup database : " << dbPath;
+    setWindowIcon(_windowIcon);
+}
 
-    db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName(dbPath);
-    db.open();
+Application::~Application()
+{
 }
 
 template<typename T>
@@ -37,7 +27,6 @@ void Application::showWindowOrDialog(T **wd)
         });
         (*wd)->setAttribute(Qt::WA_DeleteOnClose);
         (*wd)->setWindowFlags((*wd)->windowFlags() & ~Qt::WindowContextHelpButtonHint);
-        (*wd)->setWindowIcon(windowIcon);
         (*wd)->show();
         qDebug() << "showing window/dialog";
     } else {
@@ -50,7 +39,8 @@ void Application::showWindowOrDialog(T **wd)
 int Application::showUpgradeWindow()
 {
     // run migrations if needed
-    Migrator migrator;
+    SqlStore store(_dbPath);
+    Migrator migrator(store);
     if (migrator.totalPendingMigration() > 0) {
         showWindowOrDialog<UpgradeDialog>(&upgradeDialog);
         upgradeDialog->setMigrator(&migrator);
@@ -86,7 +76,7 @@ void Application::createTrayIcon()
     qDebug() << "setup tray icon";
     QSystemTrayIcon *trayIcon = new QSystemTrayIcon();
     trayIcon->setContextMenu(trayMenu);
-    trayIcon->setIcon(windowIcon);
+    trayIcon->setIcon(_windowIcon);
     trayIcon->show();
 
     connect(qApp, &QApplication::aboutToQuit, [=](void){
@@ -109,4 +99,28 @@ void Application::showConfigDialog()
 void Application::showHistoryWindow()
 {
     showWindowOrDialog<HistoryWindow>(&historyWindow);
+}
+
+bool Application::prepare(const QString &dbPath)
+{
+    QFileInfo dbFileInfo(dbPath);
+    if (!dbFileInfo.exists() && !dbFileInfo.dir().exists()) {
+        dbFileInfo.dir().mkdir(".");
+    }
+
+    // setup database
+    _dbPath = dbPath;
+    qDebug() << "database path : " << dbPath;
+
+    // upgrade checking
+    if (showUpgradeWindow() == QDialog::Rejected)
+        return false;
+
+    createTrayIcon();
+    return true;
+}
+
+const QString &Application::getDbPath()
+{
+    return _dbPath;
 }

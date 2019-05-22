@@ -1,36 +1,42 @@
-#include "src/aboutdialog.h"
 
-#include <QApplication>
 #include <QTranslator>
+#include <QCommandLineParser>
+#include <QCommandLineOption>
 #include <QDir>
 #include <QStandardPaths>
 
 #include "application.h"
-#include "store/migrator.h"
-#include "upgradedialog.h"
+
 
 int main(int argc, char *argv[])
 {
-    QApplication qtApp(argc, argv);
-    qtApp.setQuitOnLastWindowClosed(false);
+    Application app(argc, argv);
 
     // setup i18n
-    QTranslator qTranslator(&qtApp);
-    qTranslator.load(QLocale::system(), "fu", ".", qtApp.applicationDirPath().append("/i18n"));
-    qtApp.installTranslator(&qTranslator);
+    QTranslator qTranslator(&app);
+    qTranslator.load(QLocale::system(), "fu", ".", app.applicationDirPath().append("/i18n"));
+    app.installTranslator(&qTranslator);
 
-    // initialize app
+    // application info
+    QApplication::setApplicationName("fu");
+    QApplication::setApplicationVersion(APP_VERSION);
+    QApplication::setQuitOnLastWindowClosed(false);
+
+    // parse arguments
+    QCommandLineParser parser;
+    parser.setApplicationDescription("fu - File Uploader, a utility upload files/images to remote server and output desirable plain text to your Clipboard");
+    parser.addHelpOption();
+
     QDir dataDir(QStandardPaths::writableLocation(QStandardPaths::DataLocation));
-    if (!dataDir.exists())
-        dataDir.mkdir(".");
+    QString defaultDbPath = dataDir.filePath("data.db");
+    QCommandLineOption dbPathOption("p", app.tr("sqlite database file path"), "path", defaultDbPath);
+    parser.addOption(dbPathOption);
 
-    QString dbPath = dataDir.filePath("data.db");
-    Application app(dbPath);
+    parser.process(app);
 
-    if (app.showUpgradeWindow() == QDialog::Rejected)
+    if (!app.prepare(parser.value(dbPathOption)))
         return -1;
 
-    app.createTrayIcon();
 
-    return qtApp.exec();
+    return app.exec();
 }

@@ -12,15 +12,14 @@ int MigrationV0::getVersion()
     return 0;
 }
 
-void MigrationV0::run()
+void MigrationV0::run(SqlStore &store)
 {
-    execute("CREATE TABLE tags ( "
-               "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-               "name TEXT NOT NULL, "
-               "lastUsedTimestamp INTEGER"
-               ")");
-    QThread::sleep(1);
+    store.exec("CREATE TABLE tags ( "
+            "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+            "name TEXT NOT NULL, "
+            "createdAt TEXT NOT NULL,"
+            "lastUsedTimestamp INTEGER"
+            ")");
+    store.exec("CREATE INDEX idx_tags_lastUsedTimestamp ON tags (lastUsedTimestamp DESC);");
     emit progressChanged(0.5);
-    execute("CREATE INDEX idx_tags_lastUsedTimestamp ON tags (lastUsedTimestamp DESC);");
-    emit progressChanged(1);
 }

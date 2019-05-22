@@ -1,7 +1,9 @@
+#include "application.h"
 #include "configdialog.h"
 #include "ui_configdialog.h"
 
 #include <QDesktopServices>
+#include <QFileInfo>
 
 ConfigDialog::ConfigDialog() :
     QDialog(),
@@ -17,5 +19,7 @@ ConfigDialog::~ConfigDialog()
 
 void ConfigDialog::on_btnOpenDataDir_clicked()
 {
-    QDesktopServices::openUrl(QUrl("file:///d:/"));
+    auto app = qobject_cast<Application*>qApp;
+    QFileInfo fileInfo(app->getDbPath());
+    QDesktopServices::openUrl(QUrl("file:///" + fileInfo.dir().absolutePath()));
 }
