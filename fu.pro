@@ -38,6 +38,7 @@ SOURCES += \
         src/components/thumbnaillabel.cpp \
         src/configdialog.cpp \
         src/core/error.cpp \
+        src/core/tagservice.cpp \
         src/formdialog.cpp \
         src/historywindow.cpp \
         src/application.cpp \
@@ -58,10 +59,12 @@ HEADERS += \
         src/components/thumbnaillabel.h \
         src/configdialog.h \
         src/core/error.h \
+        src/core/tagservice.h \
         src/formdialog.h \
         src/historywindow.h \
         src/application.h \
         src/models/record.h \
+        src/models/tag.h \
         src/store/migration.h \
         src/store/migrations/migrationv0.h \
         src/store/migrator.h \

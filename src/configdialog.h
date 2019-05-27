@@ -18,6 +18,7 @@ public:
 
 private slots:
     void on_btnOpenDataDir_clicked();
+    void on_currentTab_changed(int id);
 
 private:
     Ui::ConfigDialog *ui;

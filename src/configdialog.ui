@@ -23,7 +23,7 @@
    <item>
     <widget class="QTabWidget" name="tabs">
      <property name="currentIndex">
-      <number>0</number>
+      <number>3</number>
      </property>
      <widget class="QWidget" name="tabServers">
       <attribute name="title">
@@ -541,7 +541,7 @@
       </attribute>
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
-        <widget class="QListWidget" name="listWidget"/>
+        <widget class="QListWidget" name="lstTags"/>
        </item>
        <item>
         <layout class="QVBoxLayout" name="verticalLayout_4">

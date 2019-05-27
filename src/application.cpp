@@ -12,6 +12,10 @@ Application::Application(int &argc, char **argv)
 
 Application::~Application()
 {
+    if (_store)
+        delete _store;
+    if (_tagService)
+        delete _tagService;
 }
 
 template<typename T>
@@ -39,8 +43,7 @@ void Application::showWindowOrDialog(T **wd)
 int Application::showUpgradeWindow()
 {
     // run migrations if needed
-    SqlStore store(_dbPath);
-    Migrator migrator(store);
+    Migrator migrator(*_store);
     if (migrator.totalPendingMigration() > 0) {
         showWindowOrDialog<UpgradeDialog>(&upgradeDialog);
         upgradeDialog->setMigrator(&migrator);
@@ -111,6 +114,8 @@ bool Application::prepare(const QString &dbPath)
     // setup database
     _dbPath = dbPath;
     qDebug() << "database path : " << dbPath;
+    _store = new SqlStore(dbPath);
+    _tagService = new TagService(*_store);
 
     // upgrade checking
     if (showUpgradeWindow() == QDialog::Rejected)
@@ -123,4 +128,9 @@ bool Application::prepare(const QString &dbPath)
 const QString &Application::getDbPath()
 {
     return _dbPath;
+}
+
+TagService *Application::tagService()
+{
+    return _tagService;
 }
