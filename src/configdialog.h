@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QCloseEvent>
+#include <QAbstractItemDelegate>
 
 namespace Ui {
 class ConfigDialog;
@@ -19,6 +20,9 @@ public:
 private slots:
     void on_btnOpenDataDir_clicked();
     void on_currentTab_changed(int id);
+    void on_lstTags_endEdit(QWidget*, QAbstractItemDelegate::EndEditHint);
+    void on_btnAddTag_clicked();
+    void on_btnDelTag_clicked();
 
 private:
     Ui::ConfigDialog *ui;

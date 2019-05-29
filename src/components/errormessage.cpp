@@ -16,3 +16,24 @@ int ErrorMessage::showFatal(const QString &message, QWidget *parent)
     msgBox.setDetailedText(message);
     return msgBox.exec();
 }
+
+int ErrorMessage::showInfo(const QString &message, QWidget *parent)
+{
+    ErrorMessage msgBox(parent);
+    msgBox.setIcon(QMessageBox::Information);
+    msgBox.setWindowTitle(tr("Notice"));
+    msgBox.setText(message);
+    return msgBox.exec();
+}
+
+int ErrorMessage::confirm(const QString &message, QWidget *parent)
+{
+    ErrorMessage msgBox(parent);
+    msgBox.setIcon(QMessageBox::Warning);
+    msgBox.setWindowTitle(tr("Warning"));
+    msgBox.setText(message);
+    msgBox.addButton(QMessageBox::Yes);
+    msgBox.addButton(QMessageBox::No);
+    msgBox.setDefaultButton(QMessageBox::No);
+    return msgBox.exec();
+}

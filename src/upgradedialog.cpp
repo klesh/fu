@@ -1,7 +1,7 @@
+#include "application.h"
 #include "upgradedialog.h"
 #include "ui_upgradedialog.h"
 #include "core/error.h"
-#include "components/errormessage.h"
 
 UpgradeDialog::UpgradeDialog() :
     QDialog(),

@@ -33,27 +33,29 @@ QList<Tag> TagService::getAll()
     return tags;
 }
 
-void TagService::append(Tag &tag)
+void TagService::append(const QString &name)
 {
     QDateTime now = QDateTime::currentDateTime();
-    tag.setCreatedAt(now);
-    tag.setLastUsedTimestamp(now.toTime_t());
 
     auto query = _store.prepare("INSERT INTO tags (name, createdAt, lastUsedTimestamp) VALUES (:name, :createdAt, :lastUsedTimestamp)");
-    query.bindValue(":name", tag.getName());
-    query.bindValue(":createdAt", tag.getCreatedAt().toString(Qt::ISODate));
-    query.bindValue(":lastUsedTimestamp", tag.getLastUsedTimestamp());
+    query.bindValue(":name", name);
+    query.bindValue(":createdAt", now.toString(Qt::ISODate));
+    query.bindValue(":lastUsedTimestamp", now.toTime_t());
 
     query.exec();
-    tag.setId(query.lastInsertId().toUInt());
 }
 
-void TagService::update(Tag &tag)
+void TagService::update(uint id, const QString &name)
 {
-
+    auto query = _store.prepare("UPDATE tags SET name=:name WHERE id=:id");
+    query.bindValue(":name", name);
+    query.bindValue(":id", id);
+    query.exec();
 }
 
-void TagService::remove(Tag &tag)
+void TagService::remove(uint id)
 {
-
+    auto query = _store.prepare("DELETE FROM tags WHERE id=:id");
+    query.bindValue(":id", id);
+    query.exec();
 }

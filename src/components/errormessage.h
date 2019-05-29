@@ -11,6 +11,8 @@ public:
     ErrorMessage(QWidget *parent = nullptr);
 
     static int showFatal(const QString &message, QWidget *parent = nullptr);
+    static int showInfo(const QString &message, QWidget *parent = nullptr);
+    static int confirm(const QString &message, QWidget *parent = nullptr);
 };
 
 #endif // ERRORMESSAGE_H
