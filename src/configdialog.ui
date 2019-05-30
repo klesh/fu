@@ -112,14 +112,14 @@
           <item>
            <widget class="QCheckBox" name="cbxAlwayUpload">
             <property name="text">
-             <string>Always upload a copy to this server</string>
+             <string>Enable uploading to this server</string>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QCheckBox" name="cbxDontOutput">
             <property name="text">
-             <string>Do not output</string>
+             <string>Enable output to Clipboard</string>
             </property>
            </widget>
           </item>
@@ -552,14 +552,14 @@
          <item>
           <widget class="QPushButton" name="btnAddTag">
            <property name="text">
-            <string>Add</string>
+            <string>&amp;Add</string>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QPushButton" name="btnDelTag">
            <property name="text">
-            <string>Delete</string>
+            <string>&amp;Delete</string>
            </property>
           </widget>
          </item>

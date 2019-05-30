@@ -18,11 +18,11 @@ public:
     ~ConfigDialog();
 
 private slots:
-    void on_btnOpenDataDir_clicked();
-    void on_currentTab_changed(int id);
-    void on_lstTags_endEdit(QWidget*, QAbstractItemDelegate::EndEditHint);
-    void on_btnAddTag_clicked();
-    void on_btnDelTag_clicked();
+    void reloadTab(int id);
+    void bakOpenDataDir();
+    void tagsEndEdit(QWidget*);
+    void tagsAddItem();
+    void tagsDelItems();
 
 private:
     Ui::ConfigDialog *ui;

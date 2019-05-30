@@ -5,10 +5,10 @@
 Tag convertResultToTag(QSqlQuery result) {
     Tag tag;
     auto rec = result.record();
-    tag.setId(result.value(rec.indexOf("id")).toUInt());
-    tag.setName(result.value(rec.indexOf("name")).toString());
-    tag.setCreatedAt(result.value(rec.indexOf("createdAt")).toDateTime());
-    tag.setLastUsedTimestamp(result.value(rec.indexOf("lastUsedTimestamp")).toUInt());
+    tag.id = result.value(rec.indexOf("id")).toUInt();
+    tag.name = result.value(rec.indexOf("name")).toString();
+    tag.createAt = result.value(rec.indexOf("createdAt")).toDateTime();
+    tag.lastUsedTimestamp = result.value(rec.indexOf("lastUsedTimestamp")).toUInt();
     return tag;
 }
 

@@ -16,7 +16,7 @@ void MigrationV0::run(SqlStore &store)
 {
     store.exec("CREATE TABLE tags ( "
             "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-            "name TEXT NOT NULL, "
+            "name TEXT NOT NULL UNIQUE, "
             "createdAt TEXT NOT NULL,"
             "lastUsedTimestamp INTEGER"
             ")");
