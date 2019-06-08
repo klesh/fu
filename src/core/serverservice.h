@@ -8,15 +8,19 @@
 class ServerService
 {
     SqlStore &_store;
+    QList<Protocol *> _protocols;
 
 public:
     ServerService(SqlStore &store);
 
     QList<Server> getAll();
-    void append(const QString &name);
-    void update(uint id, const QString &name);
+    Server findById(uint id);
+    void append(Server &server);
+    void update(Server &server);
+    void save(Server &server);
     void remove(uint id);
-    QList<Protocol*> getAllProtocols();
+    QList<Protocol*> getProtocols();
+    Protocol* findProtocol(const QString &name);
 };
 
 #endif // SERVERSERVICE_H

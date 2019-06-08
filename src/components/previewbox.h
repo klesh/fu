@@ -12,6 +12,7 @@ class PreviewBox : public QFrame
 
 public:
     PreviewBox(QWidget *parent = nullptr);
+    //~PreviewBox();
 
     void setImage(const QPixmap &thumbnail);
     void setUploadedTo(const QString &serverName);

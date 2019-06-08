@@ -7,7 +7,9 @@
 #include "configdialog.h"
 #include "historywindow.h"
 #include "store/sqlstore.h"
+#include "core/error.h"
 #include "core/tagservice.h"
+#include "core/serverservice.h"
 
 #include <QtGlobal>
 #include <QApplication>
@@ -31,6 +33,7 @@ public:
     const QString &getDbPath();
 
     TagService *tagService();
+    ServerService *serverService();
 
 private:
     template <typename T>
@@ -39,6 +42,7 @@ private:
     QString _dbPath;
     SqlStore *_store = nullptr;
     TagService *_tagService = nullptr;
+    ServerService *_serverService = nullptr;
 
     UpgradeDialog *upgradeDialog = nullptr;
     AboutDialog *aboutDialog = nullptr;

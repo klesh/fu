@@ -32,6 +32,7 @@ SOURCES += \
         src/aboutdialog.cpp \
         src/components/errormessage.cpp \
         src/components/flowlayout.cpp \
+        src/components/folderpicker.cpp \
         src/components/previewbox.cpp \
         src/components/tagbutton.cpp \
         src/components/tagsedit.cpp \
@@ -44,6 +45,7 @@ SOURCES += \
         src/historywindow.cpp \
         src/application.cpp \
         src/main.cpp \
+        src/protocols/ftpprotocol.cpp \
         src/protocols/localstorageprotocol.cpp \
         src/store/migration.cpp \
         src/store/migrations/migrationv0.cpp \
@@ -55,6 +57,7 @@ HEADERS += \
         src/aboutdialog.h \
         src/components/errormessage.h \
         src/components/flowlayout.h \
+        src/components/folderpicker.h \
         src/components/previewbox.h \
         src/components/tagbutton.h \
         src/components/tagsedit.h \
@@ -70,6 +73,7 @@ HEADERS += \
         src/models/record.h \
         src/models/server.h \
         src/models/tag.h \
+        src/protocols/ftpprotocol.h \
         src/protocols/localstorageprotocol.h \
         src/store/migration.h \
         src/store/migrations/migrationv0.h \

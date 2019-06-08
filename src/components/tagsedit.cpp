@@ -26,3 +26,13 @@ TagsEdit::TagsEdit(QWidget *parent)
     cbxPicker->addItems({"Hello", "world", "Mr.Robot", "idiot", "Funny", "The Expanse"});
     cbxPicker->setCurrentIndex(-1);
 }
+
+/*
+TagsEdit::~TagsEdit()
+{
+    QLayoutItem *item;
+    while ((item = layout()->takeAt(0)))
+        delete item;
+    delete layout();
+}
+*/

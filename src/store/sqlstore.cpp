@@ -33,7 +33,7 @@ QSqlQuery &SqlStore::prepare(const QString &sql)
     return _query;
 }
 
-bool SqlStore::exec()
+QSqlQuery SqlStore::exec()
 {
     bool result = _query.exec();
     if (!result) {
@@ -41,7 +41,7 @@ bool SqlStore::exec()
         qDebug() << detail;
         throw_error(detail);
     }
-    return result;
+    return _query;
 }
 
 QSqlQuery &SqlStore::exec(const QString &sql)

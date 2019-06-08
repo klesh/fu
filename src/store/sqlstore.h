@@ -5,6 +5,7 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlError>
+#include <QSqlRecord>
 
 class SqlStore
 {
@@ -19,7 +20,7 @@ public:
     void close();
     QSqlQuery &prepare(const QString &sql);
     QSqlQuery &exec(const QString &sql);
-    bool exec();
+    QSqlQuery exec();
 };
 
 

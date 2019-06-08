@@ -8,6 +8,7 @@ Application::Application(int &argc, char **argv)
     : QApplication(argc, argv), _windowIcon(":icons/icon-32.png")
 {
     setWindowIcon(_windowIcon);
+
 }
 
 Application::~Application()
@@ -106,6 +107,9 @@ void Application::showHistoryWindow()
 
 bool Application::prepare(const QString &dbPath)
 {
+    if (_store)
+        throw_error("Application:prepare being invoked multiple time");
+
     QFileInfo dbFileInfo(dbPath);
     if (!dbFileInfo.exists() && !dbFileInfo.dir().exists()) {
         dbFileInfo.dir().mkdir(".");
@@ -116,6 +120,7 @@ bool Application::prepare(const QString &dbPath)
     qDebug() << "database path : " << dbPath;
     _store = new SqlStore(dbPath);
     _tagService = new TagService(*_store);
+    _serverService = new ServerService(*_store);
 
     // upgrade checking
     if (showUpgradeWindow() == QDialog::Rejected)
@@ -133,4 +138,9 @@ const QString &Application::getDbPath()
 TagService *Application::tagService()
 {
     return _tagService;
+}
+
+ServerService *Application::serverService()
+{
+    return _serverService;
 }

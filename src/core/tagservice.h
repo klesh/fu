@@ -1,8 +1,8 @@
 #ifndef TAGSERVICE_H
 #define TAGSERVICE_H
 
-#include "../models/tag.h"
 #include "../store/sqlstore.h"
+#include "../models/tag.h"
 
 class TagService
 {

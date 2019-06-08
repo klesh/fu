@@ -8,9 +8,9 @@ struct Server
     uint id;
     QString name;
     QString protocol;
-    QMap<QString, QVariant> settings;
-    bool isActived;
-    bool isOutputEnabled;
+    QVariantMap settings;
+    bool uploadEnabled;
+    uint outputFormatId;
     QDateTime createAt;
 };
 

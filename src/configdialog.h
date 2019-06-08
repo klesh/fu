@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QCloseEvent>
 #include <QAbstractItemDelegate>
+#include <QListWidgetItem>
 
 namespace Ui {
 class ConfigDialog;
@@ -23,6 +24,13 @@ private slots:
     void tagsEndEdit(QWidget*);
     void tagsAddItem();
     void tagsDelItems();
+    void serversShowItem(QListWidgetItem*, QListWidgetItem*);
+    void serversEditItem(QListWidgetItem*);
+    void serversEditItemSave();
+    void serversEditItemCancel();
+    void serversAddItem();
+    void serversDelItems();
+    void serversReloadSettingsFrame(const QString&);
 
 private:
     Ui::ConfigDialog *ui;

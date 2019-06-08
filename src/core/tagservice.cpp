@@ -1,6 +1,5 @@
 #include "tagservice.h"
 
-#include <QSqlRecord>
 
 Tag convertResultToTag(QSqlQuery result) {
     Tag tag;

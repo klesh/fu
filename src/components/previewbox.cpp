@@ -38,6 +38,16 @@ PreviewBox::PreviewBox(QWidget *parent)
     selected = false;
 }
 
+/*
+PreviewBox::~PreviewBox()
+{
+    QLayoutItem *item;
+    while ((item = layout()->takeAt(0)))
+        delete item;
+    delete layout();
+}
+*/
+
 void PreviewBox::setImage(const QPixmap &thumbnail)
 {
     previewImg->setPixmap(thumbnail);

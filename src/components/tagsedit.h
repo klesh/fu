@@ -12,6 +12,7 @@ class TagsEdit : public QFrame
 
 public:
     TagsEdit(QWidget *parnet = nullptr);
+    //~TagsEdit();
 
 protected:
     QLayout *laySelected;

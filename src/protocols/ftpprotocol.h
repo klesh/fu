@@ -1,15 +1,14 @@
-#ifndef LOCALSTORAGEPROTOCOL_H
-#define LOCALSTORAGEPROTOCOL_H
+#ifndef FTPPROTOCOL_H
+#define FTPPROTOCOL_H
 
 #include <QtCore>
 #include "../models/protocol.h"
 
-
-class LocalStorageProtocol : public Protocol
+class FtpProtocol : public Protocol
 {
     QList<ProtocolSettingInfo> _settingInfos;
 public:
-    LocalStorageProtocol();
+    FtpProtocol();
 
     // Protocol interface
 public:
@@ -18,4 +17,4 @@ public:
     const QList<ProtocolSettingInfo> &getSettingInfos();
 };
 
-#endif // LOCALSTORAGEPROTOCOL_H
+#endif // FTPPROTOCOL_H
