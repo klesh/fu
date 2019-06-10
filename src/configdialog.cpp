@@ -7,6 +7,7 @@
 #include <QFileInfo>
 #include <QSpinBox>
 #include <QToolTip>
+#include <QFileDialog>
 
 #define TAB_SERVERS 0
 #define TAB_IMAGE 1
@@ -31,6 +32,19 @@ ConfigDialog::ConfigDialog() :
     connect(ui->btnCancelServer, SIGNAL(clicked()), this, SLOT(serversEditItemCancel()));
     connect(ui->cbbProtocol, SIGNAL(currentTextChanged(const QString&)), this, SLOT(serversReloadSettingsFrame(const QString&)));
 
+    connect(ui->btnWatermarkImagePicker, SIGNAL(clicked()), this, SLOT(imagePickWatermarkFile()));
+    connect(ui->cbxImageCompression, SIGNAL(stateChanged(int)), this, SLOT(imageSaveCompressionSetting(int)));
+    connect(ui->cbxImageWatermark, SIGNAL(stateChanged(int)), this, SLOT(imageSaveWatermarkSetting(int)));
+    connect(ui->btnWatermarkPositionTopLeft, SIGNAL(toggled(bool)), this, SLOT(imageSaveWatermarkPositionSetting(bool)));
+    connect(ui->btnWatermarkPositionTopCenter, SIGNAL(toggled(bool)), this, SLOT(imageSaveWatermarkPositionSetting(bool)));
+    connect(ui->btnWatermarkPositionTopRight, SIGNAL(toggled(bool)), this, SLOT(imageSaveWatermarkPositionSetting(bool)));
+    connect(ui->btnWatermarkPositionMiddleLeft, SIGNAL(toggled(bool)), this, SLOT(imageSaveWatermarkPositionSetting(bool)));
+    connect(ui->btnWatermarkPositionMiddleCenter, SIGNAL(toggled(bool)), this, SLOT(imageSaveWatermarkPositionSetting(bool)));
+    connect(ui->btnWatermarkPositionMiddleRight, SIGNAL(toggled(bool)), this, SLOT(imageSaveWatermarkPositionSetting(bool)));
+    connect(ui->btnWatermarkPositionBottomLeft, SIGNAL(toggled(bool)), this, SLOT(imageSaveWatermarkPositionSetting(bool)));
+    connect(ui->btnWatermarkPositionBottomCenter, SIGNAL(toggled(bool)), this, SLOT(imageSaveWatermarkPositionSetting(bool)));
+    connect(ui->btnWatermarkPositionBottomRight, SIGNAL(toggled(bool)), this, SLOT(imageSaveWatermarkPositionSetting(bool)));
+
     connect(ui->lstTags->itemDelegate(), SIGNAL(commitData(QWidget*)), this, SLOT(tagsEndEdit(QWidget*)));
     connect(ui->btnAddTag, SIGNAL(clicked()), this, SLOT(tagsAddItem()));
     connect(ui->btnDelTag, SIGNAL(clicked()), this, SLOT(tagsDelItems()));
@@ -54,85 +68,72 @@ void ConfigDialog::reloadTab(int id)
 {
     qDebug() << "reloading tab " << id;
 
-    switch (id) {
-    case TAB_SERVERS:
-    {
-        ui->lstServers->clear();
-        QList<Server> servers = APP->serverService()->getAll();
-        for (auto &server : servers) {
-            auto listItem = new QListWidgetItem(server.name, ui->lstServers);
-            listItem->setData(Qt::UserRole, server.id);
-            ui->lstServers->addItem(listItem);
-        }
-        break;
-    }
-    case TAB_TAGS:
-    {
-        ui->lstTags->clear();
-        QList<Tag> tags = APP->tagService()->getAll();
-        for (auto &tag : tags) {
-            auto listItem = new QListWidgetItem(tag.name, ui->lstTags);
-            listItem->setFlags(listItem->flags() | Qt::ItemIsEditable);
-            listItem->setData(Qt::UserRole, tag.id);
-            ui->lstTags->addItem(listItem);
-        }
-        break;
-    }
-    }
-}
-
-void ConfigDialog::bakOpenDataDir()
-{
-    QFileInfo fileInfo(APP->getDbPath());
-    QDesktopServices::openUrl(QUrl("file:///" + fileInfo.dir().absolutePath()));
-}
-
-void ConfigDialog::tagsEndEdit(QWidget* editor)
-{
-    QString newName = reinterpret_cast<QLineEdit*>(editor)->text();
-    uint id = ui->lstTags->currentItem()->data(Qt::UserRole).toUInt();
-    if (!newName.isEmpty()) {
-        if (id) {
-            APP->tagService()->update(id, newName);
-        } else {
-            APP->tagService()->append(newName);
-        }
-    }
-    reloadTab(TAB_TAGS);
-}
-
-void ConfigDialog::tagsAddItem()
-{
-    auto listItem = new QListWidgetItem();
-    listItem->setFlags(listItem->flags() | Qt::ItemIsEditable);
-    listItem->setData(Qt::UserRole, 0);
-    ui->lstTags->insertItem(0, listItem);
-    ui->lstTags->setCurrentItem(listItem);
-    ui->lstTags->editItem(listItem);
-}
-
-void ConfigDialog::tagsDelItems()
-{
-    auto selectedItems = ui->lstTags->selectedItems();
-    if (selectedItems.size() == 0) {
-        ErrorMessage::showInfo(tr("No tag is selected!"), this);
-    } else {
-        if (ErrorMessage::confirm(tr("Are you sure to delete all selected tags?"), this) == QMessageBox::Yes) {
-            for (auto selectedItem : selectedItems) {
-                APP->tagService()->remove(selectedItem->data(Qt::UserRole).toUInt());
+    try {
+        switch (id) {
+        case TAB_SERVERS:
+        {
+            ui->lstServers->clear();
+            QList<Server> servers = APP->serverService()->getAll();
+            for (auto &server : servers) {
+                auto listItem = new QListWidgetItem(server.name, ui->lstServers);
+                listItem->setData(Qt::UserRole, server.id);
+                ui->lstServers->addItem(listItem);
             }
-            reloadTab(TAB_TAGS);
+            break;
         }
+        case TAB_IMAGE:
+        {
+            ui->cbxImageCompression->setChecked(APP->settingService()->imageCompressionEnabled());
+
+            auto imageWatermarkEnabled = APP->settingService()->imageWatermarkEnabled();
+            ui->cbxImageWatermark->setChecked(imageWatermarkEnabled);
+            ui->btnWatermarkImagePicker->setEnabled(imageWatermarkEnabled);
+
+            auto imageWatermarkPath = APP->settingService()->imageWatermarkPath();
+            if (!imageWatermarkPath.isEmpty()) {
+                QFileInfo fi(imageWatermarkPath);
+                if (fi.exists() && fi.isFile()) {
+                    ui->lblWatermarkImagePreviewer->setPixmap(QPixmap(imageWatermarkPath).scaled(200, 200, Qt::KeepAspectRatio));
+                }
+            }
+
+            auto imageWatermarkPosition = APP->settingService()->imageWatermarkPosition();
+            auto btnWatermarkPosition = ui->frmWatermarkPosition->findChild<QPushButton*>(QString("btnWatermarkPosition%1").arg(imageWatermarkPosition));
+            btnWatermarkPosition->setChecked(true);
+            break;
+        }
+        case TAB_TAGS:
+        {
+            ui->lstTags->clear();
+            QList<Tag> tags = APP->tagService()->getAll();
+            for (auto &tag : tags) {
+                auto listItem = new QListWidgetItem(tag.name, ui->lstTags);
+                listItem->setFlags(listItem->flags() | Qt::ItemIsEditable);
+                listItem->setData(Qt::UserRole, tag.id);
+                ui->lstTags->addItem(listItem);
+            }
+            break;
+        }
+        }
+    } catch (Error &e) {
+        ErrorMessage::showFatal(e.text(), this);
     }
 }
 
 void ConfigDialog::serversShowItem(QListWidgetItem* current, QListWidgetItem* previous)
 {
+    ui->btnDelServer->setEnabled(current);
+
     Q_UNUSED(previous);
     if (!current)
         return;
 
+
     uint id = current->data(Qt::UserRole).toUInt();
+
+    if (!id)
+        return;
+
     Server server;
     if (id) {
         try {
@@ -239,15 +240,23 @@ void ConfigDialog::serversEditItemSave()
         APP->serverService()->save(server);
         reloadTab(TAB_SERVERS);
     } catch (Error &e) {
-        ErrorMessage::showFatal(e.text(), this);
+        auto errMsg = e.text();
+        if (errMsg.contains("UNIQUE constraint")) {
+            ErrorMessage::showInfo("Server with the same name already exists.", this);
+            return;
+        } else {
+            ErrorMessage::showFatal(e.text(), this);
+        }
     }
-    serversEditItemCancel();
+    ui->grpServerForm->setEnabled(false);
+    ui->grpServerList->setEnabled(true);
 }
 
 void ConfigDialog::serversEditItemCancel()
 {
     ui->grpServerForm->setEnabled(false);
     ui->grpServerList->setEnabled(true);
+    reloadTab(TAB_SERVERS);
 }
 
 void ConfigDialog::serversAddItem()
@@ -262,7 +271,12 @@ void ConfigDialog::serversAddItem()
 
 void ConfigDialog::serversDelItems()
 {
-
+    try {
+        APP->serverService()->remove(ui->lstServers->currentItem()->data(Qt::UserRole).toUInt());
+    } catch (Error &e) {
+        ErrorMessage::showFatal(e.text(), this);
+    }
+    reloadTab(TAB_SERVERS);
 }
 
 void ConfigDialog::serversReloadSettingsFrame(const QString &protocolTitle)
@@ -314,4 +328,83 @@ void ConfigDialog::serversReloadSettingsFrame(const QString &protocolTitle)
     }
 
     qDebug() << "setting components are ready";
+}
+
+void ConfigDialog::tagsEndEdit(QWidget* editor)
+{
+    QString newName = reinterpret_cast<QLineEdit*>(editor)->text();
+    uint id = ui->lstTags->currentItem()->data(Qt::UserRole).toUInt();
+    if (!newName.isEmpty()) {
+        if (id) {
+            APP->tagService()->update(id, newName);
+        } else {
+            APP->tagService()->append(newName);
+        }
+    }
+    reloadTab(TAB_TAGS);
+}
+
+void ConfigDialog::tagsAddItem()
+{
+    auto listItem = new QListWidgetItem();
+    listItem->setFlags(listItem->flags() | Qt::ItemIsEditable);
+    listItem->setData(Qt::UserRole, 0);
+    ui->lstTags->insertItem(0, listItem);
+    ui->lstTags->setCurrentItem(listItem);
+    ui->lstTags->editItem(listItem);
+}
+
+void ConfigDialog::tagsDelItems()
+{
+    auto selectedItems = ui->lstTags->selectedItems();
+    if (selectedItems.size() == 0) {
+        ErrorMessage::showInfo(tr("No tag is selected!"), this);
+    } else {
+        if (ErrorMessage::confirm(tr("Are you sure to delete all selected tags?"), this) == QMessageBox::Yes) {
+            for (auto selectedItem : selectedItems) {
+                APP->tagService()->remove(selectedItem->data(Qt::UserRole).toUInt());
+            }
+            reloadTab(TAB_TAGS);
+        }
+    }
+}
+
+void ConfigDialog::imagePickWatermarkFile()
+{
+    auto watermarkPath = QFileDialog::getOpenFileName(this, tr("Select an image file as watermark"), "", tr("Images (*.png *.gif *.jpg)"));
+    APP->settingService()->setImageWatermarkPath(watermarkPath);
+    reloadTab(TAB_IMAGE);
+}
+
+void ConfigDialog::imageSaveCompressionSetting(int enabled)
+{
+    APP->settingService()->setImageCompressionEnabled(enabled);
+}
+
+void ConfigDialog::imageSaveWatermarkSetting(int enabled)
+{
+    APP->settingService()->setImageWatermarkEnabled(enabled);
+    ui->btnWatermarkImagePicker->setEnabled(enabled);
+}
+
+void ConfigDialog::imageSaveWatermarkPositionSetting(bool toggled)
+{
+    qDebug() << "saving watermark position setting " << toggled;
+    if (toggled) // avoid initialization trigger saving action
+        return;
+
+
+    for (auto &btn : ui->frmWatermarkPosition->findChildren<QPushButton*>()) {
+        if (btn->isChecked()) {
+            qDebug() << "saving watermark position setting " << btn->objectName().mid(20);
+            APP->settingService()->setImageWatermarkPosition(btn->objectName().mid(20));
+            break;
+        }
+    }
+}
+
+void ConfigDialog::bakOpenDataDir()
+{
+    QFileInfo fileInfo(APP->getDbPath());
+    QDesktopServices::openUrl(QUrl("file:///" + fileInfo.dir().absolutePath()));
 }

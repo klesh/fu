@@ -23,7 +23,7 @@
    <item>
     <widget class="QTabWidget" name="tabs">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tabServers">
       <attribute name="title">
@@ -54,6 +54,9 @@
             </item>
             <item>
              <widget class="QPushButton" name="btnDelServer">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="text">
                <string>Delete</string>
               </property>
@@ -187,14 +190,14 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <widget class="QCheckBox" name="cbxCompression">
+        <widget class="QCheckBox" name="cbxImageCompression">
          <property name="text">
           <string>Compress image before uploading (Only for jpg/png)</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="cbxWatermark">
+        <widget class="QCheckBox" name="cbxImageWatermark">
          <property name="text">
           <string>Enable watermark</string>
          </property>
@@ -231,7 +234,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="lblWatermarkImagePreviewer">
+             <widget class="ThumbnailLabel" name="lblWatermarkImagePreviewer">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -256,11 +259,8 @@
               <property name="text">
                <string/>
               </property>
-              <property name="pixmap">
-               <pixmap>:/icons/icon.png</pixmap>
-              </property>
               <property name="scaledContents">
-               <bool>true</bool>
+               <bool>false</bool>
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
@@ -328,6 +328,12 @@
                  <property name="text">
                   <string>↖</string>
                  </property>
+                 <property name="checkable">
+                  <bool>true</bool>
+                 </property>
+                 <property name="autoExclusive">
+                  <bool>true</bool>
+                 </property>
                 </widget>
                </item>
                <item row="1" column="1">
@@ -340,6 +346,12 @@
                  </property>
                  <property name="text">
                   <string>↑</string>
+                 </property>
+                 <property name="checkable">
+                  <bool>true</bool>
+                 </property>
+                 <property name="autoExclusive">
+                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
@@ -354,6 +366,12 @@
                  <property name="text">
                   <string>↗</string>
                  </property>
+                 <property name="checkable">
+                  <bool>true</bool>
+                 </property>
+                 <property name="autoExclusive">
+                  <bool>true</bool>
+                 </property>
                 </widget>
                </item>
                <item row="2" column="0">
@@ -366,6 +384,12 @@
                  </property>
                  <property name="text">
                   <string>←</string>
+                 </property>
+                 <property name="checkable">
+                  <bool>true</bool>
+                 </property>
+                 <property name="autoExclusive">
+                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
@@ -380,6 +404,15 @@
                  <property name="text">
                   <string>※</string>
                  </property>
+                 <property name="checkable">
+                  <bool>true</bool>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
+                 </property>
+                 <property name="autoExclusive">
+                  <bool>true</bool>
+                 </property>
                 </widget>
                </item>
                <item row="2" column="2">
@@ -392,6 +425,12 @@
                  </property>
                  <property name="text">
                   <string>→</string>
+                 </property>
+                 <property name="checkable">
+                  <bool>true</bool>
+                 </property>
+                 <property name="autoExclusive">
+                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
@@ -406,6 +445,12 @@
                  <property name="text">
                   <string>↙</string>
                  </property>
+                 <property name="checkable">
+                  <bool>true</bool>
+                 </property>
+                 <property name="autoExclusive">
+                  <bool>true</bool>
+                 </property>
                 </widget>
                </item>
                <item row="3" column="1">
@@ -419,6 +464,12 @@
                  <property name="text">
                   <string>↓</string>
                  </property>
+                 <property name="checkable">
+                  <bool>true</bool>
+                 </property>
+                 <property name="autoExclusive">
+                  <bool>true</bool>
+                 </property>
                 </widget>
                </item>
                <item row="3" column="2">
@@ -431,6 +482,12 @@
                  </property>
                  <property name="text">
                   <string>↘</string>
+                 </property>
+                 <property name="checkable">
+                  <bool>true</bool>
+                 </property>
+                 <property name="autoExclusive">
+                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
@@ -653,6 +710,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>ThumbnailLabel</class>
+   <extends>QLabel</extends>
+   <header>src/components/thumbnaillabel.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

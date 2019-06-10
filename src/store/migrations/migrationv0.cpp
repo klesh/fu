@@ -39,4 +39,14 @@ void MigrationV0::run(SqlStore &store)
                "outoutFormatId uint REFERENCE outputFormats (id) ON DELETE SET NULL, "
                "createdAt TEXT NOT NULL"
                ")");
+
+    store.exec("CREATE TABLE settings ( "
+               "settingKey TEXT NOT NULL PRIMARY KEY, "
+               "settingValue TEXT DEFAULT ''"
+               ")");
+
+    store.exec("INSERT INTO settings (settingKey, settingValue) VALUES ('imageCompressionEnabled', 'true')");
+    store.exec("INSERT INTO settings (settingKey, settingValue) VALUES ('imageWatermarkEnabled', 'false')");
+    store.exec("INSERT INTO settings (settingKey, settingValue) VALUES ('imageWatermarkPath', '')");
+    store.exec("INSERT INTO settings (settingKey, settingValue) VALUES ('imageWatermarkPosition', 'MiddleCenter')");
 }

@@ -50,7 +50,6 @@ Server ServerService::findById(uint id)
 void ServerService::append(Server &server)
 {
     auto query = _store.prepare("INSERT INTO servers (name, protocol, settingsJSON, createdAt) VALUES (:name, :protocol, :settings, :createdAt)");
-    qDebug() << "appending new server" << server.name << server.protocol << toJson(server.settings);
     query.bindValue(":name", server.name);
     query.bindValue(":protocol", server.protocol);
     query.bindValue(":settings", toJson(server.settings));
@@ -78,6 +77,13 @@ void ServerService::save(Server &server)
         append(server);
     }
 
+}
+
+void ServerService::remove(uint id)
+{
+    auto query = _store.prepare("DELETE FROM servers where id=:id");
+    query.bindValue(":id", id);
+    _store.exec();
 }
 
 QList<Protocol *> ServerService::getProtocols()

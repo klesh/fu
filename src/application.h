@@ -10,6 +10,7 @@
 #include "core/error.h"
 #include "core/tagservice.h"
 #include "core/serverservice.h"
+#include "core/settingservice.h"
 
 #include <QtGlobal>
 #include <QApplication>
@@ -34,6 +35,7 @@ public:
 
     TagService *tagService();
     ServerService *serverService();
+    SettingService *settingService();
 
 private:
     template <typename T>
@@ -43,6 +45,7 @@ private:
     SqlStore *_store = nullptr;
     TagService *_tagService = nullptr;
     ServerService *_serverService = nullptr;
+    SettingService *_settingService = nullptr;
 
     UpgradeDialog *upgradeDialog = nullptr;
     AboutDialog *aboutDialog = nullptr;

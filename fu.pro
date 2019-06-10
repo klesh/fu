@@ -40,6 +40,7 @@ SOURCES += \
         src/configdialog.cpp \
         src/core/error.cpp \
         src/core/serverservice.cpp \
+        src/core/settingservice.cpp \
         src/core/tagservice.cpp \
         src/formdialog.cpp \
         src/historywindow.cpp \
@@ -65,6 +66,7 @@ HEADERS += \
         src/configdialog.h \
         src/core/error.h \
         src/core/serverservice.h \
+        src/core/settingservice.h \
         src/core/tagservice.h \
         src/formdialog.h \
         src/historywindow.h \

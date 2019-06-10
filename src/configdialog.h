@@ -20,10 +20,7 @@ public:
 
 private slots:
     void reloadTab(int id);
-    void bakOpenDataDir();
-    void tagsEndEdit(QWidget*);
-    void tagsAddItem();
-    void tagsDelItems();
+
     void serversShowItem(QListWidgetItem*, QListWidgetItem*);
     void serversEditItem(QListWidgetItem*);
     void serversEditItemSave();
@@ -31,6 +28,17 @@ private slots:
     void serversAddItem();
     void serversDelItems();
     void serversReloadSettingsFrame(const QString&);
+
+    void tagsEndEdit(QWidget*);
+    void tagsAddItem();
+    void tagsDelItems();
+
+    void imagePickWatermarkFile();
+    void imageSaveCompressionSetting(int);
+    void imageSaveWatermarkSetting(int);
+    void imageSaveWatermarkPositionSetting(bool);
+
+    void bakOpenDataDir();
 
 private:
     Ui::ConfigDialog *ui;

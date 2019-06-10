@@ -121,6 +121,7 @@ bool Application::prepare(const QString &dbPath)
     _store = new SqlStore(dbPath);
     _tagService = new TagService(*_store);
     _serverService = new ServerService(*_store);
+    _settingService = new SettingService(*_store);
 
     // upgrade checking
     if (showUpgradeWindow() == QDialog::Rejected)
@@ -143,4 +144,9 @@ TagService *Application::tagService()
 ServerService *Application::serverService()
 {
     return _serverService;
+}
+
+SettingService *Application::settingService()
+{
+    return _settingService;
 }
