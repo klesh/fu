@@ -6,15 +6,18 @@
 #include "aboutdialog.h"
 #include "configdialog.h"
 #include "historywindow.h"
+#include "uploaddialog.h"
 #include "store/sqlstore.h"
 #include "core/error.h"
 #include "core/tagservice.h"
 #include "core/serverservice.h"
 #include "core/settingservice.h"
+#include "core/outputformatservice.h"
 
 #include <QtGlobal>
 #include <QApplication>
 #include <QIcon>
+#include <QSystemTrayIcon>
 
 class Application : public QApplication
 {
@@ -29,6 +32,7 @@ public:
     void showAboutDialog();
     void showConfigDialog();
     void showHistoryWindow();
+    void showUploadDialog();
     bool prepare(const QString& dbPath);
 
     const QString &getDbPath();
@@ -36,6 +40,7 @@ public:
     TagService *tagService();
     ServerService *serverService();
     SettingService *settingService();
+    OutputFormatService *outputFormatService();
 
 private:
     template <typename T>
@@ -46,11 +51,16 @@ private:
     TagService *_tagService = nullptr;
     ServerService *_serverService = nullptr;
     SettingService *_settingService = nullptr;
+    OutputFormatService *_outputFormatService = nullptr;
 
     UpgradeDialog *upgradeDialog = nullptr;
     AboutDialog *aboutDialog = nullptr;
     ConfigDialog *configDialog = nullptr;
     HistoryWindow *historyWindow = nullptr;
+    UploadDialog *uploadDialog = nullptr;
+
+public slots:
+    void trayIconActivated(QSystemTrayIcon::ActivationReason);
 };
 
 #define APP (qobject_cast<Application*>qApp)

@@ -39,6 +39,7 @@ SOURCES += \
         src/components/thumbnaillabel.cpp \
         src/configdialog.cpp \
         src/core/error.cpp \
+        src/core/outputformatservice.cpp \
         src/core/serverservice.cpp \
         src/core/settingservice.cpp \
         src/core/tagservice.cpp \
@@ -65,12 +66,13 @@ HEADERS += \
         src/components/thumbnaillabel.h \
         src/configdialog.h \
         src/core/error.h \
+        src/core/outputformatservice.h \
         src/core/serverservice.h \
         src/core/settingservice.h \
         src/core/tagservice.h \
-        src/formdialog.h \
         src/historywindow.h \
         src/application.h \
+        src/models/outputformat.h \
         src/models/protocol.h \
         src/models/record.h \
         src/models/server.h \
@@ -81,14 +83,15 @@ HEADERS += \
         src/store/migrations/migrationv0.h \
         src/store/migrator.h \
         src/store/sqlstore.h \
-        src/upgradedialog.h
+        src/upgradedialog.h \
+        src/uploaddialog.h
 
 FORMS += \
         src/aboutdialog.ui \
         src/configdialog.ui \
-        src/formdialog.ui \
         src/historywindow.ui \
-        src/upgradedialog.ui
+        src/upgradedialog.ui \
+        src/uploaddialog.ui
 
 RESOURCES += \
         fu.qrc

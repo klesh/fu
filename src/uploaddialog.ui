@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>FormDialog</class>
- <widget class="QDialog" name="FormDialog">
+ <class>UploadDialog</class>
+ <widget class="QDialog" name="UploadDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -47,7 +47,7 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>283</width>
+             <width>406</width>
              <height>299</height>
             </rect>
            </property>
@@ -88,14 +88,7 @@
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout_3">
              <item>
-              <widget class="QTextEdit" name="textEdit">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-              </widget>
+              <widget class="QLineEdit" name="lineEdit"/>
              </item>
             </layout>
            </widget>
@@ -191,7 +184,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>FormDialog</receiver>
+   <receiver>UploadDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -207,7 +200,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>FormDialog</receiver>
+   <receiver>UploadDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

@@ -23,7 +23,7 @@
    <item>
     <widget class="QTabWidget" name="tabs">
      <property name="currentIndex">
-      <number>1</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="tabServers">
       <attribute name="title">
@@ -520,13 +520,13 @@
       </attribute>
       <layout class="QHBoxLayout" name="horizontalLayout_6">
        <item>
-        <widget class="QGroupBox" name="lotOutputFormatList">
+        <widget class="QGroupBox" name="grpOutputFormatList">
          <property name="title">
           <string>List</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_8">
           <item>
-           <widget class="QListView" name="lstOutputFormats"/>
+           <widget class="QListWidget" name="lstOutputFormats"/>
           </item>
           <item>
            <layout class="QHBoxLayout" name="lotOutputFormatListButtons">
@@ -550,7 +550,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="grpOutputFormatDetail">
+        <widget class="QGroupBox" name="grpOutputFormatForm">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -581,12 +581,16 @@
              </widget>
             </item>
             <item row="1" column="1">
-             <widget class="QTextEdit" name="txtOutputFormatTemplate"/>
+             <widget class="QTextEdit" name="txtOutputFormatTemplate">
+              <property name="acceptRichText">
+               <bool>false</bool>
+              </property>
+             </widget>
             </item>
             <item row="2" column="1">
              <widget class="QLabel" name="lblOutputFormatTemplateHint">
               <property name="text">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Place &lt;span style=&quot; font-weight:600;&quot;&gt;%s&lt;/span&gt; as where you expect the URL to be. i.e.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;&amp;lt;img src=&amp;quot;%s&amp;quot;&amp;gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;i.e.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;&amp;lt;img src=&amp;quot;%1&amp;quot; alt=&amp;quot;%2&amp;quot;&amp;gt;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;%1 will be replaced with &amp;quot;Protocol Output&amp;quot; (normally a URL)&lt;/p&gt;&lt;p&gt;%2 will be replaced with the Description&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="textFormat">
                <enum>Qt::RichText</enum>
@@ -611,7 +615,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="btnResetOutputFormat">
+             <widget class="QPushButton" name="btnCancelOutputFormat">
               <property name="text">
                <string>Cancel</string>
               </property>

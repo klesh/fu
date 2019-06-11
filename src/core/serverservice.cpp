@@ -14,7 +14,7 @@ Server convertResultToServer(QSqlQuery result) {
     server.id = result.value(rec.indexOf("id")).toUInt();
     server.name = result.value(rec.indexOf("name")).toString();
     server.protocol = result.value(rec.indexOf("protocol")).toString();
-    server.createAt = result.value(rec.indexOf("createdAt")).toDateTime();
+    server.createdAt = result.value(rec.indexOf("createdAt")).toDateTime();
     server.settings = QJsonDocument::fromJson(result.value(rec.indexOf("settingsJSON")).toByteArray()).toVariant().toMap();
     return server;
 }

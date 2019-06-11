@@ -32,6 +32,13 @@ ConfigDialog::ConfigDialog() :
     connect(ui->btnCancelServer, SIGNAL(clicked()), this, SLOT(serversEditItemCancel()));
     connect(ui->cbbProtocol, SIGNAL(currentTextChanged(const QString&)), this, SLOT(serversReloadSettingsFrame(const QString&)));
 
+    connect(ui->lstOutputFormats, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)), this, SLOT(outputFormatsShowItem(QListWidgetItem*, QListWidgetItem*)));
+    connect(ui->lstOutputFormats, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(outputFormatsEditItem(QListWidgetItem*)));
+    connect(ui->btnAddOutputFormat, SIGNAL(clicked()), this, SLOT(outputFormatsAddItem()));
+    connect(ui->btnDelOutputFormat, SIGNAL(clicked()), this, SLOT(outputFormatsDelItems()));
+    connect(ui->btnSaveOutputFormat, SIGNAL(clicked()), this, SLOT(outputFormatsEditItemSave()));
+    connect(ui->btnCancelOutputFormat, SIGNAL(clicked()), this, SLOT(outputFormatsEditItemCancel()));
+
     connect(ui->btnWatermarkImagePicker, SIGNAL(clicked()), this, SLOT(imagePickWatermarkFile()));
     connect(ui->cbxImageCompression, SIGNAL(stateChanged(int)), this, SLOT(imageSaveCompressionSetting(int)));
     connect(ui->cbxImageWatermark, SIGNAL(stateChanged(int)), this, SLOT(imageSaveWatermarkSetting(int)));
@@ -100,6 +107,17 @@ void ConfigDialog::reloadTab(int id)
             auto imageWatermarkPosition = APP->settingService()->imageWatermarkPosition();
             auto btnWatermarkPosition = ui->frmWatermarkPosition->findChild<QPushButton*>(QString("btnWatermarkPosition%1").arg(imageWatermarkPosition));
             btnWatermarkPosition->setChecked(true);
+            break;
+        }
+        case TAB_OUTPUT_FORMATS:
+        {
+            ui->lstOutputFormats->clear();
+            QList<OutputFormat> outputFormats = APP->outputFormatService()->getAll();
+            for (auto &outputFormat : outputFormats) {
+                auto listItem = new QListWidgetItem(outputFormat.name, ui->lstOutputFormats);
+                listItem->setData(Qt::UserRole, outputFormat.id);
+                ui->lstOutputFormats->addItem(listItem);
+            }
             break;
         }
         case TAB_TAGS:
@@ -186,13 +204,8 @@ void ConfigDialog::serversEditItem(QListWidgetItem *)
 
 void ConfigDialog::serversEditItemSave()
 {
-    auto highlight = [](QWidget * widget, QString hint) {
-        widget->setFocus();
-        QToolTip::showText(widget->mapToGlobal(QPoint()), hint);
-    };
-
     if (ui->txtServerName->text().isEmpty()) {
-        return highlight(ui->txtServerName, tr("Please enter the name of server"));
+        return highlightWidget(ui->txtServerName, tr("Please enter the name of server"));
     }
 
     Server server;
@@ -209,7 +222,7 @@ void ConfigDialog::serversEditItemSave()
                 auto folderPicker = ui->frmServerSettings->findChild<FolderPicker*>(settingInfo.name);
                 assert(folderPicker);
                 if (settingInfo.required && folderPicker->currentPath().isEmpty()) {
-                    return highlight(folderPicker, settingInfo.hint);
+                    return highlightWidget(folderPicker, settingInfo.hint);
                 }
                 qDebug() << folderPicker->currentPath();
                 server.settings[settingInfo.name] = folderPicker->currentPath();
@@ -227,7 +240,7 @@ void ConfigDialog::serversEditItemSave()
                 auto lineEdit = ui->frmServerSettings->findChild<QLineEdit*>(settingInfo.name);
                 assert(lineEdit);
                 if (settingInfo.required && lineEdit->text().isEmpty()) {
-                    return highlight(lineEdit, settingInfo.hint);
+                    return highlightWidget(lineEdit, settingInfo.hint);
                 }
                 server.settings[settingInfo.name] = lineEdit->text();
                 break;
@@ -330,6 +343,130 @@ void ConfigDialog::serversReloadSettingsFrame(const QString &protocolTitle)
     qDebug() << "setting components are ready";
 }
 
+void ConfigDialog::imagePickWatermarkFile()
+{
+    auto watermarkPath = QFileDialog::getOpenFileName(this, tr("Select an image file as watermark"), "", tr("Images (*.png *.gif *.jpg)"));
+    APP->settingService()->setImageWatermarkPath(watermarkPath);
+    reloadTab(TAB_IMAGE);
+}
+
+void ConfigDialog::imageSaveCompressionSetting(int enabled)
+{
+    APP->settingService()->setImageCompressionEnabled(enabled);
+}
+
+void ConfigDialog::imageSaveWatermarkSetting(int enabled)
+{
+    APP->settingService()->setImageWatermarkEnabled(enabled);
+    ui->btnWatermarkImagePicker->setEnabled(enabled);
+}
+
+void ConfigDialog::imageSaveWatermarkPositionSetting(bool toggled)
+{
+    qDebug() << "saving watermark position setting " << toggled;
+    if (toggled) // avoid initialization trigger saving action
+        return;
+
+
+    for (auto &btn : ui->frmWatermarkPosition->findChildren<QPushButton*>()) {
+        if (btn->isChecked()) {
+            qDebug() << "saving watermark position setting " << btn->objectName().mid(20);
+            APP->settingService()->setImageWatermarkPosition(btn->objectName().mid(20));
+            break;
+        }
+    }
+}
+
+void ConfigDialog::outputFormatsShowItem(QListWidgetItem *current, QListWidgetItem *previous)
+{
+    ui->btnDelOutputFormat->setEnabled(current);
+
+    Q_UNUSED(previous);
+    if (!current)
+        return;
+
+
+    uint id = current->data(Qt::UserRole).toUInt();
+
+    if (!id)
+        return;
+
+    OutputFormat outputFormat;
+    if (id) {
+        try {
+            outputFormat = APP->outputFormatService()->findById(id);
+        } catch (Error &e) {
+            ErrorMessage::showFatal(e.text(), this);
+        }
+    }
+    ui->txtOutputFormatName->setText(outputFormat.name);
+    ui->txtOutputFormatTemplate->setText(outputFormat.templateTEXT);
+}
+
+void ConfigDialog::outputFormatsEditItem(QListWidgetItem *)
+{
+    ui->grpOutputFormatForm->setEnabled(true);
+    ui->grpOutputFormatList->setEnabled(false);
+}
+
+void ConfigDialog::outputFormatsEditItemSave()
+{
+    if (ui->txtOutputFormatName->text().isEmpty()) {
+        return highlightWidget(ui->txtOutputFormatName, tr("Please enter the name of output format"));
+    }
+    if (ui->txtOutputFormatTemplate->toPlainText().isEmpty()) {
+        return highlightWidget(ui->txtOutputFormatTemplate, tr("Please enter the template of output format"));
+    }
+
+    OutputFormat outputFormat;
+    outputFormat.id = ui->lstOutputFormats->currentItem()->data(Qt::UserRole).toUInt();
+    outputFormat.name = ui->txtOutputFormatName->text();
+    outputFormat.templateTEXT = ui->txtOutputFormatTemplate->toPlainText();
+
+
+    try {
+        APP->outputFormatService()->save(outputFormat);
+        reloadTab(TAB_OUTPUT_FORMATS);
+    } catch (Error &e) {
+        auto errMsg = e.text();
+        if (errMsg.contains("UNIQUE constraint")) {
+            ErrorMessage::showInfo("OutputFormat with the same name already exists.", this);
+            return;
+        } else {
+            ErrorMessage::showFatal(e.text(), this);
+        }
+    }
+    ui->grpOutputFormatForm->setEnabled(false);
+    ui->grpOutputFormatList->setEnabled(true);
+}
+
+void ConfigDialog::outputFormatsEditItemCancel()
+{
+    ui->grpOutputFormatForm->setEnabled(false);
+    ui->grpOutputFormatList->setEnabled(true);
+    reloadTab(TAB_OUTPUT_FORMATS);
+}
+
+void ConfigDialog::outputFormatsAddItem()
+{
+    auto listItem = new QListWidgetItem();
+    listItem->setText(tr("new format"));
+    listItem->setData(Qt::UserRole, 0);
+    ui->lstOutputFormats->insertItem(0, listItem);
+    ui->lstOutputFormats->setCurrentItem(listItem);
+    outputFormatsEditItem(listItem);
+}
+
+void ConfigDialog::outputFormatsDelItems()
+{
+    try {
+        APP->outputFormatService()->remove(ui->lstOutputFormats->currentItem()->data(Qt::UserRole).toUInt());
+    } catch (Error &e) {
+        ErrorMessage::showFatal(e.text(), this);
+    }
+    reloadTab(TAB_OUTPUT_FORMATS);
+}
+
 void ConfigDialog::tagsEndEdit(QWidget* editor)
 {
     QString newName = reinterpret_cast<QLineEdit*>(editor)->text();
@@ -369,42 +506,14 @@ void ConfigDialog::tagsDelItems()
     }
 }
 
-void ConfigDialog::imagePickWatermarkFile()
-{
-    auto watermarkPath = QFileDialog::getOpenFileName(this, tr("Select an image file as watermark"), "", tr("Images (*.png *.gif *.jpg)"));
-    APP->settingService()->setImageWatermarkPath(watermarkPath);
-    reloadTab(TAB_IMAGE);
-}
-
-void ConfigDialog::imageSaveCompressionSetting(int enabled)
-{
-    APP->settingService()->setImageCompressionEnabled(enabled);
-}
-
-void ConfigDialog::imageSaveWatermarkSetting(int enabled)
-{
-    APP->settingService()->setImageWatermarkEnabled(enabled);
-    ui->btnWatermarkImagePicker->setEnabled(enabled);
-}
-
-void ConfigDialog::imageSaveWatermarkPositionSetting(bool toggled)
-{
-    qDebug() << "saving watermark position setting " << toggled;
-    if (toggled) // avoid initialization trigger saving action
-        return;
-
-
-    for (auto &btn : ui->frmWatermarkPosition->findChildren<QPushButton*>()) {
-        if (btn->isChecked()) {
-            qDebug() << "saving watermark position setting " << btn->objectName().mid(20);
-            APP->settingService()->setImageWatermarkPosition(btn->objectName().mid(20));
-            break;
-        }
-    }
-}
-
 void ConfigDialog::bakOpenDataDir()
 {
     QFileInfo fileInfo(APP->getDbPath());
     QDesktopServices::openUrl(QUrl("file:///" + fileInfo.dir().absolutePath()));
+}
+
+void ConfigDialog::highlightWidget(QWidget *widget, const QString hint)
+{
+    widget->setFocus();
+    QToolTip::showText(widget->mapToGlobal(QPoint()), hint);
 }

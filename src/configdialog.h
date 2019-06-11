@@ -29,16 +29,24 @@ private slots:
     void serversDelItems();
     void serversReloadSettingsFrame(const QString&);
 
-    void tagsEndEdit(QWidget*);
-    void tagsAddItem();
-    void tagsDelItems();
-
     void imagePickWatermarkFile();
     void imageSaveCompressionSetting(int);
     void imageSaveWatermarkSetting(int);
     void imageSaveWatermarkPositionSetting(bool);
 
+    void outputFormatsShowItem(QListWidgetItem*, QListWidgetItem*);
+    void outputFormatsEditItem(QListWidgetItem*);
+    void outputFormatsEditItemSave();
+    void outputFormatsEditItemCancel();
+    void outputFormatsAddItem();
+    void outputFormatsDelItems();
+
+    void tagsEndEdit(QWidget*);
+    void tagsAddItem();
+    void tagsDelItems();
+
     void bakOpenDataDir();
+    void highlightWidget(QWidget*, const QString);
 
 private:
     Ui::ConfigDialog *ui;

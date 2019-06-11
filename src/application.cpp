@@ -1,6 +1,5 @@
 #include "application.h"
 
-#include <QSystemTrayIcon>
 #include <QMenu>
 
 
@@ -83,6 +82,8 @@ void Application::createTrayIcon()
     trayIcon->setIcon(_windowIcon);
     trayIcon->show();
 
+    connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(trayIconActivated(QSystemTrayIcon::ActivationReason)));
+
     connect(qApp, &QApplication::aboutToQuit, [=](void){
         qDebug() << "cleanup tray icon";
         delete trayIcon;
@@ -105,6 +106,11 @@ void Application::showHistoryWindow()
     showWindowOrDialog<HistoryWindow>(&historyWindow);
 }
 
+void Application::showUploadDialog()
+{
+    showWindowOrDialog<UploadDialog>(&uploadDialog);
+}
+
 bool Application::prepare(const QString &dbPath)
 {
     if (_store)
@@ -122,6 +128,7 @@ bool Application::prepare(const QString &dbPath)
     _tagService = new TagService(*_store);
     _serverService = new ServerService(*_store);
     _settingService = new SettingService(*_store);
+    _outputFormatService = new OutputFormatService(*_store);
 
     // upgrade checking
     if (showUpgradeWindow() == QDialog::Rejected)
@@ -149,4 +156,17 @@ ServerService *Application::serverService()
 SettingService *Application::settingService()
 {
     return _settingService;
+}
+
+OutputFormatService *Application::outputFormatService()
+{
+    return _outputFormatService;
+}
+
+void Application::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
+{
+    if (reason == QSystemTrayIcon::ActivationReason::Trigger) {
+        qDebug() << "tray icon activated " << reason;
+        showUploadDialog();
+    }
 }

@@ -11,7 +11,7 @@ struct Server
     QVariantMap settings;
     bool uploadEnabled;
     uint outputFormatId;
-    QDateTime createAt;
+    QDateTime createdAt;
 };
 
 #endif // SERVER_H

@@ -1,14 +1,14 @@
-#include "formdialog.h"
-#include "ui_formdialog.h"
+#include "uploaddialog.h"
+#include "ui_uploaddialog.h"
 
-FormDialog::FormDialog(QWidget *parent) :
+UploadDialog::UploadDialog(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::FormDialog)
+    ui(new Ui::UploadDialog)
 {
     ui->setupUi(this);
 }
 
-FormDialog::~FormDialog()
+UploadDialog::~UploadDialog()
 {
     delete ui;
 }
