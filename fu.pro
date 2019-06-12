@@ -43,7 +43,6 @@ SOURCES += \
         src/core/serverservice.cpp \
         src/core/settingservice.cpp \
         src/core/tagservice.cpp \
-        src/formdialog.cpp \
         src/historywindow.cpp \
         src/application.cpp \
         src/main.cpp \
@@ -53,7 +52,8 @@ SOURCES += \
         src/store/migrations/migrationv0.cpp \
         src/store/migrator.cpp \
         src/store/sqlstore.cpp \
-        src/upgradedialog.cpp
+        src/upgradedialog.cpp \
+        src/uploaddialog.cpp
 
 HEADERS += \
         src/aboutdialog.h \

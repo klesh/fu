@@ -2,6 +2,12 @@
 #define UPLOADDIALOG_H
 
 #include <QDialog>
+#include <QKeyEvent>
+
+/*
+#include <QResizeEvent>
+#include <QtDebug>
+*/
 
 namespace Ui {
 class UploadDialog;
@@ -17,6 +23,11 @@ public:
 
 private:
     Ui::UploadDialog *ui;
+
+    /*
+protected:
+    void resizeEvent(QResizeEvent *e) override { qDebug() << e->size(); }
+    */
 };
 
 #endif // UPLOADDIALOG_H

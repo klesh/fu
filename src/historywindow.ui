@@ -198,7 +198,7 @@
     <item>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
-       <widget class="QScrollArea" name="sclRecords2">
+       <widget class="QScrollArea" name="scrRecords">
         <property name="contextMenuPolicy">
          <enum>Qt::DefaultContextMenu</enum>
         </property>
@@ -267,15 +267,15 @@
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>ThumbnailLabel</class>
-   <extends>QLabel</extends>
-   <header>src/components/thumbnaillabel.h</header>
-  </customwidget>
-  <customwidget>
    <class>TagsEdit</class>
    <extends>QFrame</extends>
    <header>src/components/tagsedit.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ThumbnailLabel</class>
+   <extends>QLabel</extends>
+   <header>src/components/thumbnaillabel.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

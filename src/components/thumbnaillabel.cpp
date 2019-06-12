@@ -10,3 +10,9 @@ ThumbnailLabel::ThumbnailLabel(QWidget *parent)
     setAlignment(Qt::AlignCenter);
     setStyleSheet("background: white");
 }
+
+ThumbnailLabel::ThumbnailLabel(QWidget *parent, const QPixmap &thumbnail)
+    : ThumbnailLabel(parent)
+{
+    setPixmap(thumbnail);
+}

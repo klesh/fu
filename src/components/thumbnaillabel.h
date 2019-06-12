@@ -9,6 +9,7 @@ class ThumbnailLabel : public QLabel
 
 public:
     ThumbnailLabel(QWidget *parent = nullptr);
+    ThumbnailLabel(QWidget *parent, const QPixmap &thumbnail);
 };
 
 #endif // THUMBNAILLABEL_H

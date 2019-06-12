@@ -31,4 +31,5 @@ TagButton::TagButton(const QString text, QWidget *parent)
     : TagButton(parent)
 {
     setText(text);
+    setObjectName(text);
 }
