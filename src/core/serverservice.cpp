@@ -16,6 +16,8 @@ Server convertResultToServer(QSqlQuery result) {
     server.protocol = result.value(rec.indexOf("protocol")).toString();
     server.createdAt = result.value(rec.indexOf("createdAt")).toDateTime();
     server.settings = QJsonDocument::fromJson(result.value(rec.indexOf("settingsJSON")).toByteArray()).toVariant().toMap();
+    server.uploadEnabled = result.value(rec.indexOf("uploadEnabled")).toBool();
+    server.outputFormatId = result.value(rec.indexOf("outputFormatId")).toUInt();
     return server;
 }
 
@@ -82,6 +84,22 @@ void ServerService::save(Server &server)
 void ServerService::remove(uint id)
 {
     auto query = _store.prepare("DELETE FROM servers where id=:id");
+    query.bindValue(":id", id);
+    _store.exec();
+}
+
+void ServerService::setUploadEnabled(uint id, bool enabled)
+{
+    auto query = _store.prepare("UPDATE servers SET uploadEnabled=:enabled WHERE id=:id");
+    query.bindValue(":enabled", enabled);
+    query.bindValue(":id", id);
+    _store.exec();
+}
+
+void ServerService::setOutputFormatId(uint id, uint outputFormatId)
+{
+    auto query = _store.prepare("UPDATE servers SET outputFormatId=:outputFormatId WHERE id=:id");
+    query.bindValue(":outputFormatId", outputFormatId);
     query.bindValue(":id", id);
     _store.exec();
 }

@@ -35,7 +35,7 @@ void MigrationV0::run(SqlStore &store)
                "protocol TEXT NOT NULL, "
                "settingsJSON TEXT NOT NULL DEFAULT '{}', "
                "uploadEnabled INTEGER NOT NULL DEFAULT 1, "
-               "outoutFormatId uint REFERENCE outputFormats (id) ON DELETE SET NULL, "
+               "outputFormatId INTEGER REFERENCES outputFormats (id) ON DELETE SET NULL, "
                "createdAt TEXT NOT NULL"
                ")");
 

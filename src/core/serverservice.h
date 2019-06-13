@@ -19,6 +19,8 @@ public:
     void update(Server &server);
     void save(Server &server);
     void remove(uint id);
+    void setUploadEnabled(uint id, bool enabled);
+    void setOutputFormatId(uint id, uint outputFormatId);
     QList<Protocol*> getProtocols();
     Protocol* findProtocol(const QString &name);
 };
