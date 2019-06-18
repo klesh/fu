@@ -129,6 +129,7 @@ bool Application::prepare(const QString &dbPath)
     _serverService = new ServerService(*_store);
     _settingService = new SettingService(*_store);
     _outputFormatService = new OutputFormatService(*_store);
+    _clipService = new ClipService(*_store);
 
     // upgrade checking
     if (showUpgradeWindow() == QDialog::Rejected)
@@ -161,6 +162,11 @@ SettingService *Application::settingService()
 OutputFormatService *Application::outputFormatService()
 {
     return _outputFormatService;
+}
+
+ClipService *Application::clipService()
+{
+    return _clipService;
 }
 
 void Application::trayIconActivated(QSystemTrayIcon::ActivationReason reason)

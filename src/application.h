@@ -13,6 +13,7 @@
 #include "core/serverservice.h"
 #include "core/settingservice.h"
 #include "core/outputformatservice.h"
+#include "core/clipservice.h"
 
 #include <QtGlobal>
 #include <QApplication>
@@ -41,6 +42,7 @@ public:
     ServerService *serverService();
     SettingService *settingService();
     OutputFormatService *outputFormatService();
+    ClipService *clipService();
 
 private:
     template <typename T>
@@ -52,6 +54,7 @@ private:
     ServerService *_serverService = nullptr;
     SettingService *_settingService = nullptr;
     OutputFormatService *_outputFormatService = nullptr;
+    ClipService *_clipService = nullptr;
 
     UpgradeDialog *upgradeDialog = nullptr;
     AboutDialog *aboutDialog = nullptr;
@@ -64,6 +67,9 @@ public slots:
 };
 
 #define APP (qobject_cast<Application*>qApp)
+#define THUMB_WIDTH 160
+#define THUMB_HEIGHT 160
+
 
 #endif // APPLICATION_H
 

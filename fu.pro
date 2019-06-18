@@ -38,6 +38,7 @@ SOURCES += \
         src/components/tagsedit.cpp \
         src/components/thumbnaillabel.cpp \
         src/configdialog.cpp \
+        src/core/clipservice.cpp \
         src/core/error.cpp \
         src/core/outputformatservice.cpp \
         src/core/serverservice.cpp \
@@ -65,6 +66,7 @@ HEADERS += \
         src/components/tagsedit.h \
         src/components/thumbnaillabel.h \
         src/configdialog.h \
+        src/core/clipservice.h \
         src/core/error.h \
         src/core/outputformatservice.h \
         src/core/serverservice.h \
@@ -72,6 +74,7 @@ HEADERS += \
         src/core/tagservice.h \
         src/historywindow.h \
         src/application.h \
+        src/models/clip.h \
         src/models/outputformat.h \
         src/models/protocol.h \
         src/models/record.h \

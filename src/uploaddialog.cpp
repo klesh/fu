@@ -3,6 +3,7 @@
 #include "application.h"
 #include "components/flowlayout.h"
 #include "components/thumbnaillabel.h"
+#include "core/clipservice.h"
 
 #include <QClipboard>
 #include <QMimeData>
@@ -76,6 +77,7 @@ UploadDialog::UploadDialog(QWidget *parent) :
         connect(uploadWidget, &QPushButton::toggled, [=](bool checked) {
             outputWidget->setEnabled(checked);
             APP->serverService()->setUploadEnabled(server.id, checked);
+            refresh();
         });
         connect(outputWidget, &QComboBox::currentTextChanged, [=](const QString&) {
             APP->serverService()->setOutputFormatId(server.id, outputWidget->currentData().toUInt());
@@ -93,36 +95,64 @@ UploadDialog::UploadDialog(QWidget *parent) :
     uploadToLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::Minimum, QSizePolicy::Expanding));
 
 
-    const static QPixmap thumbnail = QPixmap("D:/Nextcloud/kleshwong/wallpapers/6fVBDMW-dark-minimalist-wallpaper.jpg").scaled(160, 160, Qt::KeepAspectRatio);
+    _previewLayout = new FlowLayout(ui->sclPreview);
 
-    auto previewLayout = new FlowLayout(ui->sclPreview);
-    previewLayout->addWidget(new ThumbnailLabel(ui->sclPreview, thumbnail));
-    previewLayout->addWidget(new ThumbnailLabel(ui->sclPreview, thumbnail));
-    previewLayout->addWidget(new ThumbnailLabel(ui->sclPreview, thumbnail));
-    previewLayout->addWidget(new ThumbnailLabel(ui->sclPreview, thumbnail));
-    previewLayout->addWidget(new ThumbnailLabel(ui->sclPreview, thumbnail));
-    previewLayout->addWidget(new ThumbnailLabel(ui->sclPreview, thumbnail));
-    previewLayout->addWidget(new ThumbnailLabel(ui->sclPreview, thumbnail));
-    previewLayout->addWidget(new ThumbnailLabel(ui->sclPreview, thumbnail));
-    /*
-    const QClipboard *clipboard = QApplication::clipboard();
-    const QMimeData *mimeData = clipboard->mimeData();
-
-    if (mimeData->hasImage()) {
-        setPixmap(qvariant_cast<QPixmap>(mimeData->imageData()));
-    } else if (mimeData->hasHtml()) {
-        setText(mimeData->html());
-        setTextFormat(Qt::RichText);
-    } else if (mimeData->hasText()) {
-        setText(mimeData->text());
-        setTextFormat(Qt::PlainText);
-    } else {
-        setText(tr("Cannot display data"));
-    }
-    */
+    connect(QApplication::clipboard(), SIGNAL(dataChanged()), this, SLOT(reload()));
+    reload();
 }
 
 UploadDialog::~UploadDialog()
 {
     delete ui;
+}
+
+void UploadDialog::accept()
+{
+    qDebug() << _clips.size();
+    QDialog::accept();
+}
+
+void UploadDialog::reload()
+{
+    QLayoutItem* child = nullptr;
+    while ((child = _previewLayout->takeAt(0))) {
+        delete child;
+    }
+    QWidget *ctrl = nullptr;
+    while ((ctrl = ui->sclPreview->findChild<QWidget*>())) {
+        delete ctrl;
+    }
+
+    _clips =  APP->clipService()->getAllFromClipboard();
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
+    for (auto &clip : _clips) {
+        _previewLayout->addWidget(new ThumbnailLabel(ui->sclPreview, clip.icon));
+        if (!clip.name.isEmpty()) {
+            auto lblName = new QLabel(ui->sclPreview);
+            lblName->setText(clip.name);
+            lblName->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+            lblName->setAlignment(Qt::AlignCenter);
+            lblName->setMinimumWidth(THUMB_WIDTH);
+            QFontMetrics metrix(lblName->font());
+            int width = THUMB_WIDTH - 5;
+            QString clippedText = metrix.elidedText(clip.name, Qt::ElideRight, width);
+            lblName->setText(clippedText);
+            _previewLayout->addWidget(lblName);
+        }
+    }
+
+    refresh();
+}
+
+void UploadDialog::refresh()
+{
+    bool isAnyServerSelected = false;
+    for (auto &button : ui->sclUploadTo->findChildren<QPushButton*>()) {
+        if (button->isChecked()) {
+            isAnyServerSelected = true;
+            break;
+        }
+    }
+
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(isAnyServerSelected && !_clips.empty());
 }

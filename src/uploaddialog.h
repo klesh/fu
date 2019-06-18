@@ -1,6 +1,8 @@
 #ifndef UPLOADDIALOG_H
 #define UPLOADDIALOG_H
 
+#include "models/clip.h"
+
 #include <QDialog>
 #include <QKeyEvent>
 
@@ -23,11 +25,15 @@ public:
 
 private:
     Ui::UploadDialog *ui;
+    QList<Clip> _clips;
+    QLayout *_previewLayout;
 
-    /*
 protected:
-    void resizeEvent(QResizeEvent *e) override { qDebug() << e->size(); }
-    */
+    void accept() override;
+
+public slots:
+    void reload();
+    void refresh();
 };
 
 #endif // UPLOADDIALOG_H
