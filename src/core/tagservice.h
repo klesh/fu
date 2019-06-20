@@ -13,9 +13,10 @@ public:
     ~TagService();
 
     QList<Tag> getAll();
-    void append(const QString &name);
+    uint append(const QString &name);
     void update(uint id, const QString &name);
     void remove(uint id);
+    uint findOrAppend(const QString &name);
 };
 
 #endif // TAGSERVICE_H

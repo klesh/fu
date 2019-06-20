@@ -7,11 +7,12 @@
 struct Clip
 {
     uint id;
-    bool isPixmap;
     QVariant data;
-    QDateTime createdAt;
-    QPixmap icon;
+    bool isImage;
+    bool isFile;
+    QPixmap preview;
     QString name;
+    QDateTime createdAt;
 };
 
 #endif // CLIP_H

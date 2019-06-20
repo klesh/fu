@@ -1,6 +1,8 @@
 #ifndef SERVER_H
 #define SERVER_H
 
+#include "protocol.h"
+#include "outputformat.h"
 #include <QtCore>
 
 struct Server
@@ -12,6 +14,8 @@ struct Server
     bool uploadEnabled;
     uint outputFormatId;
     QDateTime createdAt;
+    Uploader *uploader;
+    OutputFormat outputFormater;
 };
 
 #endif // SERVER_H

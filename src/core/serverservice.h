@@ -14,6 +14,7 @@ public:
     ServerService(SqlStore &store);
 
     QList<Server> getAll();
+    QList<Server> getAllUploadEnabled();
     Server findById(uint id);
     void append(Server &server);
     void update(Server &server);

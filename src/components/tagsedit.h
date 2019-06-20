@@ -14,6 +14,7 @@ public:
     TagsEdit(QWidget *parnet = nullptr);
     //~TagsEdit();
     bool isTagSelected(const QString &);
+    QStringList tags();
 
 protected:
     QScrollArea *sclSelected;

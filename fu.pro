@@ -44,6 +44,7 @@ SOURCES += \
         src/core/serverservice.cpp \
         src/core/settingservice.cpp \
         src/core/tagservice.cpp \
+        src/core/uploadservice.cpp \
         src/historywindow.cpp \
         src/application.cpp \
         src/main.cpp \
@@ -72,6 +73,7 @@ HEADERS += \
         src/core/serverservice.h \
         src/core/settingservice.h \
         src/core/tagservice.h \
+        src/core/uploadservice.h \
         src/historywindow.h \
         src/application.h \
         src/models/clip.h \

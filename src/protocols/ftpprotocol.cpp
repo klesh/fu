@@ -21,3 +21,25 @@ const QList<ProtocolSettingInfo> &FtpProtocol::getSettingInfos()
 {
     return _settingInfos;
 }
+
+Uploader *FtpProtocol::createUploader(QVariantMap &settings)
+{
+    return new FtpUploader(settings);
+}
+
+
+// uploader
+FtpUploader::FtpUploader(QVariantMap settings)
+{
+
+}
+
+FtpUploader::~FtpUploader()
+{
+
+}
+
+QString FtpUploader::upload(QDataStream *stream, const QString name)
+{
+    return "";
+}

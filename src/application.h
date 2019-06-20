@@ -14,6 +14,7 @@
 #include "core/settingservice.h"
 #include "core/outputformatservice.h"
 #include "core/clipservice.h"
+#include "core/uploadservice.h"
 
 #include <QtGlobal>
 #include <QApplication>
@@ -35,18 +36,21 @@ public:
     void showHistoryWindow();
     void showUploadDialog();
     bool prepare(const QString& dbPath);
+    void sendNotification(const QString &message, const QString &title="fu", QSystemTrayIcon::MessageIcon icon = QSystemTrayIcon::Information, int timeout = 10000);
 
     const QString &getDbPath();
 
-    TagService *tagService();
-    ServerService *serverService();
-    SettingService *settingService();
-    OutputFormatService *outputFormatService();
-    ClipService *clipService();
+    TagService *tagService() {return _tagService; }
+    ServerService *serverService() { return _serverService; }
+    SettingService *settingService() {return _settingService; }
+    OutputFormatService *outputFormatService() { return _outputFormatService; }
+    ClipService *clipService() { return _clipService; }
+    UploadService *uploadService() { return _uploadService; }
 
 private:
     template <typename T>
     void showWindowOrDialog(T **widget);
+    QSystemTrayIcon *_trayIcon;
     QIcon _windowIcon;
     QString _dbPath;
     SqlStore *_store = nullptr;
@@ -55,6 +59,7 @@ private:
     SettingService *_settingService = nullptr;
     OutputFormatService *_outputFormatService = nullptr;
     ClipService *_clipService = nullptr;
+    UploadService *_uploadService = nullptr;
 
     UpgradeDialog *upgradeDialog = nullptr;
     AboutDialog *aboutDialog = nullptr;

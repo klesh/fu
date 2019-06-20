@@ -20,3 +20,37 @@ const QList<ProtocolSettingInfo> &LocalStorageProtocol::getSettingInfos()
 {
     return _settingInfos;
 }
+
+Uploader *LocalStorageProtocol::createUploader(QVariantMap &settings)
+{
+    return new LocalStorageUploader(settings);
+}
+
+
+// uploader
+LocalStorageUploader::LocalStorageUploader(QVariantMap settings)
+{
+    _folder = settings["folder"].toString();
+    _output = settings["output"].toString();
+}
+
+LocalStorageUploader::~LocalStorageUploader()
+{
+
+}
+
+QString LocalStorageUploader::upload(QDataStream *stream, const QString name)
+{
+    QDir dir(_folder);
+    QFile outputFile(dir.absoluteFilePath(name));
+    outputFile.open(QIODevice::WriteOnly);
+    QDataStream outputStream(&outputFile);
+    char buffer[1024];
+    while (!stream->atEnd()) {
+        int len = stream->readRawData(buffer, 1024);
+        outputFile.write(buffer, len);
+    }
+    outputFile.close();
+
+    return _output.arg(name);
+}

@@ -36,6 +36,17 @@ bool TagsEdit::isTagSelected(const QString &tag)
     return sclSelected->findChild<QPushButton*>(tag);
 }
 
+QStringList TagsEdit::tags()
+{
+    QStringList tags;
+    for (auto &btn : sclSelected->findChildren<QPushButton*>()) {
+        if (btn->isChecked()) {
+            tags.append(btn->text());
+        }
+    }
+    return tags;
+}
+
 void TagsEdit::deselectTag(const QString &tag)
 {
     auto tagButton = sclSelected->findChild<QPushButton*>(tag);

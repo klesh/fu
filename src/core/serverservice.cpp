@@ -1,3 +1,4 @@
+#include "../application.h"
 #include "error.h"
 #include "serverservice.h"
 #include "../protocols/localstorageprotocol.h"
@@ -34,6 +35,20 @@ QList<Server> ServerService::getAll()
     auto result = _store.exec("SELECT * FROM servers ORDER BY id DESC");
     while (result.next()) {
         servers.append(convertResultToServer(result));
+    }
+    return servers;
+}
+
+QList<Server> ServerService::getAllUploadEnabled()
+{
+    QList<Server> servers;
+    auto result = _store.exec("SELECT * FROM servers WHERE uploadEnabled=1 ORDER BY id DESC");
+    while (result.next()) {
+        auto server = convertResultToServer(result);
+        server.uploader = findProtocol(server.protocol)->createUploader(server.settings);
+        if (server.outputFormatId)
+            server.outputFormater = APP->outputFormatService()->findById(server.outputFormatId);
+        servers.append(server);
     }
     return servers;
 }

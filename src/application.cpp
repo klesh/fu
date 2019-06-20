@@ -77,16 +77,16 @@ void Application::createTrayIcon()
 
 
     qDebug() << "setup tray icon";
-    QSystemTrayIcon *trayIcon = new QSystemTrayIcon();
-    trayIcon->setContextMenu(trayMenu);
-    trayIcon->setIcon(_windowIcon);
-    trayIcon->show();
+    _trayIcon = new QSystemTrayIcon();
+    _trayIcon->setContextMenu(trayMenu);
+    _trayIcon->setIcon(_windowIcon);
+    _trayIcon->show();
 
-    connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(trayIconActivated(QSystemTrayIcon::ActivationReason)));
+    connect(_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(trayIconActivated(QSystemTrayIcon::ActivationReason)));
 
     connect(qApp, &QApplication::aboutToQuit, [=](void){
         qDebug() << "cleanup tray icon";
-        delete trayIcon;
+        delete _trayIcon;
         delete trayMenu;
     });
 }
@@ -130,6 +130,7 @@ bool Application::prepare(const QString &dbPath)
     _settingService = new SettingService(*_store);
     _outputFormatService = new OutputFormatService(*_store);
     _clipService = new ClipService(*_store);
+    _uploadService = new UploadService(*_store);
 
     // upgrade checking
     if (showUpgradeWindow() == QDialog::Rejected)
@@ -139,34 +140,14 @@ bool Application::prepare(const QString &dbPath)
     return true;
 }
 
+void Application::sendNotification(const QString &message, const QString &title, QSystemTrayIcon::MessageIcon icon, int timeout)
+{
+    _trayIcon->showMessage(title, message, icon, timeout);
+}
+
 const QString &Application::getDbPath()
 {
     return _dbPath;
-}
-
-TagService *Application::tagService()
-{
-    return _tagService;
-}
-
-ServerService *Application::serverService()
-{
-    return _serverService;
-}
-
-SettingService *Application::settingService()
-{
-    return _settingService;
-}
-
-OutputFormatService *Application::outputFormatService()
-{
-    return _outputFormatService;
-}
-
-ClipService *Application::clipService()
-{
-    return _clipService;
 }
 
 void Application::trayIconActivated(QSystemTrayIcon::ActivationReason reason)

@@ -84,4 +84,28 @@ void MigrationV0::run(SqlStore &store)
     query.bindValue(":template", "<img src=\"%1\" alt=\"%2\" />");
     query.bindValue(":enabled", false);
     store.exec();
+
+    store.exec("CREATE TABLE clips ("
+               "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+               "name TEXT NOT NULL, "
+               "isImage INTEGER NOT NULL,"
+               "isFile INTEGER NOT NULL,"
+               "preview BLOB,"
+               "description TEXT,"
+               "createdAt TEXT NOT NULL"
+               ")");
+
+    store.exec("CREATE TABLE clips_tags ("
+               "clipId INTEGER NOT NULL REFERENCES clips (id) ON DELETE CASCADE,"
+               "tagId INTEGER NOT NULL REFERENCES tags (id) ON DELETE CASCADE,"
+               "PRIMARY KEY (clipId, tagId)"
+               ")");
+
+    store.exec("CREATE TABLE uploads ("
+               "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+               "clipId INTEGER NOT NULL REFERENCES clips (id) ON DELETE CASCADE,"
+               "serverId INTEGER NOT NULL REFERENCES servers (id) ON DELETE CASCADE,"
+               "output TEXT, "
+               "createdAt TEXT NOT NULL"
+               ")");
 }

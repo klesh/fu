@@ -108,7 +108,7 @@ UploadDialog::~UploadDialog()
 
 void UploadDialog::accept()
 {
-    qDebug() << _clips.size();
+    APP->uploadService()->upload(_clips, ui->tgeTags->tags(), ui->txtDescription->text());
     QDialog::accept();
 }
 
@@ -126,7 +126,7 @@ void UploadDialog::reload()
     _clips =  APP->clipService()->getAllFromClipboard();
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
     for (auto &clip : _clips) {
-        _previewLayout->addWidget(new ThumbnailLabel(ui->sclPreview, clip.icon));
+        _previewLayout->addWidget(new ThumbnailLabel(ui->sclPreview, clip.preview));
         if (!clip.name.isEmpty()) {
             auto lblName = new QLabel(ui->sclPreview);
             lblName->setText(clip.name);

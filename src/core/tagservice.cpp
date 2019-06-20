@@ -32,7 +32,7 @@ QList<Tag> TagService::getAll()
     return tags;
 }
 
-void TagService::append(const QString &name)
+uint TagService::append(const QString &name)
 {
     QDateTime now = QDateTime::currentDateTime();
 
@@ -42,6 +42,8 @@ void TagService::append(const QString &name)
     query.bindValue(":lastUsedTimestamp", now.toTime_t());
 
     query.exec();
+
+    return query.lastInsertId().toUInt();
 }
 
 void TagService::update(uint id, const QString &name)
@@ -57,4 +59,16 @@ void TagService::remove(uint id)
     auto query = _store.prepare("DELETE FROM tags WHERE id=:id");
     query.bindValue(":id", id);
     query.exec();
+}
+
+uint TagService::findOrAppend(const QString &name)
+{
+    auto query = _store.prepare("SELECT id FROM tags WHERE name=:name");
+    query.bindValue(":name", name);
+
+    auto result = _store.exec();
+    if (result.next()) {
+        return result.value(0).toUInt();
+    }
+    return append(name);
 }
