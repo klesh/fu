@@ -2,6 +2,7 @@
 #define UPLOADDIALOG_H
 
 #include "models/clip.h"
+#include "components/thumbnaillabel.h"
 
 #include <QDialog>
 #include <QKeyEvent>
@@ -21,11 +22,12 @@ class UploadDialog : public QDialog
 
 public:
     explicit UploadDialog(QWidget *parent = nullptr);
-    ~UploadDialog();
+    ~UploadDialog() override;
 
 private:
     Ui::UploadDialog *ui;
     QList<Clip> _clips;
+    QMap<Clip*, ThumbnailLabel*> _thumbnails;
     QLayout *_previewLayout;
 
 protected:

@@ -41,7 +41,8 @@ uint TagService::append(const QString &name)
     query.bindValue(":createdAt", now.toString(Qt::ISODate));
     query.bindValue(":lastUsedTimestamp", now.toTime_t());
 
-    query.exec();
+    if (!query.exec())
+        qDebug() << "add tag failed: " << query.lastError().text();
 
     return query.lastInsertId().toUInt();
 }
@@ -63,11 +64,13 @@ void TagService::remove(uint id)
 
 uint TagService::findOrAppend(const QString &name)
 {
+    qDebug() << "find or append " << name;
     auto query = _store.prepare("SELECT id FROM tags WHERE name=:name");
     query.bindValue(":name", name);
 
     auto result = _store.exec();
     if (result.next()) {
+        qDebug() << "tag found: " << result.value(0);
         return result.value(0).toUInt();
     }
     return append(name);

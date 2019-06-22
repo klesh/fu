@@ -61,6 +61,7 @@ HEADERS += \
         src/aboutdialog.h \
         src/components/errormessage.h \
         src/components/flowlayout.h \
+        src/components/focuswatcher.h \
         src/components/folderpicker.h \
         src/components/previewbox.h \
         src/components/tagbutton.h \

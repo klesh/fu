@@ -108,6 +108,13 @@ UploadDialog::~UploadDialog()
 
 void UploadDialog::accept()
 {
+    // make sure all thumbnail are loaded
+    for (auto &clip : _clips) {
+        auto thumbnail = _thumbnails[&clip];
+        thumbnail->loading()->wait();
+        clip.rawPngThumb = thumbnail->createRawPng();
+    }
+
     APP->uploadService()->upload(_clips, ui->tgeTags->tags(), ui->txtDescription->text());
     QDialog::accept();
 }
@@ -123,10 +130,20 @@ void UploadDialog::reload()
         delete ctrl;
     }
 
+    _thumbnails.clear();
     _clips =  APP->clipService()->getAllFromClipboard();
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
     for (auto &clip : _clips) {
-        _previewLayout->addWidget(new ThumbnailLabel(ui->sclPreview, clip.preview));
+        auto thumbnail = new ThumbnailLabel(ui->sclPreview);
+        if (clip.isImage) {
+            if (clip.isFile) {
+                thumbnail->setThumbnailByOriginPath(clip.data.toUrl().toLocalFile());
+            } else {
+                thumbnail->setThumbnailByOrigin(qvariant_cast<QPixmap>(clip.data));
+            }
+        }
+
+        _previewLayout->addWidget(thumbnail);
         if (!clip.name.isEmpty()) {
             auto lblName = new QLabel(ui->sclPreview);
             lblName->setText(clip.name);
@@ -139,6 +156,7 @@ void UploadDialog::reload()
             lblName->setText(clippedText);
             _previewLayout->addWidget(lblName);
         }
+        _thumbnails[&clip] = thumbnail;
     }
 
     refresh();

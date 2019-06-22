@@ -23,12 +23,21 @@ TagsEdit::TagsEdit(QWidget *parent)
     cbxPicker->setEditable(true);
     layout->addWidget(cbxPicker);
 
-    connect(cbxPicker, SIGNAL(activated(const QString&)), this, SLOT(selectTag(const QString&)));
 
     for (auto &tag : APP->tagService()->getAll()) {
         cbxPicker->addItem(tag.name, tag.id);
     }
+
+    connect(cbxPicker, SIGNAL(activated(const QString&)), this, SLOT(selectTag(const QString&)));
     cbxPicker->setCurrentIndex(-1);
+
+    focusWatcher = new FocusWatcher(cbxPicker);
+    connect(focusWatcher, SIGNAL(unfocused()), this, SLOT(finishUp()));
+}
+
+TagsEdit::~TagsEdit()
+{
+    delete focusWatcher;
 }
 
 bool TagsEdit::isTagSelected(const QString &tag)
@@ -40,9 +49,7 @@ QStringList TagsEdit::tags()
 {
     QStringList tags;
     for (auto &btn : sclSelected->findChildren<QPushButton*>()) {
-        if (btn->isChecked()) {
-            tags.append(btn->text());
-        }
+        tags.append(btn->text());
     }
     return tags;
 }
@@ -55,6 +62,14 @@ void TagsEdit::deselectTag(const QString &tag)
 
     laySelected->removeWidget(tagButton);
     delete tagButton;
+}
+
+void TagsEdit::finishUp()
+{
+    if (!cbxPicker->currentText().isEmpty()) {
+        selectTag(cbxPicker->currentText());
+        cbxPicker->setCurrentIndex(-1);
+    }
 }
 
 void TagsEdit::selectTag(const QString &tag)

@@ -10,7 +10,7 @@ struct Clip
     QVariant data;
     bool isImage;
     bool isFile;
-    QPixmap preview;
+    QByteArray rawPngThumb;
     QString name;
     QDateTime createdAt;
 };

@@ -6,10 +6,17 @@
 class ThumbnailLabel : public QLabel
 {
     Q_OBJECT
+    QThread *_loading = nullptr;
 
 public:
     ThumbnailLabel(QWidget *parent = nullptr);
-    ThumbnailLabel(QWidget *parent, const QPixmap &thumbnail);
+    ThumbnailLabel(QWidget *parent, const QPixmap &origin);
+    ThumbnailLabel(QWidget *parent, const QString &originPath);
+    ~ThumbnailLabel();
+    void setThumbnailByOrigin(const QPixmap &origin);
+    void setThumbnailByOriginPath(const QString &originPath);
+    QByteArray createRawPng();
+    QThread *loading();
 };
 
 #endif // THUMBNAILLABEL_H

@@ -16,13 +16,11 @@ QList<Clip> ClipService::getAllFromClipboard()
     const auto clipboard = QApplication::clipboard();
     const auto mimeData = clipboard->mimeData();
     const static QMimeDatabase mimeDb;
-    const static auto unknownImg = QPixmap(":icons/unknown-icon.png");
 
     if (mimeData->hasImage()) {
         Clip clip;
         clip.isFile = false;
         auto image = qvariant_cast<QPixmap>(mimeData->imageData());
-        clip.preview = image.scaled(THUMB_WIDTH, THUMB_HEIGHT, Qt::KeepAspectRatio);
         clip.data = image;
         clip.isImage = true;
         list.append(clip);
@@ -35,10 +33,8 @@ QList<Clip> ClipService::getAllFromClipboard()
             clip.isFile = true;
             auto mimeType = mimeDb.mimeTypeForUrl(url);
             if (mimeType.name().startsWith("image/")) {
-                clip.preview = QPixmap(url.path().mid(1)).scaled(THUMB_WIDTH, THUMB_HEIGHT, Qt::KeepAspectRatio, Qt::SmoothTransformation);
                 clip.isImage = true;
             } else {
-                clip.preview = unknownImg;
                 clip.isImage = false;
             }
             clip.name = url.fileName();
@@ -49,3 +45,15 @@ QList<Clip> ClipService::getAllFromClipboard()
 
     return list;
 }
+
+QPixmap ClipService::thumbnailize(const QPixmap &origin)
+{
+    return origin.scaled(THUMB_WIDTH, THUMB_HEIGHT, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+}
+
+const QPixmap &ClipService::unkownFileIcon()
+{
+    const static QPixmap unknownImg(":icons/unknown-icon.png");
+    return unknownImg;
+}
+

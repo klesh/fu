@@ -17,6 +17,7 @@ void UploadService::upload(QList<Clip> &clips, const QStringList &tags, const QS
     for (auto &tag : tags) {
         tagIds.append(APP->tagService()->findOrAppend(tag));
     }
+    qDebug() << tagIds;
 
     auto servers = APP->serverService()->getAllUploadEnabled();
     QPixmap watermark;
@@ -34,16 +35,7 @@ void UploadService::upload(QList<Clip> &clips, const QStringList &tags, const QS
             query.bindValue(":name", clip.name);
             query.bindValue(":isImage", clip.isImage);
             query.bindValue(":isFile", clip.isFile);
-            if (clip.isImage) {
-                QByteArray bytes;
-                QBuffer buffer(&bytes);
-                buffer.open(QIODevice::WriteOnly);
-
-                clip.preview.save(&buffer, "PNG");
-                query.bindValue(":preview", bytes);
-            } else {
-                query.bindValue(":preview", NULL);
-            }
+            query.bindValue(":preview", clip.rawPngThumb);
             query.bindValue(":description", desc);
             query.bindValue(":createdAt",  QDateTime::currentDateTime().toString(Qt::ISODate));
 
