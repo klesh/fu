@@ -16,7 +16,10 @@ mkdir -p $TMP
 echo "Creating 180x180 icon for AboutDialog"
 convert $DIR/icon.png -resize 180x180 $DIR/icon-180.png
 
-echo "Generating Windows Icon"
+echo "Generating uploading icon for System Tray"
+convert $DIR/icon-uploading.png -resize 32x32 $DIR/icon-uploading-32.png
+
+echo "Generating icon for Windows"
 convert $DIR/icon.png -define icon:auto-resize=16,24,32,48,64,128 -compress zip $TMP/fu.ico
 mv $TMP/fu.ico $DIR/../platforms/win32
 echo fu.ico generated successfully

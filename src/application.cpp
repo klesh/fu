@@ -4,7 +4,7 @@
 
 
 Application::Application(int &argc, char **argv)
-    : QApplication(argc, argv), _windowIcon(":icons/icon-32.png")
+    : QApplication(argc, argv), _windowIcon(":icons/icon-32.png"), _uploadingIcon(":icons/icon-uploading-32.png")
 {
     setWindowIcon(_windowIcon);
 
@@ -137,6 +137,20 @@ bool Application::prepare(const QString &dbPath)
         return false;
 
     createTrayIcon();
+
+    // timer for uploading icon animation
+    auto timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, [=](void) {
+        if (_uploadService->isUploading()) {
+            _isUploadingIcon = !_isUploadingIcon;
+            _trayIcon->setIcon(_isUploadingIcon ? _uploadingIcon : _windowIcon);
+        } else if (_isUploadingIcon) {
+            _isUploadingIcon = false;
+            _trayIcon->setIcon(_windowIcon);
+        }
+    });
+    timer->start(500);
+
     return true;
 }
 

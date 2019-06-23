@@ -52,6 +52,8 @@ private:
     void showWindowOrDialog(T **widget);
     QSystemTrayIcon *_trayIcon;
     QIcon _windowIcon;
+    QIcon _uploadingIcon;
+    bool _isUploadingIcon = false;
     QString _dbPath;
     SqlStore *_store = nullptr;
     TagService *_tagService = nullptr;

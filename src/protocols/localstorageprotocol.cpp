@@ -41,16 +41,18 @@ LocalStorageUploader::~LocalStorageUploader()
 
 QString LocalStorageUploader::upload(QDataStream *stream, const QString name)
 {
+    QThread::sleep(3);
     QDir dir(_folder);
     QFile outputFile(dir.absoluteFilePath(name));
     outputFile.open(QIODevice::WriteOnly);
     QDataStream outputStream(&outputFile);
-    char buffer[1024];
+    char *buffer = new char[1024];
     while (!stream->atEnd()) {
         int len = stream->readRawData(buffer, 1024);
         outputFile.write(buffer, len);
     }
     outputFile.close();
 
+    delete[] buffer;
     return _output.arg(name);
 }

@@ -1,8 +1,11 @@
 #include "../application.h"
 #include "uploadservice.h"
+#include "uploadthread.h"
 
 #include <QPainter>
 #include <QImageWriter>
+
+
 
 UploadService::UploadService(SqlStore &store)
     : _store(store)
@@ -10,7 +13,18 @@ UploadService::UploadService(SqlStore &store)
 
 }
 
-void UploadService::upload(QList<Clip> &clips, const QStringList &tags, const QString &desc)
+void UploadService::upload(const QList<Clip> &clips, const QStringList &tags, const QString &desc)
+{
+    auto thread = QThread::create([=](void) {
+        _isUploading = true;
+        _upload(clips, tags, desc);
+        _isUploading = false;
+    });
+    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+    thread->start();
+}
+
+void UploadService::_upload(const QList<Clip> &clips, const QStringList &tags, const QString &desc)
 {
     // ensure tags are saved
     QList<uint> tagIds;
@@ -27,6 +41,9 @@ void UploadService::upload(QList<Clip> &clips, const QStringList &tags, const QS
     auto imageWatermarkPos = APP->settingService()->imageWatermarkPosition();
     auto imageCompressionEanbled = APP->settingService()->imageCompressionEnabled();
 
+    QList<UploadThread*> uploadThreads;
+    QList<QByteArray*> imageBytesPtrs;
+
     // ensure clips are saved
     try {
         for (auto &clip : clips) {
@@ -40,18 +57,18 @@ void UploadService::upload(QList<Clip> &clips, const QStringList &tags, const QS
             query.bindValue(":createdAt",  QDateTime::currentDateTime().toString(Qt::ISODate));
 
             auto result = _store.exec();
-            clip.id = result.lastInsertId().toUInt();
+            auto clipId = result.lastInsertId().toUInt();
 
             // save relationship between clip and tags
             for (auto &tagId: tagIds) {
                 query = _store.prepare("INSERT INTO clips_tags (clipId, tagId) VALUES (:clipId, :tagId)");
-                query.bindValue(":clipId", clip.id);
+                query.bindValue(":clipId", clipId);
                 query.bindValue(":tagId", tagId);
                 _store.exec();
             }
 
             // only when clip is a image, and preprocess are needed
-            QByteArray imageBytes;
+            QByteArray *imageBytes = nullptr;
             if (clip.isImage && (imageCompressionEanbled || !watermark.isNull())) {
                 // prefer png
                 char format[10] = "PNG";
@@ -86,32 +103,18 @@ void UploadService::upload(QList<Clip> &clips, const QStringList &tags, const QS
                     quality = 70;
                 }
 
-                QBuffer buffer(&imageBytes);
+                imageBytes = new QByteArray();
+                QBuffer buffer(imageBytes);
                 buffer.open(QIODevice::WriteOnly);
                 pixmap.save(&buffer, format, quality);
+                imageBytesPtrs.append(imageBytes);
             }
 
             // upload to servers, shall be rewrite as multi-threaded
             for (auto &server : servers) {
-                QDataStream *stream;
-                QFile *file = nullptr;
-                if (!imageBytes.isEmpty()) { // share same processed image
-                    stream = new QDataStream(&imageBytes, QIODevice::ReadOnly);
-                } else { // create independent file stream
-                    auto filePath = clip.data.toUrl().toLocalFile();
-                    file = new QFile(filePath);
-                    if (!file->open(QIODevice::ReadOnly)) {
-                        APP->sendNotification(tr("Failed to open file %1").arg(filePath), tr("Error"), QSystemTrayIcon::MessageIcon::Warning);
-                        continue;
-                    }
-                    stream = new QDataStream(file);
-                }
-                server.uploader->upload(stream, clip.name);
-                delete stream;
-                if (file) {
-                    file->close();
-                    delete file;
-                }
+                auto uploadThread = new UploadThread(server, clip, *imageBytes);
+                uploadThread->start();
+                uploadThreads.append(uploadThread);
             }
 
         }
@@ -119,7 +122,22 @@ void UploadService::upload(QList<Clip> &clips, const QStringList &tags, const QS
 
     }
 
+    int suceed = 0, fail = 0;
+    for (auto &uploadThread : uploadThreads) {
+        uploadThread->wait();
+        if (uploadThread->isSuccess()) {
+            suceed++;
+        } else {
+            fail++;
+        }
+        delete  uploadThread;
+    }
+
     for (auto &server : servers) {
         delete server.uploader;
     }
+    for (auto &imageBytes : imageBytesPtrs) {
+        delete imageBytes;
+    }
+    APP->sendNotification(tr("File upload completed.\n%1 suceeded, %2 failed").arg(suceed).arg(fail));
 }

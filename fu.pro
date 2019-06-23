@@ -45,6 +45,7 @@ SOURCES += \
         src/core/settingservice.cpp \
         src/core/tagservice.cpp \
         src/core/uploadservice.cpp \
+        src/core/uploadthread.cpp \
         src/historywindow.cpp \
         src/application.cpp \
         src/main.cpp \
@@ -75,6 +76,7 @@ HEADERS += \
         src/core/settingservice.h \
         src/core/tagservice.h \
         src/core/uploadservice.h \
+        src/core/uploadthread.h \
         src/historywindow.h \
         src/application.h \
         src/models/clip.h \
@@ -83,6 +85,7 @@ HEADERS += \
         src/models/record.h \
         src/models/server.h \
         src/models/tag.h \
+        src/models/upload.h \
         src/protocols/ftpprotocol.h \
         src/protocols/localstorageprotocol.h \
         src/store/migration.h \
