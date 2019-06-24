@@ -16,6 +16,7 @@ class UploadThread : public QThread
 
     QString _errMessage;
     bool _isSuccess;
+    QString _output;
 
     void run() override;
 
@@ -28,6 +29,7 @@ public:
 
     bool isSuccess () { return _isSuccess; }
     const QString errMessage() { return _errMessage; }
+    const QString output() { return _output; }
 };
 
 #endif // UPLOADTHREAD_H

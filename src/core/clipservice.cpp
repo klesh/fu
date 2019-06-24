@@ -23,6 +23,7 @@ QList<Clip> ClipService::getAllFromClipboard()
         auto image = qvariant_cast<QPixmap>(mimeData->imageData());
         clip.data = image;
         clip.isImage = true;
+        clip.name = QString("%1.png").arg(QDateTime::currentDateTime().toString("yyyyMMddHHmmss"));
         list.append(clip);
     } else if (mimeData->hasUrls()) {
         for (auto &url : mimeData->urls()) {
@@ -44,6 +45,11 @@ QList<Clip> ClipService::getAllFromClipboard()
     }
 
     return list;
+}
+
+void ClipService::setClipboard(const QString &text)
+{
+    QApplication::clipboard()->setText(text);
 }
 
 QPixmap ClipService::thumbnailize(const QPixmap &origin)

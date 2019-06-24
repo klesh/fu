@@ -54,8 +54,8 @@ QByteArray ThumbnailLabel::createRawPng()
     return bytes;
 }
 
-QThread *ThumbnailLabel::loading()
+void ThumbnailLabel::wait()
 {
-    return _loading;
+    if (_loading)
+        _loading->wait();
 }
-

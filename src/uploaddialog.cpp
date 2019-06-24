@@ -111,8 +111,9 @@ void UploadDialog::accept()
     // make sure all thumbnail are loaded
     for (auto &clip : _clips) {
         auto thumbnail = _thumbnails[&clip];
-        thumbnail->loading()->wait();
+        thumbnail->wait();
         clip.rawPngThumb = thumbnail->createRawPng();
+        clip.name = ui->sclPreview->findChild<QLineEdit*>(clip.name)->text();
     }
 
     APP->uploadService()->upload(_clips, ui->tgeTags->tags(), ui->txtDescription->text());
@@ -144,18 +145,22 @@ void UploadDialog::reload()
         }
 
         _previewLayout->addWidget(thumbnail);
-        if (!clip.name.isEmpty()) {
-            auto lblName = new QLabel(ui->sclPreview);
-            lblName->setText(clip.name);
-            lblName->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-            lblName->setAlignment(Qt::AlignCenter);
-            lblName->setMinimumWidth(THUMB_WIDTH);
-            QFontMetrics metrix(lblName->font());
-            int width = THUMB_WIDTH - 5;
-            QString clippedText = metrix.elidedText(clip.name, Qt::ElideRight, width);
-            lblName->setText(clippedText);
-            _previewLayout->addWidget(lblName);
-        }
+        auto name = new QLineEdit(ui->sclPreview);
+        name->setText(clip.name);
+        name->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+        name->setAlignment(Qt::AlignCenter);
+        name->setMinimumWidth(THUMB_WIDTH);
+        name->setObjectName(clip.name);
+        connect(name, &QLineEdit::textChanged, [=](const QString &) {
+            this->refresh();
+        });
+        /*
+        QFontMetrics metrix(name->font());
+        int width = THUMB_WIDTH - 5;
+        QString clippedText = metrix.elidedText(clip.name, Qt::ElideRight, width);
+        name->setText(clippedText);
+        */
+        _previewLayout->addWidget(name);
         _thumbnails[&clip] = thumbnail;
     }
 
@@ -171,6 +176,13 @@ void UploadDialog::refresh()
             break;
         }
     }
+    bool isAnyClipNameEmpty = false;
+    for (auto &lineEdit : ui->sclPreview->findChildren<QLineEdit*>()) {
+        if (lineEdit->text().isEmpty()) {
+            isAnyClipNameEmpty = true;
+            break;
+        }
+    }
 
-    ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(isAnyServerSelected && !_clips.empty());
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(isAnyServerSelected && !_clips.empty() && !isAnyClipNameEmpty);
 }

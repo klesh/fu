@@ -12,6 +12,7 @@ struct Clip
     bool isFile;
     QByteArray rawPngThumb;
     QString name;
+    QString description;
     QDateTime createdAt;
 };
 

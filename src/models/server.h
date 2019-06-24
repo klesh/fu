@@ -15,7 +15,7 @@ struct Server
     uint outputFormatId;
     QDateTime createdAt;
     Uploader *uploader;
-    OutputFormat outputFormater;
+    OutputFormat outputFormat;
 };
 
 #endif // SERVER_H

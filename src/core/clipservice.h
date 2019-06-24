@@ -12,6 +12,7 @@ public:
     ClipService(SqlStore &store);
 
     QList<Clip> getAllFromClipboard();
+    void setClipboard(const QString &text);
     static QPixmap thumbnailize(const QPixmap &origin);
     const static QPixmap &unkownFileIcon();
 };

@@ -19,7 +19,7 @@ void UploadThread::run()
     }
 
     try {
-        _server.uploader->upload(stream, _clip.name);
+        _output = _server.uploader->upload(stream, _clip.name);
         _isSuccess = true;
     } catch (Error &e) {
         _isSuccess = false;

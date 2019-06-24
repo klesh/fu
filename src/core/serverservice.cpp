@@ -43,11 +43,15 @@ QList<Server> ServerService::getAllUploadEnabled()
 {
     QList<Server> servers;
     auto result = _store.exec("SELECT * FROM servers WHERE uploadEnabled=1 ORDER BY id DESC");
+    QMap<uint, OutputFormat> cache;
     while (result.next()) {
         auto server = convertResultToServer(result);
         server.uploader = findProtocol(server.protocol)->createUploader(server.settings);
-        if (server.outputFormatId)
-            server.outputFormater = APP->outputFormatService()->findById(server.outputFormatId);
+        if (server.outputFormatId) {
+            if (!cache.contains(server.outputFormatId))
+                cache[server.outputFormatId] = APP->outputFormatService()->findById(server.outputFormatId);
+            server.outputFormat = cache[server.outputFormatId];
+        }
         servers.append(server);
     }
     return servers;
