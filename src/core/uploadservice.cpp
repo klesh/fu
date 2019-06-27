@@ -25,7 +25,6 @@ void UploadService::upload(QList<Clip> &clips, const QStringList &tags, const QS
         tagIds.append(APP->tagService()->findOrAppend(tag));
     }
 
-    int i = 0;
     for (auto &clip : clips) {
         clip.description = desc;
         auto query = _store.prepare("INSERT INTO clips (name, isImage, isFile, preview, description, createdAt)"

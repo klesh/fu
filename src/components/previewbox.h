@@ -15,14 +15,14 @@ public:
     //~PreviewBox();
 
     void setImage(const QPixmap &thumbnail);
-    void setUploadedTo(const QString &serverName);
+    void setName(const QString &name);
     void setTags(const QStringList &tags);
     bool isSelected();
 
 protected:
     void mousePressEvent(QMouseEvent *evt) override;
     QLabel *previewImg;
-    QLabel *uploadedTo;
+    QLabel *name;
     QFrame *tagsFrame;
     bool selected;
 };

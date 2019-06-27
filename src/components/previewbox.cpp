@@ -25,12 +25,12 @@ PreviewBox::PreviewBox(QWidget *parent)
     previewImg = new ThumbnailLabel(this);
     boxLayout->addWidget(previewImg);
 
-    uploadedTo = new QLabel(this);
-    uploadedTo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    uploadedTo->setMaximumHeight(25);
-    uploadedTo->setText(tr("Uploaded to: ") + "haha");
-    uploadedTo->setAlignment(Qt::AlignHCenter);
-    boxLayout->addWidget(uploadedTo);
+    name = new QLabel(this);
+    name->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    name->setMaximumHeight(25);
+    name->setText(tr("Uploaded to: ") + "haha");
+    name->setAlignment(Qt::AlignHCenter);
+    boxLayout->addWidget(name);
 
     tagsFrame = nullptr;
 
@@ -53,9 +53,9 @@ void PreviewBox::setImage(const QPixmap &thumbnail)
     previewImg->setPixmap(thumbnail);
 }
 
-void PreviewBox::setUploadedTo(const QString &serverName)
+void PreviewBox::setName(const QString &n)
 {
-    uploadedTo->setText(serverName);
+    name->setText(n);
 }
 
 void PreviewBox::setTags(const QStringList &tags)

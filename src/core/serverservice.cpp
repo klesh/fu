@@ -1,6 +1,6 @@
-#include "../application.h"
-#include "error.h"
 #include "serverservice.h"
+#include "error.h"
+#include "../application.h"
 #include "../protocols/localstorageprotocol.h"
 #include "../protocols/ftpprotocol.h"
 
@@ -9,7 +9,7 @@ QString toJson(QVariantMap &settings)
     return QJsonDocument::fromVariant(settings).toJson(QJsonDocument::Compact);
 }
 
-Server convertResultToServer(QSqlQuery result) {
+Server convertResultToServer(QSqlQuery &result) {
     Server server;
     auto rec = result.record();
     server.id = result.value(rec.indexOf("id")).toUInt();
@@ -74,7 +74,7 @@ void ServerService::append(Server &server)
     query.bindValue(":name", server.name);
     query.bindValue(":protocol", server.protocol);
     query.bindValue(":settings", toJson(server.settings));
-    query.bindValue(":createdAt",  QDateTime::currentDateTime().toString(Qt::ISODate));
+    query.bindValue(":createdAt", datetimeToISO());
 
     auto result = _store.exec();
     server.id = result.lastInsertId().toUInt();

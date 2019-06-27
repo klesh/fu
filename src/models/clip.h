@@ -14,6 +14,7 @@ struct Clip
     QString name;
     QString description;
     QDateTime createdAt;
+    QStringList tags;
 };
 
 #endif // CLIP_H

@@ -1,40 +1,38 @@
 #include "historywindow.h"
 #include "ui_historywindow.h"
-#include "models/record.h"
 #include "components/flowlayout.h"
 #include "components/previewbox.h"
 #include "components/tagbutton.h"
+#include "application.h"
 
 #include <QDebug>
 #include <QRandomGenerator>
+#include <QCheckBox>
 
 
 HistoryWindow::HistoryWindow() :
     QMainWindow(),
     ui(new Ui::HistoryWindow)
 {
-    ;
     ui->setupUi(this);
 
+    ui->dteFrom->setDate(QDate::currentDate().addMonths(-1));
+    ui->dteTo->setDate(QDate::currentDate());
 
-    // mock records
-    QList<Record> records;
-    const static QPixmap thumbnail = QPixmap("D:/Nextcloud/kleshwong/wallpapers/6fVBDMW-dark-minimalist-wallpaper.jpg").scaled(160, 160, Qt::KeepAspectRatio);
-    for (int i = 0; i < 100; i++)
-    {
-
-        Record record;
-        record.setUploadedTo("imgur.com");
-        record.setThumbnail(thumbnail);
-        record.setTags({"Mr.Robot", "Hello", "World"});
-        QDateTime createdAt = QDateTime::currentDateTime().addDays(-QRandomGenerator::global()->bounded(0, 5));
-        record.setCreatedAt(createdAt);
-        records.append(record);
+    for (auto &server : APP->serverService()->getAll()) {
+        auto serverCtrl = new QCheckBox(ui->sclServers);
+        serverCtrl->setText(server.name);
+        serverCtrl->setProperty("serverId", server.id);
+        ui->sclServers->layout()->addWidget(serverCtrl);
     }
-    updateRecords(records);
 
-    // set up context menu
-    connect(ui->sclRecords, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(showRecordsContextMenu(const QPoint &)));
+    reload();
+
+    auto test = new QAction(this);
+    test->setText("test");
+    addAction(test);
+    connect(ui->btnApply, SIGNAL(clicked()), this, SLOT(reload()));
+    connect(ui->sclClips, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(showClipsContextMenu(const QPoint &)));
 }
 
 HistoryWindow::~HistoryWindow()
@@ -43,45 +41,71 @@ HistoryWindow::~HistoryWindow()
 }
 
 
-void HistoryWindow::updateRecords(const QList<Record> &records)
+void HistoryWindow::reload()
 {
-    QLayout *recordsLayout = ui->sclRecords->layout();
+    QMap<QString, QVariant> filter;
+    if (ui->grpByDate->isChecked()) {
+        filter["dateFrom"] = ui->dteFrom->date();
+        filter["dateTo"] = ui->dteTo->date();
+    }
+    if (ui->grpByServers->isChecked()) {
+        QList<uint> serverIds;
+        for (auto &serverCtrl : ui->sclServers->findChildren<QCheckBox*>()) {
+            if (serverCtrl->isChecked()) {
+                auto serverId = serverCtrl->property("serverId").toUInt();
+                serverIds.append(serverId);
+            }
+        }
+        filter["serverIds"] = QVariant::fromValue(serverIds);
+    }
+
+    if (ui->grpTags->isChecked()) {
+        filter["tags"] = ui->tgeTags->tags();
+    }
+
+    if (ui->grpByImage->isChecked()) {
+        filter["image"] = ui->tnlImage->pixmap();
+    }
+
+    QLayout *layout = ui->sclClips->layout();
 
     // clean up old widgets
     QLayoutItem *item;
-    while ((item = recordsLayout->takeAt(0)) != nullptr) {
+    while ((item = layout->takeAt(0)) != nullptr) {
         delete item->widget();
         delete item;
     }
 
     // rebuild new widgets
-    QMap<QDate, QList<Record>> dateRecordsMap = Record::groupByCreationDate(records);
-    for (const QDate &date : dateRecordsMap.keys()) {
+    auto datedClips = APP->clipService()->searchAndGroup(filter);
+    for (const auto &pair : datedClips) {
+        auto date = pair.first;
         QLabel *dateLabel = new QLabel(this);
         dateLabel->setText(date.toString("yyyy-MM-dd"));
         dateLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
         dateLabel->setStyleSheet("font-size: 24px; font: bold; border-bottom: 1px solid black;");
         dateLabel->setMargin(10);
-        recordsLayout->addWidget(dateLabel);
+        layout->addWidget(dateLabel);
 
         QFrame *groupedFrame = new QFrame(this);
         FlowLayout *groupedLayout = new FlowLayout(groupedFrame);
         groupedLayout->setMargin(0);
         groupedFrame->setLayout(groupedLayout);
-        for (const Record &record : dateRecordsMap[date]) {
+        for (auto &clip: pair.second) {
             PreviewBox *box = new PreviewBox(this);
-            box->setUploadedTo(record.getUploadedTo());
-            box->setImage(record.getThumbnail());
-            box->setTags(record.getTags());
+            QPixmap thumbnail;
+            thumbnail.loadFromData(clip.rawPngThumb, "PNG");
+            box->setImage(thumbnail);
+            box->setTags(clip.tags);
+            box->setName(clip.name);
             groupedLayout->addWidget(box);
         }
-        recordsLayout->addWidget(groupedFrame);
+        layout->addWidget(groupedFrame);
     }
 }
 
-void HistoryWindow::showRecordsContextMenu(const QPoint &pos)
+void HistoryWindow::showClipsContextMenu(const QPoint &pos)
 {
-    qDebug() <<"hello";
     QMenu contextMenu(this);
     QAction copyUrlAction(tr("Copy as ") + "Plain Url", this);
     contextMenu.addAction(&copyUrlAction);
@@ -113,5 +137,5 @@ void HistoryWindow::showRecordsContextMenu(const QPoint &pos)
     QAction unselectAllAction(tr("&Unselect All"), this);
     contextMenu.addAction(&unselectAllAction);
 
-    contextMenu.exec(ui->sclRecords->mapToGlobal(pos));
+    contextMenu.exec(ui->sclClips->mapToGlobal(pos));
 }

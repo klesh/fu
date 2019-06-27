@@ -13,8 +13,11 @@ public:
 
     QList<Clip> getAllFromClipboard();
     void setClipboard(const QString &text);
+    QList<Clip> search(QMap<QString, QVariant> &filter);
+    QList<QPair<QDate, QList<Clip>>> searchAndGroup(QMap<QString, QVariant> &filter);
     static QPixmap thumbnailize(const QPixmap &origin);
     const static QPixmap &unkownFileIcon();
+    static QList<QPair<QDate, QList<Clip>>> groupByCreationDate(QList<Clip> &clips);
 };
 
 #endif // CLIPSERVICE_H

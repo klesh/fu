@@ -1,7 +1,7 @@
 #include "error.h"
 #include "outputformatservice.h"
 
-OutputFormat convertResultToOutputFormat(QSqlQuery result) {
+OutputFormat convertResultToOutputFormat(QSqlQuery &result) {
     OutputFormat outputFormat;
     auto rec = result.record();
     outputFormat.id = result.value(rec.indexOf("id")).toUInt();

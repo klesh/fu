@@ -1,6 +1,7 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
+#include "core/utils.h"
 #include "components/errormessage.h"
 #include "upgradedialog.h"
 #include "aboutdialog.h"

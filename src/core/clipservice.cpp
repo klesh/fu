@@ -3,6 +3,19 @@
 
 #include <QClipboard>
 
+Clip convertResultToClip(QSqlQuery &result) {
+    Clip clip;
+    auto rec = result.record();
+    clip.id = result.value(rec.indexOf("id")).toUInt();
+    clip.name = result.value(rec.indexOf("name")).toString();
+    clip.isImage = result.value(rec.indexOf("isImage")).toBool();
+    clip.isFile = result.value(rec.indexOf("isFile")).toBool();
+    clip.rawPngThumb = result.value(rec.indexOf("preview")).toByteArray();
+    clip.description = result.value(rec.indexOf("description")).toString();
+    clip.createdAt = result.value(rec.indexOf("createdAt")).toDateTime();
+    return clip;
+}
+
 ClipService::ClipService(SqlStore &store)
     : _store(store)
 {
@@ -52,6 +65,64 @@ void ClipService::setClipboard(const QString &text)
     QApplication::clipboard()->setText(text);
 }
 
+QList<Clip> ClipService::search(QMap<QString, QVariant> &filter)
+{
+    QList<Clip> clips;
+
+    QStringList sql, where;
+    sql.append("SELECT clips.* FROM clips");
+
+
+    if (filter.contains("dateFrom")) {
+        where.append(QString("DATETIME(clips.createdAt) > DATETIME('%1')").arg(dateToISO(filter["dateFrom"].toDate())));
+    }
+    if (filter.contains("dateTo")) {
+        where.append(QString("DATETIME(clips.createdAt) <= DATETIME('%1')").arg(dateToISO(filter["dateTo"].toDate().addDays(1))));
+    }
+    if (filter.contains("serverIds")) {
+        auto serverIds = qvariant_cast<QList<uint>>(filter["serverIds"]);
+        sql.append("LEFT JOIN uploads ON clips.id=uploads.clipId");
+        where.append(QString("uploads.serverId IN (%1)").arg(join<uint>(serverIds)));
+    }
+    if (filter.contains("tags")) {
+        auto tags = qvariant_cast<QStringList>(filter["tags"]);
+        auto tagIds = APP->tagService()->mapToIds(tags);
+        sql.append("LEFT JOIN clips_tags ON clips.id=clips_tags.clipId");
+        where.append(QString("clips_tags.tagId IN (%1)").arg(join<uint>(tagIds)));
+    }
+
+    if (!where.empty()) {
+        sql.append("WHERE");
+        sql.append(where.join(" AND "));
+    }
+
+    sql.append("ORDER BY id DESC");
+    auto sqlText = sql.join(" ");
+
+    qDebug() << sqlText;
+
+    auto result = _store.exec(sqlText);
+    while (result.next()) {
+        clips.append(convertResultToClip(result));
+    }
+
+    for (auto &clip : clips) {
+        auto tagsResult = _store.exec(QString("SELECT tags.name FROM tags LEFT JOIN clips_tags ON (tags.id=clips_tags.tagId) WHERE clips_tags.clipId=%1").arg(clip.id));
+        while (tagsResult.next()) {
+            clip.tags.append(tagsResult.value(0).toString());
+        }
+    }
+
+    return clips;
+}
+
+QList<QPair<QDate, QList<Clip>>> ClipService::searchAndGroup(QMap<QString, QVariant> &filter)
+{
+    auto clips = search(filter);
+    auto datedClips = groupByCreationDate(clips);
+    return datedClips;
+}
+
 QPixmap ClipService::thumbnailize(const QPixmap &origin)
 {
     return origin.scaled(THUMB_WIDTH, THUMB_HEIGHT, Qt::KeepAspectRatio, Qt::SmoothTransformation);
@@ -59,7 +130,24 @@ QPixmap ClipService::thumbnailize(const QPixmap &origin)
 
 const QPixmap &ClipService::unkownFileIcon()
 {
-    const static QPixmap unknownImg(":icons/unknown-icon.png");
+    const static QPixmap unknownImg(":icons/file.svg");
     return unknownImg;
 }
 
+QList<QPair<QDate, QList<Clip>>> ClipService::groupByCreationDate(QList<Clip> &clips)
+{
+    QList<QPair<QDate, QList<Clip>>> datedClips;
+    for (auto &clip : clips) {
+        QDate date = clip.createdAt.date();
+        if (datedClips.empty() || datedClips.last().first != date) {
+        //if (!datedClips.contains(date)) {
+            QPair<QDate, QList<Clip>> pair;
+            QList<Clip> clips;
+            pair.first = date;
+            pair.second = clips;
+            datedClips.append(pair);
+        }
+        datedClips.last().second.append(clip);
+    }
+    return datedClips;
+}

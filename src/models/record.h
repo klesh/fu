@@ -34,18 +34,6 @@ public:
     void setThumbnail(QPixmap value) { thumbnail = value; }
     QPixmap getThumbnail() const { return thumbnail; }
 
-    static QMap<QDate, QList<Record>> groupByCreationDate(QList<Record> records) {
-        QMap<QDate, QList<Record>> dateRecordsMap;
-        for (const Record &record : records) {
-            QDate date = record.createdAt.date();
-            if (!dateRecordsMap.contains(date)) {
-                QList<Record> dateRecords;
-                dateRecordsMap.insert(date, dateRecords);
-            }
-            dateRecordsMap[date].append(record);
-        }
-        return dateRecordsMap;
-    }
 };
 
 #endif // RECORD_H

@@ -77,6 +77,7 @@ HEADERS += \
         src/core/tagservice.h \
         src/core/uploadservice.h \
         src/core/uploadthread.h \
+        src/core/utils.h \
         src/historywindow.h \
         src/application.h \
         src/models/clip.h \

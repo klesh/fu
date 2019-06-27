@@ -4,5 +4,10 @@
         <file>icons/icon-180.png</file>
         <file>icons/unknown-icon.png</file>
         <file>icons/icon-uploading-32.png</file>
+        <file>icons/x.svg</file>
+        <file>icons/check-square.svg</file>
+        <file>icons/trash.svg</file>
+        <file>icons/x-square.svg</file>
+        <file>icons/file.svg</file>
     </qresource>
 </RCC>

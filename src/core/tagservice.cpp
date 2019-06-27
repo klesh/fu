@@ -1,7 +1,7 @@
 #include "tagservice.h"
 
 
-Tag convertResultToTag(QSqlQuery result) {
+Tag convertResultToTag(QSqlQuery &result) {
     Tag tag;
     auto rec = result.record();
     tag.id = result.value(rec.indexOf("id")).toUInt();
@@ -62,9 +62,8 @@ void TagService::remove(uint id)
     query.exec();
 }
 
-uint TagService::findOrAppend(const QString &name)
+uint TagService::find(const QString &name)
 {
-    qDebug() << "find or append " << name;
     auto query = _store.prepare("SELECT id FROM tags WHERE name=:name");
     query.bindValue(":name", name);
 
@@ -73,5 +72,22 @@ uint TagService::findOrAppend(const QString &name)
         qDebug() << "tag found: " << result.value(0);
         return result.value(0).toUInt();
     }
-    return append(name);
+    return 0;
+}
+
+uint TagService::findOrAppend(const QString &name)
+{
+    auto tagId = find(name);
+    return tagId || append(name);
+}
+
+QList<uint> TagService::mapToIds(const QStringList &tags)
+{
+    QList<uint> tagIds;
+    for (auto &tag : tags) {
+        auto tagId = this->find(tag);
+        if (tagId)
+            tagIds.append(tagId);
+    }
+    return tagIds;
 }

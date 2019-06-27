@@ -31,8 +31,14 @@
       </property>
       <property name="minimumSize">
        <size>
-        <width>280</width>
+        <width>220</width>
         <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>200</width>
+        <height>16777215</height>
        </size>
       </property>
       <property name="frameShape">
@@ -50,9 +56,15 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_2">
+        <widget class="QGroupBox" name="grpByDate">
          <property name="title">
           <string>By Date</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
          </property>
          <layout class="QFormLayout" name="formLayout">
           <item row="0" column="0">
@@ -63,7 +75,7 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QDateEdit" name="dateEdit"/>
+           <widget class="QDateEdit" name="dteFrom"/>
           </item>
           <item row="1" column="0">
            <widget class="QLabel" name="label_2">
@@ -73,13 +85,13 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QDateEdit" name="dateEdit_2"/>
+           <widget class="QDateEdit" name="dteTo"/>
           </item>
          </layout>
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox">
+        <widget class="QGroupBox" name="grpByServers">
          <property name="maximumSize">
           <size>
            <width>16777215</width>
@@ -89,36 +101,28 @@
          <property name="title">
           <string>By Servers</string>
          </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
          <layout class="QHBoxLayout" name="horizontalLayout_6">
           <item>
-           <widget class="QScrollArea" name="scrollArea_2">
+           <widget class="QScrollArea" name="scaServers">
             <property name="widgetResizable">
              <bool>true</bool>
             </property>
-            <widget class="QWidget" name="scrollAreaWidgetContents">
+            <widget class="QWidget" name="sclServers">
              <property name="geometry">
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>238</width>
+               <width>178</width>
                <height>116</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_3">
-              <item>
-               <widget class="QCheckBox" name="checkBox">
-                <property name="text">
-                 <string>CheckBox</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QCheckBox" name="checkBox_2">
-                <property name="text">
-                 <string>CheckBox</string>
-                </property>
-               </widget>
-              </item>
               <item>
                <spacer name="verticalSpacer">
                 <property name="orientation">
@@ -144,9 +148,15 @@
          <property name="title">
           <string>By Tags</string>
          </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
          <layout class="QHBoxLayout" name="horizontalLayout_4">
           <item>
-           <widget class="TagsEdit" name="frame_2">
+           <widget class="TagsEdit" name="tgeTags">
             <property name="frameShape">
              <enum>QFrame::StyledPanel</enum>
             </property>
@@ -159,15 +169,44 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_4">
+        <widget class="QGroupBox" name="grpByImage">
          <property name="title">
           <string>By Image</string>
          </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_5">
           <item>
-           <widget class="ThumbnailLabel" name="label_3">
+           <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <item>
+             <widget class="ThumbnailLabel" name="tnlImage">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>160</width>
+                <height>160</height>
+               </size>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnPaste">
             <property name="text">
-             <string>No Image Selected</string>
+             <string>Paste</string>
             </property>
            </widget>
           </item>
@@ -175,16 +214,29 @@
         </widget>
        </item>
        <item>
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
         <layout class="QHBoxLayout" name="horizontalLayout">
          <item>
-          <widget class="QPushButton" name="pushButton">
+          <widget class="QPushButton" name="btnApply">
            <property name="text">
             <string>Apply</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_2">
+          <widget class="QPushButton" name="btnClear">
            <property name="text">
             <string>Clear</string>
            </property>
@@ -198,7 +250,80 @@
     <item>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
-       <widget class="QScrollArea" name="scrRecords">
+       <layout class="QHBoxLayout" name="horizontalLayout_5">
+        <item>
+         <widget class="QPushButton" name="pushButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Delete</string>
+          </property>
+          <property name="icon">
+           <iconset resource="../fu.qrc">
+            <normaloff>:/icons/x.svg</normaloff>:/icons/x.svg</iconset>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_2">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Clearn All</string>
+          </property>
+          <property name="icon">
+           <iconset resource="../fu.qrc">
+            <normaloff>:/icons/trash.svg</normaloff>:/icons/trash.svg</iconset>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_3">
+          <property name="text">
+           <string>Select All</string>
+          </property>
+          <property name="icon">
+           <iconset resource="../fu.qrc">
+            <normaloff>:/icons/check-square.svg</normaloff>:/icons/check-square.svg</iconset>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_4">
+          <property name="text">
+           <string>Unselect All</string>
+          </property>
+          <property name="icon">
+           <iconset resource="../fu.qrc">
+            <normaloff>:/icons/x-square.svg</normaloff>:/icons/x-square.svg</iconset>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QScrollArea" name="scaClips">
         <property name="contextMenuPolicy">
          <enum>Qt::DefaultContextMenu</enum>
         </property>
@@ -211,13 +336,13 @@
         <property name="widgetResizable">
          <bool>true</bool>
         </property>
-        <widget class="QWidget" name="sclRecords">
+        <widget class="QWidget" name="sclClips">
          <property name="geometry">
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>972</width>
-           <height>725</height>
+           <width>1032</width>
+           <height>746</height>
           </rect>
          </property>
          <property name="contextMenuPolicy">
@@ -230,39 +355,25 @@
         </widget>
        </widget>
       </item>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_5">
-        <item>
-         <widget class="QPushButton" name="pushButton_4">
-          <property name="text">
-           <string>Previous Page</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_5">
-          <property name="text">
-           <string>Page: 1</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pushButton_3">
-          <property name="text">
-           <string>Next Page</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
      </layout>
     </item>
    </layout>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionDelete">
+   <property name="icon">
+    <iconset resource="../fu.qrc">
+     <normaloff>:/icons/x.svg</normaloff>:/icons/x.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Delete</string>
+   </property>
+   <property name="toolTip">
+    <string>Delete selected clips</string>
+   </property>
+   <property name="shortcut">
+    <string>Del</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -278,6 +389,8 @@
    <header>src/components/thumbnaillabel.h</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../fu.qrc"/>
+ </resources>
  <connections/>
 </ui>

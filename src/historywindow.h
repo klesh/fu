@@ -1,7 +1,6 @@
 #ifndef HISTORYWINDOW_H
 #define HISTORYWINDOW_H
 
-#include "models/record.h"
 
 #include <QMainWindow>
 #include <QMenuBar>
@@ -25,10 +24,10 @@ public:
 private:
     Ui::HistoryWindow *ui;
 
-    void updateRecords(const QList<Record> &records);
 
 private slots:
-    void showRecordsContextMenu(const QPoint &pos);
+    void reload();
+    void showClipsContextMenu(const QPoint &pos);
 };
 
 #endif // HISTORYWINDOW_H
