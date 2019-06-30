@@ -6,7 +6,6 @@
 #include <QMenuBar>
 #include <QTranslator>
 #include <QCloseEvent>
-#include <QMenu>
 
 
 namespace Ui {
@@ -23,11 +22,13 @@ public:
 
 private:
     Ui::HistoryWindow *ui;
+    bool confirm(const QString &message);
 
 
-private slots:
+public slots:
     void reload();
-    void showClipsContextMenu(const QPoint &pos);
+    void cleanAll();
+    void deleteSelected();
 };
 
 #endif // HISTORYWINDOW_H

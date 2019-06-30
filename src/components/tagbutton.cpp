@@ -1,7 +1,7 @@
 #include "tagbutton.h"
 
 const static QString TAG_STYLE_SHEET = "\
-* { \
+QPushButton { \
         border-radius: 8px; \
         border-style:  solid; \
         border-width:1px; \
@@ -10,10 +10,10 @@ const static QString TAG_STYLE_SHEET = "\
         background: white; \
         padding: 3px 10px; \
 }\n\
-:hover:!pressed { \
+QPushButton:hover:!pressed { \
         background: #eee; \
 }\n\
-:pressed { \
+QPushButton:pressed { \
         background: #28a745; \
         color: white; \
 }\n\
@@ -25,6 +25,7 @@ TagButton::TagButton(QWidget *parent)
     setStyleSheet(TAG_STYLE_SHEET);
     setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     setMaximumHeight(20);
+    setObjectName("tagButton");
 }
 
 TagButton::TagButton(const QString text, QWidget *parent)

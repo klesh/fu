@@ -23,21 +23,31 @@ HistoryWindow::HistoryWindow() :
         auto serverCtrl = new QCheckBox(ui->sclServers);
         serverCtrl->setText(server.name);
         serverCtrl->setProperty("serverId", server.id);
+        serverCtrl->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
         ui->sclServers->layout()->addWidget(serverCtrl);
     }
 
     reload();
 
-    auto test = new QAction(this);
-    test->setText("test");
-    addAction(test);
     connect(ui->btnApply, SIGNAL(clicked()), this, SLOT(reload()));
-    connect(ui->sclClips, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(showClipsContextMenu(const QPoint &)));
+    connect(ui->btnClean, SIGNAL(clicked()), this, SLOT(cleanAll()));
+    connect(ui->btnDelete, SIGNAL(clicked()), this, SLOT(deleteSelected()));
+
+    /*
+    for (auto &server : APP->serverService()->getAllByClipId(9)) {
+        qDebug() << "server name: " << server.name;
+    }
+    */
 }
 
 HistoryWindow::~HistoryWindow()
 {
     delete ui;
+}
+
+bool HistoryWindow::confirm(const QString &message)
+{
+    return QMessageBox::question(this, tr("Confirmation"), message, QMessageBox::Yes|QMessageBox::No) == QMessageBox::Yes;
 }
 
 
@@ -92,50 +102,28 @@ void HistoryWindow::reload()
         groupedLayout->setMargin(0);
         groupedFrame->setLayout(groupedLayout);
         for (auto &clip: pair.second) {
-            PreviewBox *box = new PreviewBox(this);
-            QPixmap thumbnail;
-            thumbnail.loadFromData(clip.rawPngThumb, "PNG");
-            box->setImage(thumbnail);
-            box->setTags(clip.tags);
-            box->setName(clip.name);
-            groupedLayout->addWidget(box);
+            groupedLayout->addWidget(new PreviewBox(this, clip));
         }
         layout->addWidget(groupedFrame);
     }
 }
 
-void HistoryWindow::showClipsContextMenu(const QPoint &pos)
+void HistoryWindow::cleanAll()
 {
-    QMenu contextMenu(this);
-    QAction copyUrlAction(tr("Copy as ") + "Plain Url", this);
-    contextMenu.addAction(&copyUrlAction);
+    if (confirm(tr("Are you sure you want to delete all history PERMANENTLY?"))) {
+        APP->clipService()->clean();
+        reload();
+    }
+}
 
-    QAction copyAsMarkdownImage(tr("Copy as ") + "Markdown Image", this);
-    contextMenu.addAction(&copyAsMarkdownImage);
-
-    QAction copyAsMarkdownLink(tr("Copy as ") + "Markdown Link", this);
-    contextMenu.addAction(&copyAsMarkdownLink);
-
-    contextMenu.addSeparator();
-
-    QAction editAction(tr("&Edit"), this);
-    contextMenu.addAction(&editAction);
-
-    contextMenu.addSeparator();
-
-    QAction deleteAction(tr("&Delete"), this);
-    contextMenu.addAction(&deleteAction);
-
-    QAction clearAction(tr("&Clean Up History"), this);
-    contextMenu.addAction(&clearAction);
-
-    contextMenu.addSeparator();
-
-    QAction selectAllAction(tr("Select &All"), this);
-    contextMenu.addAction(&selectAllAction);
-
-    QAction unselectAllAction(tr("&Unselect All"), this);
-    contextMenu.addAction(&unselectAllAction);
-
-    contextMenu.exec(ui->sclClips->mapToGlobal(pos));
+void HistoryWindow::deleteSelected()
+{
+    if (confirm(tr("Are you sure you want to delete all selected clips?"))) {
+        for (auto &preview : ui->sclClips->findChildren<PreviewBox*>()) {
+            if (preview->isSelected()) {
+                APP->clipService()->remove(preview->clip.id);
+            }
+        }
+        reload();
+    }
 }

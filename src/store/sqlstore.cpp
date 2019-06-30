@@ -16,7 +16,13 @@ SqlStore::~SqlStore()
 
 bool SqlStore::open()
 {
-    return _db.open();
+    bool r = true;
+    if (!_db.isOpen()) {
+        r = _db.open();
+        if (r)
+            exec("PRAGMA foreign_keys=ON");
+    }
+    return r;
 }
 
 void SqlStore::close()
@@ -26,9 +32,9 @@ void SqlStore::close()
 
 QSqlQuery &SqlStore::prepare(const QString &sql)
 {
-    if (!_db.isOpen())
-        open();
+    open();
 
+    //_query = QSqlQuery(_db);
     _query.prepare(sql);
     return _query;
 }
@@ -40,6 +46,13 @@ QSqlQuery SqlStore::exec()
         auto detail = QString("  SQL: %1\n  ERR: %2").arg(_query.executedQuery()).arg(_query.lastError().text());
         qDebug() << detail;
         throw_error(detail);
+    } else {
+        auto rec = _query.record();
+        QStringList fields;
+        for (int i = 0; i < rec.count(); i++) {
+            fields.append(rec.fieldName(i));
+        }
+        qDebug() << _query.executedQuery() << fields.join(", ");
     }
     return _query;
 }

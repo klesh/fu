@@ -23,7 +23,6 @@ void Application::showWindowOrDialog(T **wd)
 {
     // if target window/dialog is already running, bring it to top instead of creating a new instance.
     if (!*wd) {
-        qDebug() << "creating window/dialog";
         *wd = new T();
         connect(*wd, &QWidget::destroyed, [=](void){
             qDebug() << "set window/dialog to null";
@@ -32,11 +31,9 @@ void Application::showWindowOrDialog(T **wd)
         (*wd)->setAttribute(Qt::WA_DeleteOnClose);
         (*wd)->setWindowFlags((*wd)->windowFlags() & ~Qt::WindowContextHelpButtonHint);
         (*wd)->show();
-        qDebug() << "showing window/dialog";
     } else {
         (*wd)->raise();
         (*wd)->activateWindow();
-        qDebug() << "activate existing window/dialog";
     }
 }
 
@@ -57,21 +54,21 @@ void Application::createTrayIcon()
     qDebug() << "create context menu";
     QMenu *trayMenu = new QMenu();
 
-    QAction *historyAction = new QAction(tr("&History"));
+    auto historyAction = new QAction(tr("&History"));
     trayMenu->addAction(historyAction);
     connect(historyAction, &QAction::triggered, this, &Application::showHistoryWindow);
 
-    QAction *configAction = new QAction(tr("&Config"));
+    auto configAction = new QAction(tr("&Config"));
     trayMenu->addAction(configAction);
     connect(configAction, &QAction::triggered, this, &Application::showConfigDialog);
 
-    QAction *aboutAction = new QAction(tr("&About"));
+    auto aboutAction = new QAction(tr("&About"));
     trayMenu->addAction(aboutAction);
     connect(aboutAction, &QAction::triggered, this, &Application::showAboutDialog);
 
     trayMenu->addSeparator();
 
-    QAction *quitAction = new QAction(tr("&Exit"));
+    auto quitAction = new QAction(tr("&Exit"));
     trayMenu->addAction(quitAction);
     connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
 

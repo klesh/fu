@@ -26,7 +26,7 @@ void MigrationV0::run(SqlStore &store)
     store.exec("CREATE TABLE outputFormats ("
                "id INTEGER PRIMARY KEY AUTOINCREMENT, "
                "name TEXT NOT NULL UNIQUE, "
-               "template TEXT NOT NULL, "
+               "template TEXT NOT NULL "
                ")");
 
     store.exec("CREATE TABLE servers ( "
@@ -51,38 +51,26 @@ void MigrationV0::run(SqlStore &store)
 
     emit progressChanged(0.6);
 
-    store.exec("CREATE TABLE outputFormats ( "
-               "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-               "name TEXT NOT NULL UNIQUE, "
-               "template TEXT NOT NULL, "
-               "enabled INTEGER NOT NULL DEFAULT 1 "
-               ")");
-
-    QSqlQuery query = store.prepare("INSERT INTO outputFormats (name, template, enabled) VALUES (:name, :template, :enabled)");
+    QSqlQuery query = store.prepare("INSERT INTO outputFormats (name, template) VALUES (:name, :template)");
 
     query.bindValue(":name", tr("Raw"));
     query.bindValue(":template", "%1");
-    query.bindValue(":enabled", false);
     store.exec();
 
     query.bindValue(":name", tr("Markdown Link"));
     query.bindValue(":template", "[%2](%1)");
-    query.bindValue(":enabled", false);
     store.exec();
 
     query.bindValue(":name", tr("Markdown Image"));
     query.bindValue(":template", "![%2](%1)");
-    query.bindValue(":enabled", true);
     store.exec();
 
     query.bindValue(":name", tr("HTML Link"));
     query.bindValue(":template", "<a href=\"%1\">%2</a>");
-    query.bindValue(":enabled", false);
     store.exec();
 
     query.bindValue(":name", tr("HTML Image"));
     query.bindValue(":template", "<img src=\"%1\" alt=\"%2\" />");
-    query.bindValue(":enabled", false);
     store.exec();
 
     store.exec("CREATE TABLE clips ("

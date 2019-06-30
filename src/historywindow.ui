@@ -122,21 +122,7 @@
                <height>116</height>
               </rect>
              </property>
-             <layout class="QVBoxLayout" name="verticalLayout_3">
-              <item>
-               <spacer name="verticalSpacer">
-                <property name="orientation">
-                 <enum>Qt::Vertical</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>20</width>
-                  <height>40</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-             </layout>
+             <layout class="QVBoxLayout" name="verticalLayout_3"/>
             </widget>
            </widget>
           </item>
@@ -252,7 +238,7 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_5">
         <item>
-         <widget class="QPushButton" name="pushButton">
+         <widget class="QPushButton" name="btnDelete">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -260,7 +246,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>Delete</string>
+           <string>Delete Selected</string>
           </property>
           <property name="icon">
            <iconset resource="../fu.qrc">
@@ -269,7 +255,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_2">
+         <widget class="QPushButton" name="btnClean">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -277,33 +263,11 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>Clearn All</string>
+           <string>Clean All</string>
           </property>
           <property name="icon">
            <iconset resource="../fu.qrc">
             <normaloff>:/icons/trash.svg</normaloff>:/icons/trash.svg</iconset>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pushButton_3">
-          <property name="text">
-           <string>Select All</string>
-          </property>
-          <property name="icon">
-           <iconset resource="../fu.qrc">
-            <normaloff>:/icons/check-square.svg</normaloff>:/icons/check-square.svg</iconset>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pushButton_4">
-          <property name="text">
-           <string>Unselect All</string>
-          </property>
-          <property name="icon">
-           <iconset resource="../fu.qrc">
-            <normaloff>:/icons/x-square.svg</normaloff>:/icons/x-square.svg</iconset>
           </property>
          </widget>
         </item>
@@ -324,9 +288,6 @@
       </item>
       <item>
        <widget class="QScrollArea" name="scaClips">
-        <property name="contextMenuPolicy">
-         <enum>Qt::DefaultContextMenu</enum>
-        </property>
         <property name="autoFillBackground">
          <bool>false</bool>
         </property>
@@ -345,11 +306,8 @@
            <height>746</height>
           </rect>
          </property>
-         <property name="contextMenuPolicy">
-          <enum>Qt::CustomContextMenu</enum>
-         </property>
          <property name="styleSheet">
-          <string notr="true">background: white</string>
+          <string notr="true">#sclClips { background: white}</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_4"/>
         </widget>

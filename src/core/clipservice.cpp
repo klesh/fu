@@ -60,6 +60,49 @@ QList<Clip> ClipService::getAllFromClipboard()
     return list;
 }
 
+void ClipService::massAppend(QList<Clip> &clips, const QList<QString> tags, const QString &desc)
+{
+    // save clips and tags
+    QList<uint> tagIds;
+    for (auto &tag : tags) {
+        tagIds.append(APP->tagService()->findOrAppend(tag));
+    }
+
+    for (auto &clip : clips) {
+        clip.description = desc;
+        auto query = _store.prepare("INSERT INTO clips (name, isImage, isFile, preview, description, createdAt)"
+                                    " VALUES (:name, :isImage, :isFile, :preview, :description, :createdAt)");
+        query.bindValue(":name", clip.name);
+        query.bindValue(":isImage", clip.isImage);
+        query.bindValue(":isFile", clip.isFile);
+        query.bindValue(":preview", clip.rawPngThumb);
+        query.bindValue(":description", clip.description);
+        query.bindValue(":createdAt",  datetimeToISO(QDateTime::currentDateTime()));
+
+        auto result = _store.exec();
+        clip.id = result.lastInsertId().toUInt();
+
+        // save relationship between clip and tags
+        for (auto &tagId: tagIds) {
+            query = _store.prepare("INSERT INTO clips_tags (clipId, tagId) VALUES (:clipId, :tagId)");
+            query.bindValue(":clipId", clip.id);
+            query.bindValue(":tagId", tagId);
+            _store.exec();
+        }
+
+    }
+}
+
+void ClipService::clean()
+{
+    _store.exec("DELETE FROM clips");
+}
+
+void ClipService::remove(uint clipId)
+{
+    _store.exec(QString("DELETE FROM clips where id=%1").arg(clipId));
+}
+
 void ClipService::setClipboard(const QString &text)
 {
     QApplication::clipboard()->setText(text);
@@ -98,8 +141,6 @@ QList<Clip> ClipService::search(QMap<QString, QVariant> &filter)
 
     sql.append("ORDER BY id DESC");
     auto sqlText = sql.join(" ");
-
-    qDebug() << sqlText;
 
     auto result = _store.exec(sqlText);
     while (result.next()) {

@@ -1,15 +1,17 @@
+#include "../application.h"
 #include "previewbox.h"
 #include "flowlayout.h"
 #include "tagbutton.h"
 #include "thumbnaillabel.h"
 
 #include <QDebug>
+#include <QMenu>
 
 const static QString BOX_STYLE_DEFAULT = "#box{border-style: solid;border-width: 1px;border-color: #eee}";
-const static QString BOX_STYLE_SELECTED = "* {background: transparent}\n#box{border-style: solid;border-width: 1px;border-color: #eee; background: lightblue}";
+const static QString BOX_STYLE_SELECTED = "QFrame {background: transparent}\n#box{border-style: solid;border-width: 1px;border-color: #eee; background: lightblue}";
 
-PreviewBox::PreviewBox(QWidget *parent)
-    : QFrame(parent)
+PreviewBox::PreviewBox(QWidget *parent, const Clip &clip)
+    : QFrame(parent), clip(clip)
 {
 
     // setup components
@@ -36,6 +38,16 @@ PreviewBox::PreviewBox(QWidget *parent)
 
     // initialize properties
     selected = false;
+
+    setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(this, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(showContextMenu(const QPoint &)));
+
+
+    QPixmap thumbnail;
+    thumbnail.loadFromData(clip.rawPngThumb, "PNG");
+    setImage(thumbnail);
+    setTags(clip.tags);
+    setName(clip.name);
 }
 
 /*
@@ -84,11 +96,61 @@ bool PreviewBox::isSelected()
 
 void PreviewBox::mousePressEvent(QMouseEvent *evt)
 {
-    if (evt->button() == Qt::LeftButton)
-        selected = !selected ;
-    else if (evt->button() == Qt::RightButton)
-        selected = true;
+    if (evt->button() == Qt::LeftButton) {
+        setSelected(!selected);
+        evt->accept();
+    } else {
+        QFrame::mousePressEvent(evt);
+    }
+}
 
+void PreviewBox::setSelected(bool s)
+{
+    selected = s;
     setStyleSheet(selected ? BOX_STYLE_SELECTED : BOX_STYLE_DEFAULT);
-    evt->accept();
+}
+
+void PreviewBox::showContextMenu(const QPoint &pos)
+{
+    setSelected(true);
+
+    QMenu contextMenu(this);
+
+    auto outputFormats = APP->outputFormatService()->getAll();
+
+    QList<QObject*> pointers;
+    for (auto &upload : APP->uploadService()->getAllByClipId(clip.id)) {
+        auto server = APP->serverService()->findById(upload.serverId);
+        auto serverMenu = new QMenu(server.name);
+        pointers.append(serverMenu);
+
+        for (auto &outputFormat : outputFormats) {
+            auto outputAs = new QAction(tr("Copy as %1").arg(outputFormat.name));
+            serverMenu->addAction(outputAs);
+            connect(outputAs, &QAction::triggered, [=]() {
+                APP->clipService()->setClipboard(OutputFormatService::format(outputFormat, clip, upload));
+            });
+            pointers.append(outputAs);
+        }
+
+        contextMenu.addMenu(serverMenu);
+    }
+
+    contextMenu.addSeparator();
+
+    QAction editAction(tr("&Edit"), this);
+    connect(&editAction, &QAction::triggered, [this]() {
+        (new UploadDialog(this))->show();
+    });
+    contextMenu.addAction(&editAction);
+
+    QAction deleteAction(tr("&Delete this"), this);
+    connect(&deleteAction, &QAction::triggered, [this]() {
+        APP->clipService()->remove(this->clip.id);
+    });
+    contextMenu.addAction(&deleteAction);
+    contextMenu.exec(mapToGlobal(pos));
+
+    for (auto &pointer : pointers)
+        delete pointer;
 }

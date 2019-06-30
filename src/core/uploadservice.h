@@ -4,7 +4,6 @@
 #include "../store/sqlstore.h"
 #include "../models/clip.h"
 #include "../models/upload.h"
-#include "../models/server.h"
 
 
 class UploadService : public QObject
@@ -21,6 +20,7 @@ public:
 
     void upload(QList<Clip> &clips, const QStringList &tags, const QString &desc);
     bool isUploading() { return _isUploading; }
+    QList<Upload> getAllByClipId(uint clipId);
 
 public slots:
     void uploadFinished();

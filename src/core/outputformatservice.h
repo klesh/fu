@@ -3,6 +3,8 @@
 
 #include "../store/sqlstore.h"
 #include "../models/outputformat.h"
+#include "../models/clip.h"
+#include "../models/upload.h"
 
 class OutputFormatService
 {
@@ -16,6 +18,7 @@ public:
     void update(OutputFormat &outputFormat);
     void save(OutputFormat &outputFormat);
     void remove(uint id);
+    static QString format(const OutputFormat &outputFormat, const Clip &clip, const Upload &upload);
 };
 
 #endif // OUTPUTFORMATSERVICE_H

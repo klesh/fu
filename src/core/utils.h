@@ -23,7 +23,6 @@ template <typename T>
 inline QString join(const QList<T> list, const QString &sep = ", ") {
     QStringList tmp;
     for (auto &item : list) {
-        qDebug() << item;
         tmp.append(QString("%1").arg(item));
     }
     return tmp.join(sep);

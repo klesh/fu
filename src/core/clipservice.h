@@ -12,6 +12,9 @@ public:
     ClipService(SqlStore &store);
 
     QList<Clip> getAllFromClipboard();
+    void massAppend(QList<Clip> &clips, const QList<QString> tags, const QString &desc);
+    void clean();
+    void remove(uint clipId);
     void setClipboard(const QString &text);
     QList<Clip> search(QMap<QString, QVariant> &filter);
     QList<QPair<QDate, QList<Clip>>> searchAndGroup(QMap<QString, QVariant> &filter);

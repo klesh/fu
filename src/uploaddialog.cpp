@@ -21,13 +21,13 @@ QPushButton { \
     background: white; \
     padding: 3px 10px; \
 }\n\
-:hover:!checked { \
+QPushButton:hover:!checked { \
     background: #eee; \
 }\n\
-:hover:checked { \
+QPushButton:hover:checked { \
     color: white; \
 }\n\
-:checked { \
+QPushButton:checked { \
     background: #28a745; \
 }\n\
 " ;

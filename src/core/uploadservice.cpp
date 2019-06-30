@@ -5,6 +5,17 @@
 #include <QPainter>
 #include <QImageWriter>
 
+Upload convertResultToUpload(QSqlQuery &result) {
+    Upload upload;
+    auto rec = result.record();
+    upload.id = result.value(rec.indexOf("id")).toUInt();
+    upload.clipId = result.value(rec.indexOf("clipId")).toUInt();
+    upload.serverId = result.value(rec.indexOf("serverId")).toUInt();
+    upload.rawOutput = result.value(rec.indexOf("output")).toString();
+    upload.createdAt = result.value(rec.indexOf("createdAt")).toDateTime();
+    return upload;
+}
+
 
 UploadService::UploadService(SqlStore &store)
     : _store(store)
@@ -18,36 +29,8 @@ void UploadService::upload(QList<Clip> &clips, const QStringList &tags, const QS
 
     _isUploading = true;
 
-
     // save clips and tags
-    QList<uint> tagIds;
-    for (auto &tag : tags) {
-        tagIds.append(APP->tagService()->findOrAppend(tag));
-    }
-
-    for (auto &clip : clips) {
-        clip.description = desc;
-        auto query = _store.prepare("INSERT INTO clips (name, isImage, isFile, preview, description, createdAt)"
-                                    " VALUES (:name, :isImage, :isFile, :preview, :description, :createdAt)");
-        query.bindValue(":name", clip.name);
-        query.bindValue(":isImage", clip.isImage);
-        query.bindValue(":isFile", clip.isFile);
-        query.bindValue(":preview", clip.rawPngThumb);
-        query.bindValue(":description", clip.description);
-        query.bindValue(":createdAt",  QDateTime::currentDateTime().toString(Qt::ISODate));
-
-        auto result = _store.exec();
-        clip.id = result.lastInsertId().toUInt();
-
-        // save relationship between clip and tags
-        for (auto &tagId: tagIds) {
-            query = _store.prepare("INSERT INTO clips_tags (clipId, tagId) VALUES (:clipId, :tagId)");
-            query.bindValue(":clipId", clip.id);
-            query.bindValue(":tagId", tagId);
-            _store.exec();
-        }
-
-    }
+    APP->clipService()->massAppend(clips, tags, desc);
 
     // start a new thread in charge of whole upload process
     auto thread = QThread::create([=](void) {
@@ -59,6 +42,17 @@ void UploadService::upload(QList<Clip> &clips, const QStringList &tags, const QS
     connect(thread, SIGNAL(finished()), this, SLOT(uploadFinished()));
     connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
     thread->start();
+}
+
+QList<Upload> UploadService::getAllByClipId(uint clipId)
+{
+    QList<Upload> uploads;
+    auto result = _store.exec(QString("SELECT * FROM uploads WHERE clipId=%1").arg(clipId));
+    while (result.next()) {
+        auto server = convertResultToUpload(result);
+        uploads.append(server);
+    }
+    return uploads;
 }
 
 void UploadService::uploadFinished()
@@ -148,15 +142,24 @@ void UploadService::upload(const QList<Clip> &clips)
             fail++;
         }
 
+        Server server = uploadThread->server();
+        Clip clip = uploadThread->clip();
+
+        Upload upload;
+        upload.clipId = clip.id;
+        upload.serverId = server.id;
+        upload.rawOutput = uploadThread->output();
+        upload.createdAt = QDateTime::currentDateTime();
         auto query = _store.prepare("INSERT INTO uploads (clipId, serverId, output, createdAt) VALUES (:clipId, :serverId, :output, :createdAt)");
-        query.bindValue(":clipId", uploadThread->clip().id);
-        query.bindValue(":serverId", uploadThread->server().id);
-        query.bindValue(":output", uploadThread->output());
-        query.bindValue(":createdAt",  QDateTime::currentDateTime().toString(Qt::ISODate));
+        query.bindValue(":clipId", upload.clipId);
+        query.bindValue(":serverId", upload.serverId);
+        query.bindValue(":output", upload.rawOutput);
+        query.bindValue(":createdAt", datetimeToISO(upload.createdAt));
         query.exec();
 
         if (uploadThread->server().outputFormatId) {
-            formattedOutputs.append(uploadThread->server().outputFormat.templateTEXT.arg(uploadThread->output()).arg(uploadThread->clip().description));
+
+            formattedOutputs.append(OutputFormatService::format(server.outputFormat, clip, upload));
         }
 
         delete  uploadThread;
