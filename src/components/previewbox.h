@@ -14,14 +14,13 @@ class PreviewBox : public QFrame
     Q_OBJECT
 
 public:
-    PreviewBox(QWidget *parent, const Clip &clip);
-    //~PreviewBox();
+    PreviewBox(QWidget *parent);
 
     void setImage(const QPixmap &thumbnail);
     void setName(const QString &name);
     void setTags(const QStringList &tags);
+    void toggle(bool selected);
     bool isSelected();
-    const Clip clip;
 
 protected:
     void mousePressEvent(QMouseEvent *evt) override;
@@ -29,10 +28,6 @@ protected:
     QLabel *name;
     QFrame *tagsFrame;
     bool selected;
-    void setSelected(bool s);
-
-public slots:
-    void showContextMenu(const QPoint &pos);
 };
 
 #endif // PREVIEWBOX_H

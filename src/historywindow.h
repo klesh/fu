@@ -29,6 +29,8 @@ public slots:
     void reload();
     void cleanAll();
     void deleteSelected();
+    void deleteClip(uint clipId);
+    void showContextMenu(const QPoint &pos);
 };
 
 #endif // HISTORYWINDOW_H

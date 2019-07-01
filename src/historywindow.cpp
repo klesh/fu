@@ -32,6 +32,8 @@ HistoryWindow::HistoryWindow() :
     connect(ui->btnApply, SIGNAL(clicked()), this, SLOT(reload()));
     connect(ui->btnClean, SIGNAL(clicked()), this, SLOT(cleanAll()));
     connect(ui->btnDelete, SIGNAL(clicked()), this, SLOT(deleteSelected()));
+    connect(ui->btnReload, SIGNAL(clicked()), this, SLOT(reload()));
+    connect(ui->sclClips, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(showContextMenu(const QPoint &)));
 
     /*
     for (auto &server : APP->serverService()->getAllByClipId(9)) {
@@ -86,7 +88,7 @@ void HistoryWindow::reload()
         delete item;
     }
 
-    // rebuild new widgets
+    // rebuild previews
     auto datedClips = APP->clipService()->searchAndGroup(filter);
     for (const auto &pair : datedClips) {
         auto date = pair.first;
@@ -102,7 +104,14 @@ void HistoryWindow::reload()
         groupedLayout->setMargin(0);
         groupedFrame->setLayout(groupedLayout);
         for (auto &clip: pair.second) {
-            groupedLayout->addWidget(new PreviewBox(this, clip));
+            auto preview = new PreviewBox(this);
+            preview->setProperty("clipId", clip.id);
+            QPixmap thumbnail;
+            thumbnail.loadFromData(clip.rawPngThumb, "PNG");
+            preview->setImage(thumbnail);
+            preview->setTags(clip.tags);
+            preview->setName(clip.name);
+            groupedLayout->addWidget(preview);
         }
         layout->addWidget(groupedFrame);
     }
@@ -121,9 +130,78 @@ void HistoryWindow::deleteSelected()
     if (confirm(tr("Are you sure you want to delete all selected clips?"))) {
         for (auto &preview : ui->sclClips->findChildren<PreviewBox*>()) {
             if (preview->isSelected()) {
-                APP->clipService()->remove(preview->clip.id);
+                APP->clipService()->remove(preview->property("clipId").toUInt());
             }
         }
         reload();
     }
+}
+
+void HistoryWindow::deleteClip(uint clipId)
+{
+    if (confirm(tr("Are you sure you want to delete this clip?"))) {
+        APP->clipService()->remove(clipId);
+        reload();
+    }
+}
+
+
+void HistoryWindow::showContextMenu(const QPoint &pos)
+{
+    qDebug() << pos;
+
+    PreviewBox *preview = nullptr;
+    QWidget* child = ui->sclClips->childAt(pos);
+    while (child) {
+        preview = dynamic_cast<PreviewBox*>(child);
+        if (preview)
+            break;
+        child = child->parentWidget();
+    }
+    if (!preview)
+        return;
+
+    preview->toggle(true);
+
+    QMenu contextMenu(this);
+
+    auto outputFormats = APP->outputFormatService()->getAll();
+
+    uint clipId = preview->property("clipId").toUInt();
+    QList<QObject*> pointers;
+    for (auto &upload : APP->uploadService()->getAllByClipId(clipId)) {
+        auto server = APP->serverService()->findById(upload.serverId);
+        auto serverMenu = new QMenu(server.name);
+        pointers.append(serverMenu);
+
+        for (auto &outputFormat : outputFormats) {
+            auto outputAs = new QAction(tr("Copy as %1").arg(outputFormat.name));
+            serverMenu->addAction(outputAs);
+            connect(outputAs, &QAction::triggered, [=]() {
+                Clip clip = APP->clipService()->findById(clipId);
+                APP->clipService()->setClipboard(OutputFormatService::format(outputFormat, clip, upload));
+            });
+            pointers.append(outputAs);
+        }
+
+        contextMenu.addMenu(serverMenu);
+    }
+
+    contextMenu.addSeparator();
+
+    QAction editAction(tr("&Edit"), this);
+    connect(&editAction, &QAction::triggered, [this]() {
+        (new UploadDialog(this))->show();
+    });
+    contextMenu.addAction(&editAction);
+
+    QAction deleteAction(tr("&Delete this"), this);
+    connect(&deleteAction, &QAction::triggered, [=]() {
+        this->deleteClip(clipId);
+    });
+    contextMenu.addAction(&deleteAction);
+    contextMenu.exec(ui->sclClips->mapToGlobal(pos));
+
+    for (auto &pointer : pointers)
+        delete pointer;
 }

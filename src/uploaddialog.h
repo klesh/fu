@@ -35,7 +35,7 @@ protected:
 
 public slots:
     void reload();
-    void refresh();
+    void syncState();
 };
 
 #endif // UPLOADDIALOG_H

@@ -93,6 +93,13 @@ void ClipService::massAppend(QList<Clip> &clips, const QList<QString> tags, cons
     }
 }
 
+Clip ClipService::findById(uint id)
+{
+    auto result = _store.exec(QString("SELECT * FROM clips WHERE id=%1").arg(id));
+    assert(result.next());
+    return convertResultToClip(result);
+}
+
 void ClipService::clean()
 {
     _store.exec("DELETE FROM clips");

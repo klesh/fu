@@ -77,7 +77,7 @@ UploadDialog::UploadDialog(QWidget *parent) :
         connect(uploadWidget, &QPushButton::toggled, [=](bool checked) {
             outputWidget->setEnabled(checked);
             APP->serverService()->setUploadEnabled(server.id, checked);
-            refresh();
+            syncState();
         });
         connect(outputWidget, &QComboBox::currentTextChanged, [=](const QString&) {
             APP->serverService()->setOutputFormatId(server.id, outputWidget->currentData().toUInt());
@@ -152,7 +152,7 @@ void UploadDialog::reload()
         name->setMinimumWidth(THUMB_WIDTH);
         name->setObjectName(clip.name);
         connect(name, &QLineEdit::textChanged, [=](const QString &) {
-            this->refresh();
+            this->syncState();
         });
         /*
         QFontMetrics metrix(name->font());
@@ -164,10 +164,10 @@ void UploadDialog::reload()
         _thumbnails[&clip] = thumbnail;
     }
 
-    refresh();
+    syncState();
 }
 
-void UploadDialog::refresh()
+void UploadDialog::syncState()
 {
     bool isAnyServerSelected = false;
     for (auto &button : ui->sclUploadTo->findChildren<QPushButton*>()) {

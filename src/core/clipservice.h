@@ -13,6 +13,7 @@ public:
 
     QList<Clip> getAllFromClipboard();
     void massAppend(QList<Clip> &clips, const QList<QString> tags, const QString &desc);
+    Clip findById(uint id);
     void clean();
     void remove(uint clipId);
     void setClipboard(const QString &text);
