@@ -47,10 +47,11 @@ void UploadService::upload(QList<Clip> &clips, const QStringList &tags, const QS
 QList<Upload> UploadService::getAllByClipId(uint clipId)
 {
     QList<Upload> uploads;
-    auto result = _store.exec(QString("SELECT * FROM uploads WHERE clipId=%1").arg(clipId));
+    auto result = _store.exec(QString("SELECT uploads.*, servers.name AS serverName FROM uploads LEFT JOIN servers ON (uploads.serverId = servers.id) WHERE uploads.clipId=%1").arg(clipId));
     while (result.next()) {
-        auto server = convertResultToUpload(result);
-        uploads.append(server);
+        auto upload = convertResultToUpload(result);
+        upload.serverName = result.value(result.record().indexOf("serverName")).toString();
+        uploads.append(upload);
     }
     return uploads;
 }

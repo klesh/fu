@@ -47,12 +47,15 @@ QSqlQuery SqlStore::exec()
         qDebug() << detail;
         throw_error(detail);
     } else {
+        /*
         auto rec = _query.record();
         QStringList fields;
         for (int i = 0; i < rec.count(); i++) {
             fields.append(rec.fieldName(i));
         }
         qDebug() << _query.executedQuery() << fields.join(", ");
+        */
+        qDebug() << _query.executedQuery() << _query.boundValues();
     }
     return _query;
 }

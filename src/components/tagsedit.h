@@ -17,6 +17,7 @@ public:
     ~TagsEdit() override;
     bool isTagSelected(const QString &);
     QStringList tags();
+    void setTags(const QStringList &tags);
 
 protected:
     FocusWatcher *focusWatcher;

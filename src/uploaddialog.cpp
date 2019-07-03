@@ -48,17 +48,78 @@ QComboBox::drop-down { \
 } \
 " ;
 
-UploadDialog::UploadDialog(QWidget *parent) :
+UploadDialog::UploadDialog(QWidget *parent, uint clipId) :
     QDialog(parent),
     ui(new Ui::UploadDialog)
 {
     ui->setupUi(this);
 
+    _previewLayout = new FlowLayout(ui->sclPreview);
     auto uploadToLayout = new QVBoxLayout(ui->sclUploadTo);
-    auto outputFormats = APP->outputFormatService()->getAll();
+    if (clipId) {
+        editMode(clipId);
+    } else {
+        uploadMode();
+    }
 
+    uploadToLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::Minimum, QSizePolicy::Expanding));
+}
+
+
+UploadDialog::~UploadDialog()
+{
+    delete ui;
+}
+
+void UploadDialog::editMode(uint clipId)
+{
+    auto clip = APP->clipService()->findById(clipId);
+    _clips.append(clip);
+
+    for (auto &upload : APP->uploadService()->getAllByClipId(clipId)) {
+        Server server;
+        server.id = 0;
+        server.name = upload.serverName;
+        createUploadToRow(server);
+    }
+
+    auto thumbnail = new ThumbnailLabel(ui->sclPreview);
+    QPixmap tmp;
+    tmp.loadFromData(clip.rawPngThumb, "PNG");
+    thumbnail->setPixmap(tmp);
+    _previewLayout->addWidget(thumbnail);
+    auto name = new QLabel(ui->sclPreview);
+    QFontMetrics metrix(name->font());
+    int width = THUMB_WIDTH - 5;
+    QString clippedText = metrix.elidedText(clip.name, Qt::ElideRight, width);
+    name->setText(clippedText);
+    _previewLayout->addWidget(name);
+
+    ui->tgeTags->setTags(clip.tags);
+    ui->txtDescription->setText(clip.description);
+}
+
+void UploadDialog::uploadMode()
+{
+    auto outputFormats = APP->outputFormatService()->getAll();
     for (auto &server : APP->serverService()->getAll()) {
-        auto uploadWidget = new QPushButton(server.name, ui->sclUploadTo);
+        createUploadToRow(server, outputFormats);
+    }
+
+    connect(QApplication::clipboard(), SIGNAL(dataChanged()), this, SLOT(reload()));
+    reload();
+}
+
+void UploadDialog::createUploadToRow(const Server &server, const QList<OutputFormat> &outputFormats)
+{
+    auto rowLayout = new QHBoxLayout();
+
+    auto uploadWidget = new QPushButton(server.name, ui->sclUploadTo);
+
+    uploadWidget->setCheckable(true);
+    rowLayout->addWidget(uploadWidget);
+
+    if (server.id) {
         auto outputWidget = new QComboBox(ui->sclUploadTo);
         outputWidget->addItem(tr("Don't output"), 0);
         int i = 1;
@@ -70,44 +131,41 @@ UploadDialog::UploadDialog(QWidget *parent) :
             }
             i++;
         }
-
-        uploadWidget->setCheckable(true);
         uploadWidget->setChecked(server.uploadEnabled);
-        outputWidget->setEnabled(server.uploadEnabled);
         connect(uploadWidget, &QPushButton::toggled, [=](bool checked) {
             outputWidget->setEnabled(checked);
             APP->serverService()->setUploadEnabled(server.id, checked);
             syncState();
         });
+
+        outputWidget->setEnabled(server.uploadEnabled);
+        outputWidget->setStyleSheet(OUTPUT_STYLE_SHEET);
+        outputWidget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+        rowLayout->addWidget(outputWidget);
         connect(outputWidget, &QComboBox::currentTextChanged, [=](const QString&) {
             APP->serverService()->setOutputFormatId(server.id, outputWidget->currentData().toUInt());
         });
-
-        uploadWidget->setStyleSheet(UPLOAD_STYLE_SHEET);
-        uploadWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-        outputWidget->setStyleSheet(OUTPUT_STYLE_SHEET);
-        outputWidget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-        auto rowLayout = new QHBoxLayout();
-        rowLayout->addWidget(uploadWidget);
-        rowLayout->addWidget(outputWidget);
-        uploadToLayout->addItem(rowLayout);
+    } else { // edit mode
+        uploadWidget->setChecked(true);
+        uploadWidget->setEnabled(false);
     }
-    uploadToLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::Minimum, QSizePolicy::Expanding));
 
-
-    _previewLayout = new FlowLayout(ui->sclPreview);
-
-    connect(QApplication::clipboard(), SIGNAL(dataChanged()), this, SLOT(reload()));
-    reload();
-}
-
-UploadDialog::~UploadDialog()
-{
-    delete ui;
+    uploadWidget->setStyleSheet(UPLOAD_STYLE_SHEET);
+    uploadWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    ui->sclUploadTo->layout()->addItem(rowLayout);
 }
 
 void UploadDialog::accept()
 {
+    // edit mode
+    if (_clips.size() == 1 && _clips.first().id) {
+        auto clip = _clips.first();
+        clip.tags = ui->tgeTags->tags();
+        clip.description = ui->txtDescription->text();
+        APP->clipService()->update(clip);
+        QDialog::accept();
+        return;
+    }
     // make sure all thumbnail are loaded
     for (auto &clip : _clips) {
         auto thumbnail = _thumbnails[&clip];
@@ -154,12 +212,6 @@ void UploadDialog::reload()
         connect(name, &QLineEdit::textChanged, [=](const QString &) {
             this->syncState();
         });
-        /*
-        QFontMetrics metrix(name->font());
-        int width = THUMB_WIDTH - 5;
-        QString clippedText = metrix.elidedText(clip.name, Qt::ElideRight, width);
-        name->setText(clippedText);
-        */
         _previewLayout->addWidget(name);
         _thumbnails[&clip] = thumbnail;
     }

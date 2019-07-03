@@ -26,6 +26,7 @@ HistoryWindow::HistoryWindow() :
         serverCtrl->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
         ui->sclServers->layout()->addWidget(serverCtrl);
     }
+    ui->sclServers->layout()->addItem(new QSpacerItem(0, 0, QSizePolicy::Minimum, QSizePolicy::Expanding));
 
     reload();
 
@@ -170,8 +171,8 @@ void HistoryWindow::showContextMenu(const QPoint &pos)
     uint clipId = preview->property("clipId").toUInt();
     QList<QObject*> pointers;
     for (auto &upload : APP->uploadService()->getAllByClipId(clipId)) {
-        auto server = APP->serverService()->findById(upload.serverId);
-        auto serverMenu = new QMenu(server.name);
+        // stack will be released outside the loop
+        auto serverMenu = new QMenu(upload.serverName);
         pointers.append(serverMenu);
 
         for (auto &outputFormat : outputFormats) {
@@ -190,8 +191,11 @@ void HistoryWindow::showContextMenu(const QPoint &pos)
     contextMenu.addSeparator();
 
     QAction editAction(tr("&Edit"), this);
-    connect(&editAction, &QAction::triggered, [this]() {
-        (new UploadDialog(this))->show();
+    connect(&editAction, &QAction::triggered, [this, clipId]() {
+        auto editDialog = new UploadDialog(this, clipId);
+        editDialog->setAttribute(Qt::WA_DeleteOnClose);
+        connect(editDialog, SIGNAL(accepted()), this, SLOT(reload()));
+        editDialog->show();
     });
     contextMenu.addAction(&editAction);
 

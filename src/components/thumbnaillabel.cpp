@@ -10,7 +10,7 @@ ThumbnailLabel::ThumbnailLabel(QWidget *parent)
     setMaximumSize(THUMB_WIDTH, THUMB_HEIGHT);
 
     setAlignment(Qt::AlignCenter);
-    //setStyleSheet("background: white");
+    setStyleSheet("background: white");
     setPixmap(ClipService::unkownFileIcon());
 }
 

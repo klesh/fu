@@ -16,12 +16,17 @@ public:
     Clip findById(uint id);
     void clean();
     void remove(uint clipId);
+    void update(Clip clip);
     void setClipboard(const QString &text);
     QList<Clip> search(QMap<QString, QVariant> &filter);
     QList<QPair<QDate, QList<Clip>>> searchAndGroup(QMap<QString, QVariant> &filter);
     static QPixmap thumbnailize(const QPixmap &origin);
     const static QPixmap &unkownFileIcon();
     static QList<QPair<QDate, QList<Clip>>> groupByCreationDate(QList<Clip> &clips);
+
+private:
+    void fillTags(Clip &clip);
+    void saveTags(uint clipId, const QList<uint> &tagIds);
 };
 
 #endif // CLIPSERVICE_H

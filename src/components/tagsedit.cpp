@@ -54,6 +54,13 @@ QStringList TagsEdit::tags()
     return tags;
 }
 
+void TagsEdit::setTags(const QStringList &tags)
+{
+    for (auto &tag : tags) {
+        selectTag(tag);
+    }
+}
+
 void TagsEdit::deselectTag(const QString &tag)
 {
     auto tagButton = sclSelected->findChild<QPushButton*>(tag);

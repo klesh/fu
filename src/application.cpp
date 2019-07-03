@@ -31,10 +31,9 @@ void Application::showWindowOrDialog(T **wd)
         (*wd)->setAttribute(Qt::WA_DeleteOnClose);
         (*wd)->setWindowFlags((*wd)->windowFlags() & ~Qt::WindowContextHelpButtonHint);
         (*wd)->show();
-    } else {
-        (*wd)->raise();
-        (*wd)->activateWindow();
     }
+    (*wd)->raise();
+    (*wd)->activateWindow();
 }
 
 int Application::showUpgradeWindow()

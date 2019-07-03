@@ -9,6 +9,7 @@ struct Upload {
     uint serverId;
     QString rawOutput;
     QDateTime createdAt;
+    QString serverName;
 };
 
 #endif // UPLOAD_H

@@ -223,6 +223,9 @@
          </item>
          <item>
           <widget class="QPushButton" name="btnClear">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>Clear</string>
            </property>

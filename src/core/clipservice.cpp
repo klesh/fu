@@ -32,6 +32,7 @@ QList<Clip> ClipService::getAllFromClipboard()
 
     if (mimeData->hasImage()) {
         Clip clip;
+        clip.id = 0;
         clip.isFile = false;
         auto image = qvariant_cast<QPixmap>(mimeData->imageData());
         clip.data = image;
@@ -44,6 +45,7 @@ QList<Clip> ClipService::getAllFromClipboard()
                 continue;
 
             Clip clip;
+            clip.id = 0;
             clip.isFile = true;
             auto mimeType = mimeDb.mimeTypeForUrl(url);
             if (mimeType.name().startsWith("image/")) {
@@ -63,10 +65,7 @@ QList<Clip> ClipService::getAllFromClipboard()
 void ClipService::massAppend(QList<Clip> &clips, const QList<QString> tags, const QString &desc)
 {
     // save clips and tags
-    QList<uint> tagIds;
-    for (auto &tag : tags) {
-        tagIds.append(APP->tagService()->findOrAppend(tag));
-    }
+    QList<uint> tagIds = APP->tagService()->mapToIds(tags, true);
 
     for (auto &clip : clips) {
         clip.description = desc;
@@ -83,13 +82,7 @@ void ClipService::massAppend(QList<Clip> &clips, const QList<QString> tags, cons
         clip.id = result.lastInsertId().toUInt();
 
         // save relationship between clip and tags
-        for (auto &tagId: tagIds) {
-            query = _store.prepare("INSERT INTO clips_tags (clipId, tagId) VALUES (:clipId, :tagId)");
-            query.bindValue(":clipId", clip.id);
-            query.bindValue(":tagId", tagId);
-            _store.exec();
-        }
-
+        saveTags(clip.id, tagIds);
     }
 }
 
@@ -97,7 +90,9 @@ Clip ClipService::findById(uint id)
 {
     auto result = _store.exec(QString("SELECT * FROM clips WHERE id=%1").arg(id));
     assert(result.next());
-    return convertResultToClip(result);
+    auto clip = convertResultToClip(result);
+    fillTags(clip);
+    return clip;
 }
 
 void ClipService::clean()
@@ -110,9 +105,44 @@ void ClipService::remove(uint clipId)
     _store.exec(QString("DELETE FROM clips where id=%1").arg(clipId));
 }
 
+void ClipService::update(Clip clip)
+{
+    // update clip description
+    auto query = _store.prepare("UPDATE clips SET description=:description WHERE id=:id");
+    query.bindValue(":description", clip.description);
+    query.bindValue(":id", clip.id);
+    _store.exec();
+
+    // recreate clip tags
+    _store.exec(QString("DELETE FROM clips_tags WHERE clipId=%1").arg(clip.id));
+
+    QList<uint> tagIds = APP->tagService()->mapToIds(clip.tags, true);
+    saveTags(clip.id, tagIds);
+}
+
 void ClipService::setClipboard(const QString &text)
 {
     QApplication::clipboard()->setText(text);
+}
+
+void ClipService::fillTags(Clip &clip)
+{
+    auto tagsResult = _store.exec(QString("SELECT tags.name FROM tags LEFT JOIN clips_tags ON (tags.id=clips_tags.tagId) WHERE clips_tags.clipId=%1").arg(clip.id));
+    while (tagsResult.next()) {
+        clip.tags.append(tagsResult.value(0).toString());
+    }
+}
+
+void ClipService::saveTags(uint clipId, const QList<uint> &tagIds)
+{
+    if (tagIds.size()) {
+        auto query = _store.prepare("INSERT INTO clips_tags (clipId, tagId) VALUES (:clipId, :tagId)");
+        for (auto &tagId: tagIds) {
+            query.bindValue(":clipId", clipId);
+            query.bindValue(":tagId", tagId);
+            _store.exec();
+        }
+    }
 }
 
 QList<Clip> ClipService::search(QMap<QString, QVariant> &filter)
@@ -155,10 +185,7 @@ QList<Clip> ClipService::search(QMap<QString, QVariant> &filter)
     }
 
     for (auto &clip : clips) {
-        auto tagsResult = _store.exec(QString("SELECT tags.name FROM tags LEFT JOIN clips_tags ON (tags.id=clips_tags.tagId) WHERE clips_tags.clipId=%1").arg(clip.id));
-        while (tagsResult.next()) {
-            clip.tags.append(tagsResult.value(0).toString());
-        }
+        fillTags(clip);
     }
 
     return clips;

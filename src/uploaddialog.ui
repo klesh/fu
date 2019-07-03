@@ -57,6 +57,9 @@
             <height>16777215</height>
            </size>
           </property>
+          <property name="verticalScrollBarPolicy">
+           <enum>Qt::ScrollBarAlwaysOn</enum>
+          </property>
           <property name="widgetResizable">
            <bool>true</bool>
           </property>
@@ -65,9 +68,12 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>198</width>
+             <width>181</width>
              <height>407</height>
             </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true"/>
            </property>
           </widget>
          </widget>
@@ -112,7 +118,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QGroupBox" name="groupBox_3">
+           <widget class="QGroupBox" name="grpUploadTo">
             <property name="title">
              <string>Upload to</string>
             </property>

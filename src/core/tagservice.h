@@ -18,7 +18,7 @@ public:
     void remove(uint id);
     uint find(const QString &name);
     uint findOrAppend(const QString &name);
-    QList<uint> mapToIds(const QStringList &tags);
+    QList<uint> mapToIds(const QStringList &tags, bool autoInsert = false);
 };
 
 #endif // TAGSERVICE_H

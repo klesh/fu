@@ -69,7 +69,7 @@ uint TagService::find(const QString &name)
 
     auto result = _store.exec();
     if (result.next()) {
-        qDebug() << "tag found: " << result.value(0);
+        qDebug() << "tag found: " << result.value(0).toUInt();
         return result.value(0).toUInt();
     }
     return 0;
@@ -78,14 +78,17 @@ uint TagService::find(const QString &name)
 uint TagService::findOrAppend(const QString &name)
 {
     auto tagId = find(name);
-    return tagId || append(name);
+    if (tagId)
+        return tagId;
+    return append(name);
 }
 
-QList<uint> TagService::mapToIds(const QStringList &tags)
+QList<uint> TagService::mapToIds(const QStringList &tags, bool autoInsert)
 {
     QList<uint> tagIds;
     for (auto &tag : tags) {
-        auto tagId = this->find(tag);
+        auto tagId = autoInsert ? this->findOrAppend(tag) : this->find(tag);
+        qDebug() << "map to id" << tagId;
         if (tagId)
             tagIds.append(tagId);
     }
