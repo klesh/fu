@@ -8,7 +8,7 @@
 #include <QDebug>
 #include <QRandomGenerator>
 #include <QCheckBox>
-
+#include <stdio.h>
 
 HistoryWindow::HistoryWindow() :
     QMainWindow(),
@@ -34,6 +34,7 @@ HistoryWindow::HistoryWindow() :
     connect(ui->btnClean, SIGNAL(clicked()), this, SLOT(cleanAll()));
     connect(ui->btnDelete, SIGNAL(clicked()), this, SLOT(deleteSelected()));
     connect(ui->btnReload, SIGNAL(clicked()), this, SLOT(reload()));
+    connect(ui->btnDeselect, SIGNAL(clicked()), this, SLOT(deselectAll()));
     connect(ui->sclClips, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(showContextMenu(const QPoint &)));
 
     /*
@@ -107,12 +108,53 @@ void HistoryWindow::reload()
         for (auto &clip: pair.second) {
             auto preview = new PreviewBox(this);
             preview->setProperty("clipId", clip.id);
+            /*
             QPixmap thumbnail;
             thumbnail.loadFromData(clip.rawPngThumb, "PNG");
+            */
+
+            QImage img;
+            img.loadFromData(clip.rawPngThumb, "PNG");
+            auto img2 = img.convertToFormat(QImage::Format_Grayscale8).scaled(100,100);
+            QPixmap thumbnail = QPixmap::fromImage(img2);
+            preview->bits = new uchar[10000];
+            memcpy(preview->bits, img2.bits(), 10000);
+            /*
+            uchar checksum = 0;
+            for (int i = 0; i < 10000; i++) {
+                checksum += preview->bits[i];
+            }
+            qDebug() << clip.id << checksum;
+            */
+
             preview->setImage(thumbnail);
             preview->setTags(clip.tags);
             preview->setName(clip.name);
             groupedLayout->addWidget(preview);
+
+            connect(preview, &PreviewBox::clicked, [=]() {
+                QList<PreviewBox*> selected;
+                for (auto &p : ui->sclClips->findChildren<PreviewBox*>()) {
+                    if (p->isSelected())
+                        selected.append(p);
+                }
+                if (selected.length() == 2) {
+                    uint distance = 0;
+                    auto a = selected.front();
+                    auto b = selected.back();
+                    for (int i = 0; i < 10000; i++) {
+                        distance += (a->bits[i] - b->bits[i])^2;
+                    }
+                    qDebug() << "distance : " << distance;
+                }
+                /*
+                uchar cs = 0;
+                for (int i = 0; i < 10000; i++) {
+                    cs += preview->bits[i];
+                }
+                qDebug() << clip.id << cs;
+                */
+            });
         }
         layout->addWidget(groupedFrame);
     }
@@ -135,6 +177,13 @@ void HistoryWindow::deleteSelected()
             }
         }
         reload();
+    }
+}
+
+void HistoryWindow::deselectAll()
+{
+    for (auto &preview : ui->sclClips->findChildren<PreviewBox*>()) {
+        preview->toggle(false);
     }
 }
 

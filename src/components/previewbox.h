@@ -19,8 +19,12 @@ public:
     void setImage(const QPixmap &thumbnail);
     void setName(const QString &name);
     void setTags(const QStringList &tags);
-    void toggle(bool selected);
+    void toggle(bool isSelected);
     bool isSelected();
+    uchar *bits;
+
+signals:
+    void clicked();
 
 protected:
     void mousePressEvent(QMouseEvent *evt) override;

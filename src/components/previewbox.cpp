@@ -79,13 +79,14 @@ void PreviewBox::mousePressEvent(QMouseEvent *evt)
     if (evt->button() == Qt::LeftButton) {
         toggle(!selected);
         evt->accept();
+        emit clicked();
     } else {
         QFrame::mousePressEvent(evt);
     }
 }
 
-void PreviewBox::toggle(bool s)
+void PreviewBox::toggle(bool isSelected)
 {
-    selected = s;
+    selected = isSelected;
     setStyleSheet(selected ? BOX_STYLE_SELECTED : BOX_STYLE_DEFAULT);
 }

@@ -24,11 +24,11 @@ private:
     Ui::HistoryWindow *ui;
     bool confirm(const QString &message);
 
-
 public slots:
     void reload();
     void cleanAll();
     void deleteSelected();
+    void deselectAll();
     void deleteClip(uint clipId);
     void showContextMenu(const QPoint &pos);
 };

@@ -8,5 +8,6 @@
         <file>icons/trash.svg</file>
         <file>icons/file.svg</file>
         <file>icons/refresh-ccw.svg</file>
+        <file>icons/x-square.svg</file>
     </qresource>
 </RCC>
