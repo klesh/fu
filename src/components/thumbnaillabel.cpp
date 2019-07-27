@@ -46,13 +46,11 @@ void ThumbnailLabel::setThumbnailByOriginPath(const QString &originPath)
     _loading->start();
 }
 
-QByteArray ThumbnailLabel::createRawPng()
+QImage ThumbnailLabel::image()
 {
-    QByteArray bytes;
-    QBuffer buffer(&bytes);
-    pixmap()->save(&buffer, "PNG", 75);
-    return bytes;
+    return pixmap()->toImage();
 }
+
 
 void ThumbnailLabel::wait()
 {

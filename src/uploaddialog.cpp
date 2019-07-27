@@ -84,9 +84,7 @@ void UploadDialog::editMode(uint clipId)
     }
 
     auto thumbnail = new ThumbnailLabel(ui->sclPreview);
-    QPixmap tmp;
-    tmp.loadFromData(clip.rawPngThumb, "PNG");
-    thumbnail->setPixmap(tmp);
+    thumbnail->setPixmap(QPixmap::fromImage(clip.thumbnail));
     _previewLayout->addWidget(thumbnail);
     auto name = new QLabel(ui->sclPreview);
     QFontMetrics metrix(name->font());
@@ -126,7 +124,6 @@ void UploadDialog::createUploadToRow(const Server &server, const QList<OutputFor
         for (auto &outputFormat : outputFormats) {
             outputWidget->addItem(outputFormat.name, outputFormat.id);
             if (outputFormat.id == server.outputFormatId) {
-                qDebug() << "output format index " << i;
                 outputWidget->setCurrentIndex(i);
             }
             i++;
@@ -170,7 +167,7 @@ void UploadDialog::accept()
     for (auto &clip : _clips) {
         auto thumbnail = _thumbnails[&clip];
         thumbnail->wait();
-        clip.rawPngThumb = thumbnail->createRawPng();
+        clip.thumbnail = thumbnail->image();
         clip.name = ui->sclPreview->findChild<QLineEdit*>(clip.name)->text();
     }
 

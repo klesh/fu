@@ -78,8 +78,9 @@ void MigrationV0::run(SqlStore &store)
                "name TEXT NOT NULL, "
                "isImage INTEGER NOT NULL,"
                "isFile INTEGER NOT NULL,"
-               "preview BLOB,"
+               "thumbnail BLOB,"
                "description TEXT,"
+               "phash SQLITE3_UINT64,"
                "createdAt TEXT NOT NULL"
                ")");
 

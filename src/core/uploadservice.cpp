@@ -88,7 +88,7 @@ void UploadService::upload(const QList<Clip> &clips)
                 auto pixmap = clip.isFile ? QPixmap(clip.data.toUrl().toLocalFile()) : qvariant_cast<QPixmap>(clip.data);
                 auto ext = clip.name.mid(clip.name.lastIndexOf('.') + 1).toLower().toLatin1();
                 if (!ext.isEmpty() && QImageWriter::supportedImageFormats().contains(ext)) {
-                    strcpy(format, ext.data());
+                    strcpy_s(format, ext.data());
                 }
 
                 // composite watermark

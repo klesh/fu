@@ -1,0 +1,3 @@
+[submodule "libs/qt-phash"]
+	path = libs/qt-phash
+	url = git@github.com:klesh/qt-phash.git

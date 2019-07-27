@@ -1,7 +1,10 @@
 #include "../application.h"
 #include "clipservice.h"
 
+#include "../../libs/qt-phash/QtPhash.h";
 #include <QClipboard>
+
+const static char* THUMBNAIL_FMT = "jpg";
 
 Clip convertResultToClip(QSqlQuery &result) {
     Clip clip;
@@ -10,7 +13,7 @@ Clip convertResultToClip(QSqlQuery &result) {
     clip.name = result.value(rec.indexOf("name")).toString();
     clip.isImage = result.value(rec.indexOf("isImage")).toBool();
     clip.isFile = result.value(rec.indexOf("isFile")).toBool();
-    clip.rawPngThumb = result.value(rec.indexOf("preview")).toByteArray();
+    clip.thumbnail.loadFromData(result.value(rec.indexOf("thumbnail")).toByteArray(), THUMBNAIL_FMT);
     clip.description = result.value(rec.indexOf("description")).toString();
     clip.createdAt = result.value(rec.indexOf("createdAt")).toDateTime();
     return clip;
@@ -69,15 +72,26 @@ void ClipService::massAppend(QList<Clip> &clips, const QList<QString> tags, cons
 
     for (auto &clip : clips) {
         clip.description = desc;
-        auto query = _store.prepare("INSERT INTO clips (name, isImage, isFile, preview, description, createdAt)"
-                                    " VALUES (:name, :isImage, :isFile, :preview, :description, :createdAt)");
+
+        QByteArray bytes;
+        if (clip.thumbnail.isNull() == false) {
+            // compute phash
+            clip.phash = QtPhash::computePhash(clip.thumbnail);
+            qDebug() << hex << clip.phash;
+            // save thubnail
+            QBuffer buffer(&bytes);
+            clip.thumbnail.save(&buffer, THUMBNAIL_FMT, 75);
+        }
+
+        auto query = _store.prepare("INSERT INTO clips (name, isImage, isFile, phash, thumbnail, description, createdAt)"
+                                    " VALUES (:name, :isImage, :isFile, :phash, :thumbnail, :description, :createdAt)");
         query.bindValue(":name", clip.name);
         query.bindValue(":isImage", clip.isImage);
         query.bindValue(":isFile", clip.isFile);
-        query.bindValue(":preview", clip.rawPngThumb);
         query.bindValue(":description", clip.description);
+        query.bindValue(":phash", clip.phash);
+        query.bindValue(":thumbnail", bytes);
         query.bindValue(":createdAt",  datetimeToISO(QDateTime::currentDateTime()));
-
         auto result = _store.exec();
         clip.id = result.lastInsertId().toUInt();
 

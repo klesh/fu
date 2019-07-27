@@ -59,6 +59,7 @@ SOURCES += \
         src/uploaddialog.cpp
 
 HEADERS += \
+        libs/qt-hash/QtPhash.h \
         src/aboutdialog.h \
         src/components/errormessage.h \
         src/components/flowlayout.h \

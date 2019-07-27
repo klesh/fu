@@ -4,7 +4,6 @@
 #include "tagbutton.h"
 #include "thumbnaillabel.h"
 
-#include <QDebug>
 #include <QMenu>
 
 const static QString BOX_STYLE_DEFAULT = "#box{border-style: solid;border-width: 1px;border-color: #eee}";

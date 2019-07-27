@@ -15,7 +15,7 @@ public:
     ~ThumbnailLabel();
     void setThumbnailByOrigin(const QPixmap &origin);
     void setThumbnailByOriginPath(const QString &originPath);
-    QByteArray createRawPng();
+    QImage image();
     void wait();
 };
 

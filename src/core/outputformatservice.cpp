@@ -77,6 +77,5 @@ QString OutputFormatService::format(const OutputFormat &outputFormat, const Clip
     if (outputFormat.templateTEXT.isEmpty())
         return QString();
 
-    qDebug() << outputFormat.templateTEXT << upload.rawOutput << clip.description;
     return outputFormat.templateTEXT.arg(upload.rawOutput).arg(clip.description);
 }

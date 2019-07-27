@@ -108,26 +108,7 @@ void HistoryWindow::reload()
         for (auto &clip: pair.second) {
             auto preview = new PreviewBox(this);
             preview->setProperty("clipId", clip.id);
-            /*
-            QPixmap thumbnail;
-            thumbnail.loadFromData(clip.rawPngThumb, "PNG");
-            */
-
-            QImage img;
-            img.loadFromData(clip.rawPngThumb, "PNG");
-            auto img2 = img.convertToFormat(QImage::Format_Grayscale8).scaled(100,100);
-            QPixmap thumbnail = QPixmap::fromImage(img2);
-            preview->bits = new uchar[10000];
-            memcpy(preview->bits, img2.bits(), 10000);
-            /*
-            uchar checksum = 0;
-            for (int i = 0; i < 10000; i++) {
-                checksum += preview->bits[i];
-            }
-            qDebug() << clip.id << checksum;
-            */
-
-            preview->setImage(thumbnail);
+            preview->setImage(QPixmap::fromImage(clip.thumbnail));
             preview->setTags(clip.tags);
             preview->setName(clip.name);
             groupedLayout->addWidget(preview);

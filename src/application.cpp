@@ -25,7 +25,6 @@ void Application::showWindowOrDialog(T **wd)
     if (!*wd) {
         *wd = new T();
         connect(*wd, &QWidget::destroyed, [=](void){
-            qDebug() << "set window/dialog to null";
             *wd = nullptr;
         });
         (*wd)->setAttribute(Qt::WA_DeleteOnClose);
