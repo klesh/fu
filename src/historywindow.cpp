@@ -30,18 +30,13 @@ HistoryWindow::HistoryWindow() :
 
     reload();
 
+    connect(ui->btnPaste, SIGNAL(clicked()), this, SLOT(reloadImage()));
     connect(ui->btnApply, SIGNAL(clicked()), this, SLOT(reload()));
     connect(ui->btnClean, SIGNAL(clicked()), this, SLOT(cleanAll()));
     connect(ui->btnDelete, SIGNAL(clicked()), this, SLOT(deleteSelected()));
     connect(ui->btnReload, SIGNAL(clicked()), this, SLOT(reload()));
     connect(ui->btnDeselect, SIGNAL(clicked()), this, SLOT(deselectAll()));
     connect(ui->sclClips, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(showContextMenu(const QPoint &)));
-
-    /*
-    for (auto &server : APP->serverService()->getAllByClipId(9)) {
-        qDebug() << "server name: " << server.name;
-    }
-    */
 }
 
 HistoryWindow::~HistoryWindow()
@@ -52,6 +47,25 @@ HistoryWindow::~HistoryWindow()
 bool HistoryWindow::confirm(const QString &message)
 {
     return QMessageBox::question(this, tr("Confirmation"), message, QMessageBox::Yes|QMessageBox::No) == QMessageBox::Yes;
+}
+
+void HistoryWindow::reloadImage()
+{
+    auto clips = APP->clipService()->getAllFromClipboard();
+    if (clips.isEmpty() || clips.first().isImage == false)
+        return;
+
+    auto clip = clips.first();
+    QPixmap pixmap;
+    if (clip.isFile)
+        pixmap.load(clip.data.toUrl().toLocalFile());
+    else
+        pixmap = qvariant_cast<QPixmap>(clip.data);
+
+    if (pixmap.isNull())
+        return;
+
+    ui->tnlImage->setPixmap(APP->clipService()->thumbnailize(pixmap));
 }
 
 
@@ -78,7 +92,8 @@ void HistoryWindow::reload()
     }
 
     if (ui->grpByImage->isChecked()) {
-        filter["image"] = ui->tnlImage->pixmap();
+        filter["image"] = ui->tnlImage->pixmap()->toImage();
+        filter["threshold"] = ui->sldThreshold->value();
     }
 
     QLayout *layout = ui->sclClips->layout();
@@ -128,13 +143,6 @@ void HistoryWindow::reload()
                     }
                     qDebug() << "distance : " << distance;
                 }
-                /*
-                uchar cs = 0;
-                for (int i = 0; i < 10000; i++) {
-                    cs += preview->bits[i];
-                }
-                qDebug() << clip.id << cs;
-                */
             });
         }
         layout->addWidget(groupedFrame);

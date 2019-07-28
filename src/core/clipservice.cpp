@@ -13,6 +13,7 @@ Clip convertResultToClip(QSqlQuery &result) {
     clip.name = result.value(rec.indexOf("name")).toString();
     clip.isImage = result.value(rec.indexOf("isImage")).toBool();
     clip.isFile = result.value(rec.indexOf("isFile")).toBool();
+    clip.phash = result.value(rec.indexOf("phash")).toULongLong();
     clip.thumbnail.loadFromData(result.value(rec.indexOf("thumbnail")).toByteArray(), THUMBNAIL_FMT);
     clip.description = result.value(rec.indexOf("description")).toString();
     clip.createdAt = result.value(rec.indexOf("createdAt")).toDateTime();
@@ -77,7 +78,6 @@ void ClipService::massAppend(QList<Clip> &clips, const QList<QString> tags, cons
         if (clip.thumbnail.isNull() == false) {
             // compute phash
             clip.phash = QtPhash::computePhash(clip.thumbnail);
-            qDebug() << hex << clip.phash;
             // save thubnail
             QBuffer buffer(&bytes);
             clip.thumbnail.save(&buffer, THUMBNAIL_FMT, 75);
@@ -193,9 +193,18 @@ QList<Clip> ClipService::search(QMap<QString, QVariant> &filter)
     sql.append("ORDER BY id DESC");
     auto sqlText = sql.join(" ");
 
+    quint64 phash = 0;
+    if (filter.contains("image")) {
+        QImage image = qvariant_cast<QImage>(filter["image"]);
+        phash = QtPhash::computePhash(image);
+    }
+    int distanceThreshold = filter.contains("threshold") ? filter["threshold"].toInt() : 15;
     auto result = _store.exec(sqlText);
     while (result.next()) {
-        clips.append(convertResultToClip(result));
+        auto clip = convertResultToClip(result);
+        if (phash && QtPhash::computeDistance(phash, clip.phash) > distanceThreshold)
+            continue;
+        clips.append(clip);
     }
 
     for (auto &clip : clips) {

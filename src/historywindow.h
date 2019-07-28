@@ -25,6 +25,7 @@ private:
     bool confirm(const QString &message);
 
 public slots:
+    void reloadImage();
     void reload();
     void cleanAll();
     void deleteSelected();
