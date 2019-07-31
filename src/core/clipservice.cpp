@@ -14,9 +14,9 @@ Clip convertResultToClip(QSqlQuery &result) {
     clip.isImage = result.value(rec.indexOf("isImage")).toBool();
     clip.isFile = result.value(rec.indexOf("isFile")).toBool();
     clip.phash = result.value(rec.indexOf("phash")).toULongLong();
-    clip.thumbnail.loadFromData(result.value(rec.indexOf("thumbnail")).toByteArray(), THUMBNAIL_FMT);
     clip.description = result.value(rec.indexOf("description")).toString();
     clip.createdAt = result.value(rec.indexOf("createdAt")).toDateTime();
+    clip.setThumbnailBytes(result.value(rec.indexOf("thumbnail")).toByteArray());
     return clip;
 }
 
@@ -38,8 +38,7 @@ QList<Clip> ClipService::getAllFromClipboard()
         Clip clip;
         clip.id = 0;
         clip.isFile = false;
-        auto image = qvariant_cast<QPixmap>(mimeData->imageData());
-        clip.data = image;
+        clip.data = mimeData->imageData();
         clip.isImage = true;
         clip.name = QString("%1.png").arg(QDateTime::currentDateTime().toString("yyyyMMddHHmmss"));
         list.append(clip);
@@ -74,13 +73,8 @@ void ClipService::massAppend(QList<Clip> &clips, const QList<QString> tags, cons
     for (auto &clip : clips) {
         clip.description = desc;
 
-        QByteArray bytes;
-        if (clip.thumbnail.isNull() == false) {
-            // compute phash
-            clip.phash = QtPhash::computePhash(clip.thumbnail);
-            // save thubnail
-            QBuffer buffer(&bytes);
-            clip.thumbnail.save(&buffer, THUMBNAIL_FMT, 75);
+        if (clip.isImage) {
+            clip.phash = QtPhash::computePhash(clip.getThumbnailImage());
         }
 
         auto query = _store.prepare("INSERT INTO clips (name, isImage, isFile, phash, thumbnail, description, createdAt)"
@@ -90,7 +84,7 @@ void ClipService::massAppend(QList<Clip> &clips, const QList<QString> tags, cons
         query.bindValue(":isFile", clip.isFile);
         query.bindValue(":description", clip.description);
         query.bindValue(":phash", clip.phash);
-        query.bindValue(":thumbnail", bytes);
+        query.bindValue(":thumbnail", clip.getThumbnailBytes());
         query.bindValue(":createdAt",  datetimeToISO(QDateTime::currentDateTime()));
         auto result = _store.exec();
         clip.id = result.lastInsertId().toUInt();
@@ -166,7 +160,6 @@ QList<Clip> ClipService::search(QMap<QString, QVariant> &filter)
     QStringList sql, where;
     sql.append("SELECT clips.* FROM clips");
 
-
     if (filter.contains("dateFrom")) {
         where.append(QString("DATETIME(clips.createdAt) > DATETIME('%1')").arg(dateToISO(filter["dateFrom"].toDate())));
     }
@@ -219,11 +212,6 @@ QList<QPair<QDate, QList<Clip>>> ClipService::searchAndGroup(QMap<QString, QVari
     auto clips = search(filter);
     auto datedClips = groupByCreationDate(clips);
     return datedClips;
-}
-
-QPixmap ClipService::thumbnailize(const QPixmap &origin)
-{
-    return origin.scaled(THUMB_WIDTH, THUMB_HEIGHT, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 }
 
 const QPixmap &ClipService::unkownFileIcon()

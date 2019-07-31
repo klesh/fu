@@ -84,11 +84,11 @@ void UploadDialog::editMode(uint clipId)
     }
 
     auto thumbnail = new ThumbnailLabel(ui->sclPreview);
-    thumbnail->setPixmap(QPixmap::fromImage(clip.thumbnail));
+    thumbnail->setPixmap(clip.thumbnailPixmap());
     _previewLayout->addWidget(thumbnail);
     auto name = new QLabel(ui->sclPreview);
     QFontMetrics metrix(name->font());
-    int width = THUMB_WIDTH - 5;
+    int width = thumbnail->width() - 5;
     QString clippedText = metrix.elidedText(clip.name, Qt::ElideRight, width);
     name->setText(clippedText);
     _previewLayout->addWidget(name);
@@ -163,11 +163,9 @@ void UploadDialog::accept()
         QDialog::accept();
         return;
     }
-    // make sure all thumbnail are loaded
+
+    // pick up file name
     for (auto &clip : _clips) {
-        auto thumbnail = _thumbnails[&clip];
-        thumbnail->wait();
-        clip.thumbnail = thumbnail->image();
         clip.name = ui->sclPreview->findChild<QLineEdit*>(clip.name)->text();
     }
 
@@ -186,18 +184,10 @@ void UploadDialog::reload()
         delete ctrl;
     }
 
-    _thumbnails.clear();
     _clips =  APP->clipService()->getAllFromClipboard();
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
     for (auto &clip : _clips) {
-        auto thumbnail = new ThumbnailLabel(ui->sclPreview);
-        if (clip.isImage) {
-            if (clip.isFile) {
-                thumbnail->setThumbnailByOriginPath(clip.data.toUrl().toLocalFile());
-            } else {
-                thumbnail->setThumbnailByOrigin(qvariant_cast<QPixmap>(clip.data));
-            }
-        }
+        auto thumbnail = new ThumbnailLabel(ui->sclPreview, clip);
 
         _previewLayout->addWidget(thumbnail);
         auto name = new QLineEdit(ui->sclPreview);
@@ -210,7 +200,6 @@ void UploadDialog::reload()
             this->syncState();
         });
         _previewLayout->addWidget(name);
-        _thumbnails[&clip] = thumbnail;
     }
 
     syncState();

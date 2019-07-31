@@ -2,8 +2,25 @@
 #include "../application.h"
 #include "../core/clipservice.h"
 
-ThumbnailLabel::ThumbnailLabel(QWidget *parent)
-    : QLabel(parent)
+void ThumbnailLabel::loadClip()
+{
+    if (_clip.isImage) {
+        setText(tr("Loading"));
+        _loading = QThread::create([&](void) {
+            this->setPixmap(_clip.thumbnailPixmap());
+            this->setText("");
+        });
+        connect(_loading, SIGNAL(finished()), _loading, SLOT(deleteLater()));
+        _loading->start();
+    } else if (_clip.isFile) {
+        setPixmap(ClipService::unkownFileIcon());
+    } else {
+        setText("N/A");
+    }
+}
+
+ThumbnailLabel::ThumbnailLabel(QWidget *parent, Clip &clip)
+    : QLabel(parent), _clip(clip)
 {
     setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     setMinimumSize(THUMB_WIDTH, THUMB_HEIGHT);
@@ -11,49 +28,12 @@ ThumbnailLabel::ThumbnailLabel(QWidget *parent)
 
     setAlignment(Qt::AlignCenter);
     setStyleSheet("background: white");
-    setPixmap(ClipService::unkownFileIcon());
+
+    loadClip();
 }
 
-ThumbnailLabel::ThumbnailLabel(QWidget *parent, const QPixmap &origin)
-    : ThumbnailLabel(parent)
+void ThumbnailLabel::setClip(Clip &clip)
 {
-    setThumbnailByOrigin(origin);
-}
-
-ThumbnailLabel::ThumbnailLabel(QWidget *parent, const QString &originPath)
-    : ThumbnailLabel(parent)
-{
-    setThumbnailByOriginPath(originPath);
-}
-
-ThumbnailLabel::~ThumbnailLabel()
-{
-    if (_loading)
-        _loading->deleteLater();
-}
-
-void ThumbnailLabel::setThumbnailByOrigin(const QPixmap &origin)
-{
-    this->setPixmap(ClipService::thumbnailize(origin));
-}
-
-void ThumbnailLabel::setThumbnailByOriginPath(const QString &originPath)
-{
-    _loading = QThread::create([=](void) {
-        QPixmap origin(originPath);
-        this->setThumbnailByOrigin(origin);
-    });
-    _loading->start();
-}
-
-QImage ThumbnailLabel::image()
-{
-    return pixmap()->toImage();
-}
-
-
-void ThumbnailLabel::wait()
-{
-    if (_loading)
-        _loading->wait();
+    _clip = clip;
+    loadClip();
 }

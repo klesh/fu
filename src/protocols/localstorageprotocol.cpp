@@ -39,9 +39,8 @@ LocalStorageUploader::~LocalStorageUploader()
 
 }
 
-QString LocalStorageUploader::upload(QDataStream *stream, const QString name)
+QString LocalStorageUploader::upload(QDataStream *stream, const QString name, bool overwrite = false)
 {
-    QThread::sleep(3);
     QDir dir(_folder);
     QFile outputFile(dir.absoluteFilePath(name));
     outputFile.open(QIODevice::WriteOnly);

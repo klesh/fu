@@ -48,6 +48,7 @@ public:
     ClipService *clipService() { return _clipService; }
     UploadService *uploadService() { return _uploadService; }
 
+
 private:
     template <typename T>
     void showWindowOrDialog(T **widget);
@@ -75,8 +76,6 @@ public slots:
 };
 
 #define APP (qobject_cast<Application*>qApp)
-#define THUMB_WIDTH 160
-#define THUMB_HEIGHT 160
 
 
 #endif // APPLICATION_H

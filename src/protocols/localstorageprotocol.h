@@ -11,9 +11,9 @@ class LocalStorageUploader : public Uploader
     QString _output;
 
 public:
-    LocalStorageUploader(QVariantMap settings);
+    LocalStorageUploader(const QVariantMap settings);
     ~LocalStorageUploader() override;
-    QString upload(QDataStream *stream, const QString name) override;
+    QString upload(QDataStream *stream, const QString name, bool overwrite = false) override;
 };
 
 class LocalStorageProtocol : public Protocol

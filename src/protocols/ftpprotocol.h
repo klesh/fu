@@ -2,15 +2,19 @@
 #define FTPPROTOCOL_H
 
 #include <QtCore>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
 #include "../models/protocol.h"
 
 
 class FtpUploader : public Uploader
 {
+    QNetworkAccessManager network;
+    const QUrl url;
 public:
-    FtpUploader(QVariantMap settings);
+    FtpUploader(const QVariantMap settings);
     ~FtpUploader() override;
-    QString upload(QDataStream *stream, const QString name) override;
+    QString upload(QDataStream *stream, const QString name, bool overwrite = false) override;
 };
 
 class FtpProtocol : public Protocol

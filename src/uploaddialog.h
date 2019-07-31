@@ -29,7 +29,6 @@ public:
 private:
     Ui::UploadDialog *ui;
     QList<Clip> _clips;
-    QMap<Clip*, ThumbnailLabel*> _thumbnails;
     QLayout *_previewLayout;
     void editMode(uint clipId);
     void uploadMode();

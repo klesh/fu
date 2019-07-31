@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core sql
+QT       += core sql network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -83,11 +83,11 @@ HEADERS += \
         src/application.h \
         src/models/clip.h \
         src/models/outputformat.h \
-        src/models/protocol.h \
         src/models/record.h \
         src/models/server.h \
         src/models/tag.h \
         src/models/upload.h \
+        src/protocols/base.h \
         src/protocols/ftpprotocol.h \
         src/protocols/localstorageprotocol.h \
         src/store/migration.h \

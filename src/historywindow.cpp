@@ -55,17 +55,7 @@ void HistoryWindow::reloadImage()
     if (clips.isEmpty() || clips.first().isImage == false)
         return;
 
-    auto clip = clips.first();
-    QPixmap pixmap;
-    if (clip.isFile)
-        pixmap.load(clip.data.toUrl().toLocalFile());
-    else
-        pixmap = qvariant_cast<QPixmap>(clip.data);
-
-    if (pixmap.isNull())
-        return;
-
-    ui->tnlImage->setPixmap(APP->clipService()->thumbnailize(pixmap));
+    ui->tnlImage->setPixmap(clips.first().thumbnailPixmap());
 }
 
 

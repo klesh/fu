@@ -4,6 +4,8 @@
 
 #include <QPainter>
 #include <QImageWriter>
+#include <QCheckBox>
+#include <QPushButton>
 
 Upload convertResultToUpload(QSqlQuery &result) {
     Upload upload;
@@ -56,81 +58,165 @@ QList<Upload> UploadService::getAllByClipId(uint clipId)
     return uploads;
 }
 
+void UploadService::handleDuplication(UploadJob &job)
+{
+    DuplicationHandlingMethod method;
+    if (job.counter) { // already select AutoRename for this job
+        method = AutoRename;
+    } else if (_applyToAll != None) { // apply to all was checked
+        method = _applyToAll;
+    } else { // pop up a Dialog for user to choose
+        auto msgBox = new QMessageBox(QMessageBox::Question,
+                                      tr("File exists"),
+                                      tr("File %1 already exists on Server %2. What would you like to do?")
+                                      .arg(job.server.name).arg(job.clip.name));
+        msgBox->setCheckBox(new QCheckBox(tr("Apply to all"), msgBox));
+        msgBox->addButton(new QPushButton(tr("Auto rename"), msgBox), QMessageBox::AcceptRole);
+        msgBox->addButton(new QPushButton(tr("Overwrite"), msgBox), QMessageBox::DestructiveRole);
+        msgBox->addButton(new QPushButton(tr("Skip"), msgBox), QMessageBox::RejectRole);
+
+        int role = msgBox->exec();
+        if (role == QMessageBox::AcceptRole)
+            method = AutoRename;
+        else if (role == QMessageBox::DestructiveRole)
+            method = Overwrite;
+        else {
+            method = Skip;
+        }
+        if (msgBox->checkBox()->checkState() == Qt::Checked)
+            _applyToAll = method;
+        delete msgBox;
+    }
+
+    if (method == AutoRename) {
+        QFileInfo fi(job.clip.name);
+        job.name = QString("%1-%2.%3")
+                .arg(fi.baseName()).arg(++job.counter).arg(fi.completeSuffix());
+        job.status = Pending;
+    } else if (method == Overwrite) {
+        job.overwrite = true;
+        job.status = Pending;
+    } else if (method == Skip) {
+        job.status = Skipped;
+    }
+}
+
+void UploadService::populatePool()
+{
+    mutex.lock();
+    if (isPopulating) {
+        needAnotherPopulation = true;
+        mutex.unlock();
+        return;
+    }
+    needAnotherPopulation = false;
+    isPopulating = true;
+    mutex.unlock();
+
+    qDebug() << "populate @" << QThread::currentThreadId();
+    for (int i = 0; i < _jobs.size() && poolSeats; i++) {
+        auto &job = _jobs[i];
+        if (job.status == Duplicated) {
+            handleDuplication(job);
+        }
+        if (job.status == Pending) {
+            job.status = Assigned;
+            auto thread = new UploadThread(job);
+            connect(thread, SIGNAL(finished()), this, SLOT(threadFinished()));
+            connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+            thread->start();
+            poolSeats--;
+        }
+    }
+    mutex.lock();
+    isPopulating = false;
+    mutex.unlock();
+    if (needAnotherPopulation) {
+        populatePool();
+    } else if (poolSeats == 5) {
+        qDebug() << poolSeats << "ALL DONE............";
+    }
+}
+
+void UploadService::threadFinished()
+{
+    poolSeats++;
+    populatePool();
+}
+
 void UploadService::uploadFinished()
 {
     APP->clipService()->setClipboard(_formattedOutput);
 }
 
-void UploadService::upload(const QList<Clip> &clips)
+void UploadService::upload(QList<Clip> &clips)
 {
-    // upload all clips to all enabled servers;
+    // load all servers
     auto servers = APP->serverService()->getAllUploadEnabled();
-    QPixmap watermark;
-    if (APP->settingService()->imageWatermarkEnabled()) {
-        watermark.load(APP->settingService()->imageWatermarkPath());
-    }
-    auto imageWatermarkPos = APP->settingService()->imageWatermarkPosition();
+
+    // prepare clips
     auto imageCompressionEanbled = APP->settingService()->imageCompressionEnabled();
+    auto imageWartermarkEnabled = APP->settingService()->imageWatermarkEnabled();
+    QPixmap watermark;
+    if (imageWartermarkEnabled)
+        watermark.load(APP->settingService()->imageWatermarkPath());
+    auto imageWatermarkPos = APP->settingService()->imageWatermarkPosition();
 
+    for (auto &clip : clips) {
+        QByteArray imageBytes;
 
-    QList<UploadThread*> uploadThreads;
-    QList<QByteArray*> imageBytesPtrs;
-
-    // ensure clips are saved
-    try {
-        for (auto &clip : clips) {
-            // only when clip is a image, and preprocess are needed
-            QByteArray *imageBytes = nullptr;
-            if (clip.isImage && (imageCompressionEanbled || !watermark.isNull())) {
-                // prefer png
-                char format[10] = "PNG";
-                int quality = -1;
-                auto pixmap = clip.isFile ? QPixmap(clip.data.toUrl().toLocalFile()) : qvariant_cast<QPixmap>(clip.data);
-                auto ext = clip.name.mid(clip.name.lastIndexOf('.') + 1).toLower().toLatin1();
-                if (!ext.isEmpty() && QImageWriter::supportedImageFormats().contains(ext)) {
-                    strcpy_s(format, ext.data());
+        if (clip.isImage) {
+            // detect format and initialize quality
+            QByteArray fmt = "jpg";
+            int quality = -1;
+            auto pixmap = clip.pixmap();
+            if (clip.isFile) {
+                QFileInfo fi(clip.localPath());
+                QByteArray suf = fi.completeSuffix().toLower().toLatin1();
+                if (QImageWriter::supportedImageFormats().contains(suf)) {
+                    fmt = suf;
                 }
+            }
+            // composite watermark
+            int x = 0, y = 0;
+            if (!watermark.isNull() && pixmap.height() > watermark.height() && pixmap.width() > watermark.width()) {
+                if (imageWatermarkPos.contains("Middle"))
+                    y = (pixmap.height() - watermark.height()) / 2;
+                else if (imageWatermarkPos.contains("Bottom"))
+                    y = pixmap.height() - watermark.height();
 
-                // composite watermark
-                int x = 0, y = 0;
-                if (!watermark.isNull() && pixmap.height() > watermark.height() && pixmap.width() > watermark.width()) {
-                    if (imageWatermarkPos.contains("Middle"))
-                        y = (pixmap.height() - watermark.height()) / 2;
-                    else if (imageWatermarkPos.contains("Bottom"))
-                        y = pixmap.height() - watermark.height();
+                if (imageWatermarkPos.contains("Center"))
+                    x = (pixmap.width() - watermark.width()) / 2;
+                else if (imageWatermarkPos.contains("Right"))
+                    x = pixmap.width() - watermark.width();
 
-                    if (imageWatermarkPos.contains("Center"))
-                        x = (pixmap.width() - watermark.width()) / 2;
-                    else if (imageWatermarkPos.contains("Right"))
-                        x = pixmap.width() - watermark.width();
-
-                    QPainter painter(&pixmap);
-                    painter.drawPixmap(x, y, watermark.width(), watermark.height(), watermark);
-                }
-
-                // perform compression
-                if (imageCompressionEanbled) {
-                    quality = 70;
-                }
-
-                imageBytes = new QByteArray();
-                QBuffer buffer(imageBytes);
-                buffer.open(QIODevice::WriteOnly);
-                pixmap.save(&buffer, format, quality);
-                imageBytesPtrs.append(imageBytes);
+                QPainter painter(&pixmap);
+                painter.drawPixmap(x, y, watermark.width(), watermark.height(), watermark);
             }
 
-            // upload to servers, shall be rewrite as multi-threaded
-            for (auto &server : servers) {
-                auto uploadThread = new UploadThread(server, clip, *imageBytes);
-                uploadThread->start();
-                uploadThreads.append(uploadThread);
+            // perform compression
+            if (imageCompressionEanbled) {
+                quality = 70;
             }
 
+            // save as bytes
+            QBuffer buffer(&imageBytes);
+            buffer.open(QIODevice::WriteOnly);
+            pixmap.save(&buffer, fmt, quality);
         }
-    } catch (...) {
 
+        for (auto &server : servers) {
+            UploadJob job;
+            job.server = server;
+            job.clip = clip;
+            job.data = imageBytes;
+            job.name = clip.name;
+            _jobs.append(job);
+        }
     }
+
+    poolSeats = 5;
+    populatePool();
 
 
     int suceed = 0, fail = 0;

@@ -45,7 +45,6 @@ QList<Server> ServerService::getAllUploadEnabled()
     auto result = _store.exec("SELECT * FROM servers WHERE uploadEnabled=1 ORDER BY id DESC");
     while (result.next()) {
         auto server = convertResultToServer(result);
-        server.uploader = findProtocol(server.protocol)->createUploader(server.settings);
         servers.append(server);
     }
 
@@ -139,4 +138,9 @@ Protocol *ServerService::findProtocol(const QString &name)
             return protocol;
     }
     throw_error("Protocol not found");
+}
+
+Uploader *ServerService::createUploader(const Server &server)
+{
+    return findProtocol(server.protocol)->createUploader(server.settings);
 }

@@ -14,7 +14,6 @@ struct Server
     bool uploadEnabled;
     uint outputFormatId;
     QDateTime createdAt;
-    Uploader *uploader;
     OutputFormat outputFormat;
 };
 

@@ -24,6 +24,7 @@ public:
     void setOutputFormatId(uint id, uint outputFormatId);
     QList<Protocol*> getProtocols();
     Protocol* findProtocol(const QString &name);
+    Uploader *createUploader(const Server &server);
 };
 
 #endif // SERVERSERVICE_H
