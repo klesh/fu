@@ -208,7 +208,7 @@ void HistoryWindow::showContextMenu(const QPoint &pos)
             serverMenu->addAction(outputAs);
             connect(outputAs, &QAction::triggered, [=]() {
                 Clip clip = APP->clipService()->findById(clipId);
-                APP->clipService()->setClipboard(OutputFormatService::format(outputFormat, clip, upload));
+                APP->clipService()->setClipboard(FormatService::format(outputFormat, clip, upload));
             });
             pointers.append(outputAs);
         }

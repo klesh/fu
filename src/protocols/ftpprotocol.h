@@ -4,17 +4,18 @@
 #include <QtCore>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
-#include "../models/protocol.h"
+#include "./base.h"
 
 
 class FtpUploader : public Uploader
 {
-    QNetworkAccessManager network;
-    const QUrl url;
+    QNetworkAccessManager _network;
+    const QUrl _ftpUrl;
+    QString _outputUrl;
 public:
     FtpUploader(const QVariantMap settings);
-    ~FtpUploader() override;
-    QString upload(QDataStream *stream, const QString name, bool overwrite = false) override;
+
+    void upload(QDataStream *stream, UploadJob &job) override;
 };
 
 class FtpProtocol : public Protocol
@@ -28,7 +29,7 @@ public:
     const QString getName();
     const QString getTitle();
     const QList<ProtocolSettingInfo> &getSettingInfos();
-    Uploader *createUploader(QVariantMap &settings);
+    Uploader *createUploader(const QVariantMap &settings);
 };
 
 #endif // FTPPROTOCOL_H

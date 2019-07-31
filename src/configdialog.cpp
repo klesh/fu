@@ -32,12 +32,12 @@ ConfigDialog::ConfigDialog() :
     connect(ui->btnCancelServer, SIGNAL(clicked()), this, SLOT(serversEditItemCancel()));
     connect(ui->cbbProtocol, SIGNAL(currentTextChanged(const QString&)), this, SLOT(serversReloadSettingsFrame(const QString&)));
 
-    connect(ui->lstOutputFormats, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)), this, SLOT(outputFormatsShowItem(QListWidgetItem*, QListWidgetItem*)));
-    connect(ui->lstOutputFormats, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(outputFormatsEditItem(QListWidgetItem*)));
-    connect(ui->btnAddOutputFormat, SIGNAL(clicked()), this, SLOT(outputFormatsAddItem()));
-    connect(ui->btnDelOutputFormat, SIGNAL(clicked()), this, SLOT(outputFormatsDelItems()));
-    connect(ui->btnSaveOutputFormat, SIGNAL(clicked()), this, SLOT(outputFormatsEditItemSave()));
-    connect(ui->btnCancelOutputFormat, SIGNAL(clicked()), this, SLOT(outputFormatsEditItemCancel()));
+    connect(ui->lstFormats, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)), this, SLOT(formatsShowItem(QListWidgetItem*, QListWidgetItem*)));
+    connect(ui->lstFormats, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(formatsEditItem(QListWidgetItem*)));
+    connect(ui->btnAddFormat, SIGNAL(clicked()), this, SLOT(formatsAddItem()));
+    connect(ui->btnDelFormat, SIGNAL(clicked()), this, SLOT(formatsDelItems()));
+    connect(ui->btnSaveFormat, SIGNAL(clicked()), this, SLOT(formatsEditItemSave()));
+    connect(ui->btnCancelFormat, SIGNAL(clicked()), this, SLOT(formatsEditItemCancel()));
 
     connect(ui->btnWatermarkImagePicker, SIGNAL(clicked()), this, SLOT(imagePickWatermarkFile()));
     connect(ui->cbxImageCompression, SIGNAL(stateChanged(int)), this, SLOT(imageSaveCompressionSetting(int)));
@@ -75,66 +75,62 @@ void ConfigDialog::reloadTab(int id)
 {
     qDebug() << "reloading tab " << id;
 
-    try {
-        switch (id) {
-        case TAB_SERVERS:
-        {
-            ui->lstServers->clear();
-            QList<Server> servers = APP->serverService()->getAll();
-            for (auto &server : servers) {
-                auto listItem = new QListWidgetItem(server.name, ui->lstServers);
-                listItem->setData(Qt::UserRole, server.id);
-                ui->lstServers->addItem(listItem);
-            }
-            break;
+    switch (id) {
+    case TAB_SERVERS:
+    {
+        ui->lstServers->clear();
+        QList<Server> servers = APP->serverService()->getAll();
+        for (auto &server : servers) {
+            auto listItem = new QListWidgetItem(server.name, ui->lstServers);
+            listItem->setData(Qt::UserRole, server.id);
+            ui->lstServers->addItem(listItem);
         }
-        case TAB_IMAGE:
-        {
-            ui->cbxImageCompression->setChecked(APP->settingService()->imageCompressionEnabled());
+        break;
+    }
+    case TAB_IMAGE:
+    {
+        ui->cbxImageCompression->setChecked(APP->settingService()->imageCompressionEnabled());
 
-            auto imageWatermarkEnabled = APP->settingService()->imageWatermarkEnabled();
-            ui->cbxImageWatermark->setChecked(imageWatermarkEnabled);
-            ui->btnWatermarkImagePicker->setEnabled(imageWatermarkEnabled);
+        auto imageWatermarkEnabled = APP->settingService()->imageWatermarkEnabled();
+        ui->cbxImageWatermark->setChecked(imageWatermarkEnabled);
+        ui->btnWatermarkImagePicker->setEnabled(imageWatermarkEnabled);
 
-            auto imageWatermarkPath = APP->settingService()->imageWatermarkPath();
-            if (!imageWatermarkPath.isEmpty()) {
-                QFileInfo fi(imageWatermarkPath);
-                if (fi.exists() && fi.isFile()) {
-                    ui->lblWatermarkImagePreviewer->setPixmap(QPixmap(imageWatermarkPath).scaled(200, 200, Qt::KeepAspectRatio));
-                }
+        auto imageWatermarkPath = APP->settingService()->imageWatermarkPath();
+        if (!imageWatermarkPath.isEmpty()) {
+            QFileInfo fi(imageWatermarkPath);
+            if (fi.exists() && fi.isFile()) {
+                ui->lblWatermarkImagePreviewer->setPixmap(QPixmap(imageWatermarkPath).scaled(200, 200, Qt::KeepAspectRatio));
             }
+        }
 
-            auto imageWatermarkPosition = APP->settingService()->imageWatermarkPosition();
-            auto btnWatermarkPosition = ui->frmWatermarkPosition->findChild<QPushButton*>(QString("btnWatermarkPosition%1").arg(imageWatermarkPosition));
-            btnWatermarkPosition->setChecked(true);
-            break;
+        auto imageWatermarkPosition = APP->settingService()->imageWatermarkPosition();
+        auto btnWatermarkPosition = ui->frmWatermarkPosition->findChild<QPushButton*>(QString("btnWatermarkPosition%1").arg(imageWatermarkPosition));
+        btnWatermarkPosition->setChecked(true);
+        break;
+    }
+    case TAB_OUTPUT_FORMATS:
+    {
+        ui->lstFormats->clear();
+        QList<Format> formats = APP->formatService()->getAll();
+        for (auto &format : formats) {
+            auto listItem = new QListWidgetItem(format.name, ui->lstFormats);
+            listItem->setData(Qt::UserRole, format.id);
+            ui->lstFormats->addItem(listItem);
         }
-        case TAB_OUTPUT_FORMATS:
-        {
-            ui->lstOutputFormats->clear();
-            QList<OutputFormat> outputFormats = APP->outputFormatService()->getAll();
-            for (auto &outputFormat : outputFormats) {
-                auto listItem = new QListWidgetItem(outputFormat.name, ui->lstOutputFormats);
-                listItem->setData(Qt::UserRole, outputFormat.id);
-                ui->lstOutputFormats->addItem(listItem);
-            }
-            break;
+        break;
+    }
+    case TAB_TAGS:
+    {
+        ui->lstTags->clear();
+        QList<Tag> tags = APP->tagService()->getAll();
+        for (auto &tag : tags) {
+            auto listItem = new QListWidgetItem(tag.name, ui->lstTags);
+            listItem->setFlags(listItem->flags() | Qt::ItemIsEditable);
+            listItem->setData(Qt::UserRole, tag.id);
+            ui->lstTags->addItem(listItem);
         }
-        case TAB_TAGS:
-        {
-            ui->lstTags->clear();
-            QList<Tag> tags = APP->tagService()->getAll();
-            for (auto &tag : tags) {
-                auto listItem = new QListWidgetItem(tag.name, ui->lstTags);
-                listItem->setFlags(listItem->flags() | Qt::ItemIsEditable);
-                listItem->setData(Qt::UserRole, tag.id);
-                ui->lstTags->addItem(listItem);
-            }
-            break;
-        }
-        }
-    } catch (Error &e) {
-        ErrorMessage::showFatal(e.text(), this);
+        break;
+    }
     }
 }
 
@@ -142,10 +138,9 @@ void ConfigDialog::serversShowItem(QListWidgetItem* current, QListWidgetItem* pr
 {
     ui->btnDelServer->setEnabled(current);
 
-    Q_UNUSED(previous);
+    Q_UNUSED(previous)
     if (!current)
         return;
-
 
     uint id = current->data(Qt::UserRole).toUInt();
 
@@ -154,11 +149,7 @@ void ConfigDialog::serversShowItem(QListWidgetItem* current, QListWidgetItem* pr
 
     Server server;
     if (id) {
-        try {
-            server = APP->serverService()->findById(id);
-        } catch (Error &e) {
-            ErrorMessage::showFatal(e.text(), this);
-        }
+        server = APP->serverService()->findById(id);
     } else {
         server.protocol = ui->cbbProtocol->currentText();
     }
@@ -170,27 +161,27 @@ void ConfigDialog::serversShowItem(QListWidgetItem* current, QListWidgetItem* pr
 
     for (auto settingInfo : protocol->getSettingInfos()) {
         switch (settingInfo.type) {
-            case Directory:
-            {
-                auto folderPicker = ui->frmServerSettings->findChild<FolderPicker*>(settingInfo.name);
-                assert(folderPicker);
-                folderPicker->setCurrentPath(server.settings[settingInfo.name].toString());
-                break;
-            }
-            case Integer:
-            {
-                auto spinBox = ui->frmServerSettings->findChild<QSpinBox*>(settingInfo.name);
-                assert(spinBox);
-                spinBox->setValue(server.settings[settingInfo.name].toInt());
-                break;
-            }
-            case Text:
-            {
-                auto lineEdit = ui->frmServerSettings->findChild<QLineEdit*>(settingInfo.name);
-                assert(lineEdit);
-                lineEdit->setText(server.settings[settingInfo.name].toString());
-                break;
-            }
+        case Directory:
+        {
+            auto folderPicker = ui->frmServerSettings->findChild<FolderPicker*>(settingInfo.name);
+            assert(folderPicker);
+            folderPicker->setCurrentPath(server.settings[settingInfo.name].toString());
+            break;
+        }
+        case Integer:
+        {
+            auto spinBox = ui->frmServerSettings->findChild<QSpinBox*>(settingInfo.name);
+            assert(spinBox);
+            spinBox->setValue(server.settings[settingInfo.name].toInt());
+            break;
+        }
+        case Text:
+        {
+            auto lineEdit = ui->frmServerSettings->findChild<QLineEdit*>(settingInfo.name);
+            assert(lineEdit);
+            lineEdit->setText(server.settings[settingInfo.name].toString());
+            break;
+        }
 
         }
     }
@@ -249,17 +240,10 @@ void ConfigDialog::serversEditItemSave()
         }
     }
 
-    try {
-        APP->serverService()->save(server);
+    if (APP->serverService()->save(server)) {
         reloadTab(TAB_SERVERS);
-    } catch (Error &e) {
-        auto errMsg = e.text();
-        if (errMsg.contains("UNIQUE constraint")) {
-            ErrorMessage::showInfo("Server with the same name already exists.", this);
-            return;
-        } else {
-            ErrorMessage::showFatal(e.text(), this);
-        }
+    } else {
+        ErrorMessage::showInfo("Server with the same name already exists.", this);
     }
     ui->grpServerForm->setEnabled(false);
     ui->grpServerList->setEnabled(true);
@@ -284,11 +268,7 @@ void ConfigDialog::serversAddItem()
 
 void ConfigDialog::serversDelItems()
 {
-    try {
-        APP->serverService()->remove(ui->lstServers->currentItem()->data(Qt::UserRole).toUInt());
-    } catch (Error &e) {
-        ErrorMessage::showFatal(e.text(), this);
-    }
+    APP->serverService()->remove(ui->lstServers->currentItem()->data(Qt::UserRole).toUInt());
     reloadTab(TAB_SERVERS);
 }
 
@@ -377,93 +357,73 @@ void ConfigDialog::imageSaveWatermarkPositionSetting(bool toggled)
     }
 }
 
-void ConfigDialog::outputFormatsShowItem(QListWidgetItem *current, QListWidgetItem *previous)
+void ConfigDialog::formatsShowItem(QListWidgetItem *current, QListWidgetItem *previous)
 {
-    ui->btnDelOutputFormat->setEnabled(current);
+    Q_UNUSED(previous)
 
-    Q_UNUSED(previous);
+    ui->btnDelFormat->setEnabled(current);
+
     if (!current)
         return;
 
-
     uint id = current->data(Qt::UserRole).toUInt();
-
-    if (!id)
-        return;
-
-    OutputFormat outputFormat;
     if (id) {
-        try {
-            outputFormat = APP->outputFormatService()->findById(id);
-        } catch (Error &e) {
-            ErrorMessage::showFatal(e.text(), this);
-        }
+        Format format = APP->formatService()->findById(id);
+        ui->txtFormatName->setText(format.name);
+        ui->txtFormatTemplate->setText(format.format);
     }
-    ui->txtOutputFormatName->setText(outputFormat.name);
-    ui->txtOutputFormatTemplate->setText(outputFormat.templateTEXT);
 }
 
-void ConfigDialog::outputFormatsEditItem(QListWidgetItem *)
+void ConfigDialog::formatsEditItem(QListWidgetItem *)
 {
-    ui->grpOutputFormatForm->setEnabled(true);
-    ui->grpOutputFormatList->setEnabled(false);
+    ui->grpFormatForm->setEnabled(true);
+    ui->grpFormatList->setEnabled(false);
 }
 
-void ConfigDialog::outputFormatsEditItemSave()
+void ConfigDialog::formatsEditItemSave()
 {
-    if (ui->txtOutputFormatName->text().isEmpty()) {
-        return highlightWidget(ui->txtOutputFormatName, tr("Please enter the name of output format"));
+    if (ui->txtFormatName->text().isEmpty()) {
+        return highlightWidget(ui->txtFormatName, tr("Please enter the name of output format"));
     }
-    if (ui->txtOutputFormatTemplate->toPlainText().isEmpty()) {
-        return highlightWidget(ui->txtOutputFormatTemplate, tr("Please enter the template of output format"));
+    if (ui->txtFormatTemplate->toPlainText().isEmpty()) {
+        return highlightWidget(ui->txtFormatTemplate, tr("Please enter the template of output format"));
     }
 
-    OutputFormat outputFormat;
-    outputFormat.id = ui->lstOutputFormats->currentItem()->data(Qt::UserRole).toUInt();
-    outputFormat.name = ui->txtOutputFormatName->text();
-    outputFormat.templateTEXT = ui->txtOutputFormatTemplate->toPlainText();
+    Format format;
+    format.id = ui->lstFormats->currentItem()->data(Qt::UserRole).toUInt();
+    format.name = ui->txtFormatName->text();
+    format.format = ui->txtFormatTemplate->toPlainText();
 
 
-    try {
-        APP->outputFormatService()->save(outputFormat);
+    if (APP->formatService()->save(format)) {
         reloadTab(TAB_OUTPUT_FORMATS);
-    } catch (Error &e) {
-        auto errMsg = e.text();
-        if (errMsg.contains("UNIQUE constraint")) {
-            ErrorMessage::showInfo("OutputFormat with the same name already exists.", this);
-            return;
-        } else {
-            ErrorMessage::showFatal(e.text(), this);
-        }
+    } else {
+        ErrorMessage::showInfo("Format with the same name already exists.", this);
     }
-    ui->grpOutputFormatForm->setEnabled(false);
-    ui->grpOutputFormatList->setEnabled(true);
+    ui->grpFormatForm->setEnabled(false);
+    ui->grpFormatList->setEnabled(true);
 }
 
-void ConfigDialog::outputFormatsEditItemCancel()
+void ConfigDialog::formatsEditItemCancel()
 {
-    ui->grpOutputFormatForm->setEnabled(false);
-    ui->grpOutputFormatList->setEnabled(true);
+    ui->grpFormatForm->setEnabled(false);
+    ui->grpFormatList->setEnabled(true);
     reloadTab(TAB_OUTPUT_FORMATS);
 }
 
-void ConfigDialog::outputFormatsAddItem()
+void ConfigDialog::formatsAddItem()
 {
     auto listItem = new QListWidgetItem();
     listItem->setText(tr("new format"));
     listItem->setData(Qt::UserRole, 0);
-    ui->lstOutputFormats->insertItem(0, listItem);
-    ui->lstOutputFormats->setCurrentItem(listItem);
-    outputFormatsEditItem(listItem);
+    ui->lstFormats->insertItem(0, listItem);
+    ui->lstFormats->setCurrentItem(listItem);
+    formatsEditItem(listItem);
 }
 
-void ConfigDialog::outputFormatsDelItems()
+void ConfigDialog::formatsDelItems()
 {
-    try {
-        APP->outputFormatService()->remove(ui->lstOutputFormats->currentItem()->data(Qt::UserRole).toUInt());
-    } catch (Error &e) {
-        ErrorMessage::showFatal(e.text(), this);
-    }
+    APP->formatService()->remove(ui->lstFormats->currentItem()->data(Qt::UserRole).toUInt());
     reloadTab(TAB_OUTPUT_FORMATS);
 }
 

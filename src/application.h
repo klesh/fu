@@ -8,12 +8,10 @@
 #include "configdialog.h"
 #include "historywindow.h"
 #include "uploaddialog.h"
-#include "store/sqlstore.h"
-#include "core/error.h"
 #include "core/tagservice.h"
 #include "core/serverservice.h"
 #include "core/settingservice.h"
-#include "core/outputformatservice.h"
+#include "core/formatservice.h"
 #include "core/clipservice.h"
 #include "core/uploadservice.h"
 
@@ -21,6 +19,7 @@
 #include <QApplication>
 #include <QIcon>
 #include <QSystemTrayIcon>
+#include <QSqlDatabase>
 
 class Application : public QApplication
 {
@@ -44,7 +43,7 @@ public:
     TagService *tagService() {return _tagService; }
     ServerService *serverService() { return _serverService; }
     SettingService *settingService() {return _settingService; }
-    OutputFormatService *outputFormatService() { return _outputFormatService; }
+    FormatService *formatService() { return _formatService; }
     ClipService *clipService() { return _clipService; }
     UploadService *uploadService() { return _uploadService; }
 
@@ -57,11 +56,11 @@ private:
     QIcon _uploadingIcon;
     bool _isUploadingIcon = false;
     QString _dbPath;
-    SqlStore *_store = nullptr;
+    QSqlDatabase _sqlDb;
     TagService *_tagService = nullptr;
     ServerService *_serverService = nullptr;
     SettingService *_settingService = nullptr;
-    OutputFormatService *_outputFormatService = nullptr;
+    FormatService *_formatService = nullptr;
     ClipService *_clipService = nullptr;
     UploadService *_uploadService = nullptr;
 

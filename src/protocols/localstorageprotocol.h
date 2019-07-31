@@ -2,7 +2,7 @@
 #define LOCALSTORAGEPROTOCOL_H
 
 #include <QtCore>
-#include "../models/protocol.h"
+#include "./base.h"
 
 
 class LocalStorageUploader : public Uploader
@@ -25,7 +25,7 @@ public:
     const QString getName();
     const QString getTitle();
     const QList<ProtocolSettingInfo> &getSettingInfos();
-    Uploader *createUploader(QVariantMap &settings);
+    Uploader *createUploader(const QVariantMap &settings);
 };
 
 #endif // LOCALSTORAGEPROTOCOL_H

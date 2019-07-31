@@ -34,12 +34,12 @@ private slots:
     void imageSaveWatermarkSetting(int);
     void imageSaveWatermarkPositionSetting(bool);
 
-    void outputFormatsShowItem(QListWidgetItem*, QListWidgetItem*);
-    void outputFormatsEditItem(QListWidgetItem*);
-    void outputFormatsEditItemSave();
-    void outputFormatsEditItemCancel();
-    void outputFormatsAddItem();
-    void outputFormatsDelItems();
+    void formatsShowItem(QListWidgetItem*, QListWidgetItem*);
+    void formatsEditItem(QListWidgetItem*);
+    void formatsEditItemSave();
+    void formatsEditItemCancel();
+    void formatsAddItem();
+    void formatsDelItems();
 
     void tagsEndEdit(QWidget*);
     void tagsAddItem();

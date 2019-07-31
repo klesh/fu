@@ -514,31 +514,31 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tabOutputFormats">
+     <widget class="QWidget" name="tabFormats">
       <attribute name="title">
        <string>Output Formats</string>
       </attribute>
       <layout class="QHBoxLayout" name="horizontalLayout_6">
        <item>
-        <widget class="QGroupBox" name="grpOutputFormatList">
+        <widget class="QGroupBox" name="grpFormatList">
          <property name="title">
           <string>List</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_8">
           <item>
-           <widget class="QListWidget" name="lstOutputFormats"/>
+           <widget class="QListWidget" name="lstFormats"/>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="lotOutputFormatListButtons">
+           <layout class="QHBoxLayout" name="lotFormatListButtons">
             <item>
-             <widget class="QPushButton" name="btnAddOutputFormat">
+             <widget class="QPushButton" name="btnAddFormat">
               <property name="text">
                <string> Add</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="btnDelOutputFormat">
+             <widget class="QPushButton" name="btnDelFormat">
               <property name="text">
                <string>Delete</string>
               </property>
@@ -550,7 +550,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="grpOutputFormatForm">
+        <widget class="QGroupBox" name="grpFormatForm">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -559,36 +559,36 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_7">
           <item>
-           <layout class="QFormLayout" name="lotOutputFormatDetail">
+           <layout class="QFormLayout" name="lotFormatDetail">
             <property name="sizeConstraint">
              <enum>QLayout::SetDefaultConstraint</enum>
             </property>
             <item row="0" column="0">
-             <widget class="QLabel" name="lblOutputFormatName">
+             <widget class="QLabel" name="lblFormatName">
               <property name="text">
                <string>Name</string>
               </property>
              </widget>
             </item>
             <item row="0" column="1">
-             <widget class="QLineEdit" name="txtOutputFormatName"/>
+             <widget class="QLineEdit" name="txtFormatName"/>
             </item>
             <item row="1" column="0">
-             <widget class="QLabel" name="lblOutputFormatTemplate">
+             <widget class="QLabel" name="lblFormatTemplate">
               <property name="text">
                <string>Template</string>
               </property>
              </widget>
             </item>
             <item row="1" column="1">
-             <widget class="QTextEdit" name="txtOutputFormatTemplate">
+             <widget class="QTextEdit" name="txtFormatTemplate">
               <property name="acceptRichText">
                <bool>false</bool>
               </property>
              </widget>
             </item>
             <item row="2" column="1">
-             <widget class="QLabel" name="lblOutputFormatTemplateHint">
+             <widget class="QLabel" name="lblFormatTemplateHint">
               <property name="text">
                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;i.e.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;&amp;lt;img src=&amp;quot;%1&amp;quot; alt=&amp;quot;%2&amp;quot;&amp;gt;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;%1 will be replaced with &amp;quot;Protocol Output&amp;quot; (normally a URL)&lt;/p&gt;&lt;p&gt;%2 will be replaced with the Description&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
@@ -603,19 +603,19 @@
            </layout>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="lotOutputFormatDetailButtons">
+           <layout class="QHBoxLayout" name="lotFormatDetailButtons">
             <property name="sizeConstraint">
              <enum>QLayout::SetDefaultConstraint</enum>
             </property>
             <item>
-             <widget class="QPushButton" name="btnSaveOutputFormat">
+             <widget class="QPushButton" name="btnSaveFormat">
               <property name="text">
                <string>Save</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="btnCancelOutputFormat">
+             <widget class="QPushButton" name="btnCancelFormat">
               <property name="text">
                <string>Cancel</string>
               </property>

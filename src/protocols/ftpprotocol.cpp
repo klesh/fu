@@ -7,6 +7,7 @@ FtpProtocol::FtpProtocol()
     _settingInfos.append({"user", tr("Username"), tr(""), Text, true, "", ""});
     _settingInfos.append({"pass", tr("Password"), tr(""), Text, true, "", ""});
     _settingInfos.append({"path", tr("Path"), tr(""), Text, true, "", ""});
+    _settingInfos.append({"outputUrl", tr("Output Url"), tr(""), Text, true, "", "%1"});
 }
 
 const QString FtpProtocol::getName()
@@ -24,12 +25,12 @@ const QList<ProtocolSettingInfo> &FtpProtocol::getSettingInfos()
     return _settingInfos;
 }
 
-Uploader *FtpProtocol::createUploader(QVariantMap &settings)
+Uploader *FtpProtocol::createUploader(const QVariantMap &settings)
 {
     return new FtpUploader(settings);
 }
 
-QUrl createUrlFromSettings(QVariantMap &settings) {
+QUrl createUrlFromSettings(const QVariantMap &settings) {
     QUrl url;
     url.setScheme("ftp");
     url.setHost(settings["host"].toString());
@@ -45,31 +46,41 @@ QUrl createUrlFromSettings(QVariantMap &settings) {
 
 // uploader
 FtpUploader::FtpUploader(QVariantMap settings)
-    : url(createUrlFromSettings(settings))
+    : _ftpUrl(createUrlFromSettings(settings))
 {
+    _outputUrl = settings["outputUrl"].toString();
 }
 
-FtpUploader::~FtpUploader()
+void FtpUploader::upload(QDataStream *stream, UploadJob &job)
 {
+    QUrl remoteUrl(_ftpUrl);
+    remoteUrl.setPath(_ftpUrl.path() + job.name);
 
-}
+    QNetworkRequest getReq(remoteUrl);
+    QNetworkReply *getRes = _network.get(getReq);
+    connect(getRes, &QNetworkReply::readyRead, [&]() {
+        getRes->close(); // remote file exists, emit QNetworkReply::OperationCanceledError
+    });
+    connect(getRes, QOverload<QNetworkReply::NetworkError>::of(&QNetworkReply::error), [&]() {
+        if (getRes->error() == QNetworkReply::OperationCanceledError) {
+            job.status = Duplicated;
+            return;
+        }
+        if (getRes->error() != QNetworkReply::ContentNotFoundError) {
+            job.status = Error;
+            job.msg = getRes->errorString();
+            return;
+        }
 
-QString FtpUploader::upload(QDataStream *stream, const QString name, bool overwrite = false)
-{
-    QUrl ftpUrl(url);
-    ftpUrl.setPath(url.path() + name);
-    QNetworkRequest req(url);
-    auto res = network.get(req);
-    connect(res, &QNetworkReply::readyRead, [res](){
-        res->close();
-    }, );
-    QObject::connect(repl,QOverload<QNetworkReply::NetworkError>::of(&QNetworkReply::error),[repl]()->void{
-         qDebug() << "Error: " + repl->errorString() << (repl->error() == QNetworkReply::OperationCanceledError);
-     });
-    path.dj
-    QUrl ftpUrl(url);
-    ftpUrl.setPath();
-    QNetworkRequest req(url);
-    network.put(req, stream->device());
-    return name;
+        QNetworkRequest putReq(remoteUrl);
+        QNetworkReply *putRes = _network.put(putReq, stream->device());
+        connect(putRes, &QNetworkReply::finished, [&]() {
+            job.status = Success;
+            job.url = _outputUrl.arg(job.name);
+        });
+        connect(putRes, QOverload<QNetworkReply::NetworkError>::of(&QNetworkReply::error), [&]() {
+            job.status = Error;
+            job.msg = putRes->errorString();
+        });
+    });
 }

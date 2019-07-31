@@ -19,8 +19,7 @@ struct Clip
     QStringList tags;
     quint64 phash;
 
-    QByteArray
-
+    // these two are likely to be used multiple time during lifecyle, cache it
     QPixmap _pixmap;
     QPixmap _thumbnailPixmap;
 
@@ -36,6 +35,11 @@ struct Clip
         return _pixmap;
     }
 
+    void freePixmap() {
+        if (!_pixmap.isNull())
+            _pixmap = QPixmap();
+    }
+
     QPixmap thumbnailPixmap() {
         if (!isImage || !_thumbnailPixmap.isNull())
             return _thumbnailPixmap;
@@ -43,26 +47,26 @@ struct Clip
         return _thumbnailPixmap;
     }
 
-    QByteArray getThumbnailBytes() {
+    QByteArray getThumbnailBytes() { // only used in database operation
         QByteArray bytes;
-        if (!isImage || !_thumbnailBytes.isNull())
+        if (!isImage)
             return bytes;
         auto thumbnail = thumbnailPixmap();
         if (thumbnail.isNull() != true) {
             QBuffer buffer(&bytes);
+            buffer.open(QIODevice::WriteOnly);
             thumbnail.save(&buffer, "jpg", 75);
         }
         return bytes;
     }
 
     void setThumbnailBytes(QByteArray bytes) {
-        _thumbnailBytes = bytes;
         _thumbnailPixmap.loadFromData(bytes, "jpg");
     }
 
     QImage getThumbnailImage() {
         QImage image;
-        if (!isImage || !_thumbnailImage.isNull())
+        if (!isImage)
             return image;
         image = thumbnailPixmap().toImage();
         return image;

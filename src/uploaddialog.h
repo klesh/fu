@@ -2,7 +2,7 @@
 #define UPLOADDIALOG_H
 
 #include "models/clip.h"
-#include "models/outputformat.h"
+#include "models/format.h"
 #include "models/server.h"
 #include "components/thumbnaillabel.h"
 
@@ -32,7 +32,7 @@ private:
     QLayout *_previewLayout;
     void editMode(uint clipId);
     void uploadMode();
-    void createUploadToRow(const Server &server, const QList<OutputFormat> &outputFormats = QList<OutputFormat>());
+    void createUploadToRow(const Server &server, const QList<Format> &outputFormats = QList<Format>());
 
 protected:
     void accept() override;

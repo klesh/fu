@@ -34,24 +34,22 @@ enum UploadJobStatus {
 struct UploadJob {
     Server server;
     Clip clip;
-    QByteArray data;
-    QString name;
-    UploadJobStatus status;
+    QByteArray data;        // either memory bytes
+    QString path;           // or local file to be uploaded
+    QString name;           // file name
+    UploadJobStatus status = Pending;
     int counter;
     bool overwrite = false;
-    QString message;
-    QString output;
+    QString url;
+    QString msg;
+    bool saved = false;
 };
 
 class Uploader : public QObject
 {
     Q_OBJECT
 public:
-    virtual QString upload(QDataStream *stream, const QString name, bool overwrite = false) = 0;
-    virtual ~Uploader() {}
-
-signals:
-    void fileExists();
+    virtual void upload(QDataStream *stream, UploadJob &job) = 0;
 };
 
 class Protocol : public QObject
@@ -62,7 +60,7 @@ public:
     virtual const QString getName() = 0;
     virtual const QString getTitle() = 0;
     virtual const QList<ProtocolSettingInfo> &getSettingInfos() = 0;
-    virtual Uploader *createUploader(QVariantMap &settings) = 0;
+    virtual Uploader *createUploader(const QVariantMap &settings) = 0;
 };
 
 #endif // PROTOCOL_H

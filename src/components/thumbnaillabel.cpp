@@ -4,22 +4,28 @@
 
 void ThumbnailLabel::loadClip()
 {
-    if (_clip.isImage) {
+    if ((*_clip).isImage) {
         setText(tr("Loading"));
         _loading = QThread::create([&](void) {
-            this->setPixmap(_clip.thumbnailPixmap());
+            this->setPixmap((*_clip).thumbnailPixmap());
             this->setText("");
         });
         connect(_loading, SIGNAL(finished()), _loading, SLOT(deleteLater()));
         _loading->start();
-    } else if (_clip.isFile) {
+    } else if ((*_clip).isFile) {
         setPixmap(ClipService::unkownFileIcon());
     } else {
         setText("N/A");
     }
 }
 
-ThumbnailLabel::ThumbnailLabel(QWidget *parent, Clip &clip)
+ThumbnailLabel::ThumbnailLabel(QWidget *parent)
+    : QLabel(parent)
+{
+
+}
+
+ThumbnailLabel::ThumbnailLabel(QWidget *parent, Clip *clip)
     : QLabel(parent), _clip(clip)
 {
     setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
@@ -32,7 +38,7 @@ ThumbnailLabel::ThumbnailLabel(QWidget *parent, Clip &clip)
     loadClip();
 }
 
-void ThumbnailLabel::setClip(Clip &clip)
+void ThumbnailLabel::setClip(Clip *clip)
 {
     _clip = clip;
     loadClip();

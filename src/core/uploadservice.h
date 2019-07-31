@@ -1,7 +1,6 @@
 #ifndef UPLOADSERVICE_H
 #define UPLOADSERVICE_H
 
-#include "../store/sqlstore.h"
 #include "../models/upload.h"
 #include "../protocols/base.h"
 
@@ -15,9 +14,8 @@ enum DuplicationHandlingMethod {
 class UploadService : public QObject
 {
     Q_OBJECT
-    SqlStore &_store;
+
     bool _isUploading = false;
-    QString _formattedOutput;
     DuplicationHandlingMethod _applyToAll;
     QList<UploadJob> _jobs;
     int poolSeats;
@@ -26,20 +24,17 @@ class UploadService : public QObject
     bool isPopulating = false;
 
     void upload(QList<Clip> &clips);
-    void handleDuplication(UploadJob &job);
     void populatePool();
+    void handleDuplication(UploadJob &job);
+
+private slots:
     void threadFinished();
+    void uploadFinished();
 
 public:
-    UploadService(SqlStore &_store);
-
     void upload(QList<Clip> &clips, const QStringList &tags, const QString &desc);
     bool isUploading() { return _isUploading; }
     QList<Upload> getAllByClipId(uint clipId);
-
-
-public slots:
-    void uploadFinished();
 };
 
 #endif // UPLOADSERVICE_H

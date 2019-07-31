@@ -39,8 +39,7 @@ SOURCES += \
         src/components/thumbnaillabel.cpp \
         src/configdialog.cpp \
         src/core/clipservice.cpp \
-        src/core/error.cpp \
-        src/core/outputformatservice.cpp \
+        src/core/formatservice.cpp \
         src/core/serverservice.cpp \
         src/core/settingservice.cpp \
         src/core/tagservice.cpp \
@@ -54,7 +53,6 @@ SOURCES += \
         src/store/migration.cpp \
         src/store/migrations/migrationv0.cpp \
         src/store/migrator.cpp \
-        src/store/sqlstore.cpp \
         src/upgradedialog.cpp \
         src/uploaddialog.cpp
 
@@ -71,8 +69,7 @@ HEADERS += \
         src/components/thumbnaillabel.h \
         src/configdialog.h \
         src/core/clipservice.h \
-        src/core/error.h \
-        src/core/outputformatservice.h \
+        src/core/formatservice.h \
         src/core/serverservice.h \
         src/core/settingservice.h \
         src/core/tagservice.h \
@@ -82,8 +79,7 @@ HEADERS += \
         src/historywindow.h \
         src/application.h \
         src/models/clip.h \
-        src/models/outputformat.h \
-        src/models/record.h \
+        src/models/format.h \
         src/models/server.h \
         src/models/tag.h \
         src/models/upload.h \
@@ -93,7 +89,6 @@ HEADERS += \
         src/store/migration.h \
         src/store/migrations/migrationv0.h \
         src/store/migrator.h \
-        src/store/sqlstore.h \
         src/upgradedialog.h \
         src/uploaddialog.h
 

@@ -7,7 +7,7 @@ struct Upload {
     uint id;
     uint clipId;
     uint serverId;
-    QString rawOutput;
+    QString url;
     QDateTime createdAt;
     QString serverName;
 };

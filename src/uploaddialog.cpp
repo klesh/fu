@@ -108,7 +108,7 @@ void UploadDialog::uploadMode()
     reload();
 }
 
-void UploadDialog::createUploadToRow(const Server &server, const QList<OutputFormat> &outputFormats)
+void UploadDialog::createUploadToRow(const Server &server, const QList<Format> &outputFormats)
 {
     auto rowLayout = new QHBoxLayout();
 

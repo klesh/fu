@@ -1,30 +1,25 @@
-#include "error.h"
 #include "settingservice.h"
 
-SettingService::SettingService(SqlStore &store)
-    : _store(store)
-{
-}
+#include <QSqlQuery>
+#include <QSqlRecord>
 
 QVariant SettingService::get(const QString &settingKey)
 {
-    auto query = _store.prepare("SELECT settingValue FROM settings WHERE settingKey=:settingKey");
+    QSqlQuery query;
+    query.prepare("SELECT settingValue FROM settings WHERE settingKey=:settingKey");
     query.bindValue(":settingKey", settingKey);
-
-    auto result = _store.exec();
-    if (result.next()) {
-        return result.value(0);
-    }
-    throw_error(QString("Requested setting `%1` not found").arg(settingKey));
+    assert(query.exec());
+    assert(query.next());
+    return query.value(0);
 }
 
 void SettingService::set(const QString &settingKey, const QString &settingValue)
 {
-    auto query = _store.prepare("UPDATE settings SET settingValue=:settingValue WHERE settingKey=:settingKey");
+    QSqlQuery query;
+    query.prepare("UPDATE settings SET settingValue=:settingValue WHERE settingKey=:settingKey");
     query.bindValue(":settingKey", settingKey);
     query.bindValue(":settingValue", settingValue);
-
-    _store.exec();
+    assert(query.exec());
 }
 
 bool SettingService::imageCompressionEnabled()

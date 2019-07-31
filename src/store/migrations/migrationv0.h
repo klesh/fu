@@ -11,7 +11,7 @@ public:
     MigrationV0();
 
     int getVersion();
-    void run(SqlStore &store);
+    void run();
 };
 
 #endif // MIGRATIONV0_H

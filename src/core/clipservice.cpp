@@ -1,29 +1,21 @@
 #include "../application.h"
 #include "clipservice.h"
 
-#include "../../libs/qt-phash/QtPhash.h";
+#include "../../libs/qt-phash/QtPhash.h"
 #include <QClipboard>
+#include <QSqlQuery>
+#include <QSqlRecord>
 
-const static char* THUMBNAIL_FMT = "jpg";
-
-Clip convertResultToClip(QSqlQuery &result) {
-    Clip clip;
-    auto rec = result.record();
-    clip.id = result.value(rec.indexOf("id")).toUInt();
-    clip.name = result.value(rec.indexOf("name")).toString();
-    clip.isImage = result.value(rec.indexOf("isImage")).toBool();
-    clip.isFile = result.value(rec.indexOf("isFile")).toBool();
-    clip.phash = result.value(rec.indexOf("phash")).toULongLong();
-    clip.description = result.value(rec.indexOf("description")).toString();
-    clip.createdAt = result.value(rec.indexOf("createdAt")).toDateTime();
-    clip.setThumbnailBytes(result.value(rec.indexOf("thumbnail")).toByteArray());
-    return clip;
-}
-
-ClipService::ClipService(SqlStore &store)
-    : _store(store)
-{
-
+inline void query2clip(QSqlQuery &query, Clip &clip) {
+    auto rec = query.record();
+    clip.id = query.value(rec.indexOf("id")).toUInt();
+    clip.name = query.value(rec.indexOf("name")).toString();
+    clip.isImage = query.value(rec.indexOf("isImage")).toBool();
+    clip.isFile = query.value(rec.indexOf("isFile")).toBool();
+    clip.phash = query.value(rec.indexOf("phash")).toULongLong();
+    clip.description = query.value(rec.indexOf("description")).toString();
+    clip.createdAt = query.value(rec.indexOf("createdAt")).toDateTime();
+    clip.setThumbnailBytes(query.value(rec.indexOf("thumbnail")).toByteArray());
 }
 
 QList<Clip> ClipService::getAllFromClipboard()
@@ -77,8 +69,9 @@ void ClipService::massAppend(QList<Clip> &clips, const QList<QString> tags, cons
             clip.phash = QtPhash::computePhash(clip.getThumbnailImage());
         }
 
-        auto query = _store.prepare("INSERT INTO clips (name, isImage, isFile, phash, thumbnail, description, createdAt)"
-                                    " VALUES (:name, :isImage, :isFile, :phash, :thumbnail, :description, :createdAt)");
+        QSqlQuery query;
+        query.prepare("INSERT INTO clips (name, isImage, isFile, phash, thumbnail, description, createdAt)"
+                      " VALUES (:name, :isImage, :isFile, :phash, :thumbnail, :description, :createdAt)");
         query.bindValue(":name", clip.name);
         query.bindValue(":isImage", clip.isImage);
         query.bindValue(":isFile", clip.isFile);
@@ -86,9 +79,10 @@ void ClipService::massAppend(QList<Clip> &clips, const QList<QString> tags, cons
         query.bindValue(":phash", clip.phash);
         query.bindValue(":thumbnail", clip.getThumbnailBytes());
         query.bindValue(":createdAt",  datetimeToISO(QDateTime::currentDateTime()));
-        auto result = _store.exec();
-        clip.id = result.lastInsertId().toUInt();
 
+        assert(query.exec());
+
+        clip.id = query.lastInsertId().toUInt();
         // save relationship between clip and tags
         saveTags(clip.id, tagIds);
     }
@@ -96,33 +90,38 @@ void ClipService::massAppend(QList<Clip> &clips, const QList<QString> tags, cons
 
 Clip ClipService::findById(uint id)
 {
-    auto result = _store.exec(QString("SELECT * FROM clips WHERE id=%1").arg(id));
-    assert(result.next());
-    auto clip = convertResultToClip(result);
-    fillTags(clip);
+    QSqlQuery query(QString("SELECT * FROM clips WHERE id=%1").arg(id));
+    assert(query.exec());
+    assert(query.next());
+    Clip clip;
+    query2clip(query, clip);
     return clip;
 }
 
 void ClipService::clean()
 {
-    _store.exec("DELETE FROM clips");
+    QSqlQuery query("DELETE FROM clips");
+    assert(query.exec());
 }
 
 void ClipService::remove(uint clipId)
 {
-    _store.exec(QString("DELETE FROM clips where id=%1").arg(clipId));
+    QSqlQuery query(QString("DELETE FROM clips where id=%1").arg(clipId));
+    assert(query.exec());
 }
 
 void ClipService::update(Clip clip)
 {
     // update clip description
-    auto query = _store.prepare("UPDATE clips SET description=:description WHERE id=:id");
+    QSqlQuery query;
+    query.prepare("UPDATE clips SET description=:description WHERE id=:id");
     query.bindValue(":description", clip.description);
     query.bindValue(":id", clip.id);
-    _store.exec();
+    assert(query.exec());
 
     // recreate clip tags
-    _store.exec(QString("DELETE FROM clips_tags WHERE clipId=%1").arg(clip.id));
+    QSqlQuery query2(QString("DELETE FROM clips_tags WHERE clipId=%1").arg(clip.id));
+    assert(query2.exec());
 
     QList<uint> tagIds = APP->tagService()->mapToIds(clip.tags, true);
     saveTags(clip.id, tagIds);
@@ -135,21 +134,24 @@ void ClipService::setClipboard(const QString &text)
 
 void ClipService::fillTags(Clip &clip)
 {
-    auto tagsResult = _store.exec(QString("SELECT tags.name FROM tags LEFT JOIN clips_tags ON (tags.id=clips_tags.tagId) WHERE clips_tags.clipId=%1").arg(clip.id));
-    while (tagsResult.next()) {
-        clip.tags.append(tagsResult.value(0).toString());
+    QSqlQuery query(QString("SELECT tags.name "
+                            "FROM tags "
+                            "LEFT JOIN clips_tags ON (tags.id=clips_tags.tagId) "
+                            "WHERE clips_tags.clipId=%1").arg(clip.id));
+    assert(query.exec());
+    while (query.next()) {
+        clip.tags.append(query.value(0).toString());
     }
 }
 
 void ClipService::saveTags(uint clipId, const QList<uint> &tagIds)
 {
-    if (tagIds.size()) {
-        auto query = _store.prepare("INSERT INTO clips_tags (clipId, tagId) VALUES (:clipId, :tagId)");
-        for (auto &tagId: tagIds) {
-            query.bindValue(":clipId", clipId);
-            query.bindValue(":tagId", tagId);
-            _store.exec();
-        }
+    QSqlQuery query;
+    query.prepare("INSERT INTO clips_tags (clipId, tagId) VALUES (:clipId, :tagId)");
+    for (auto &tagId: tagIds) {
+        query.bindValue(":clipId", clipId);
+        query.bindValue(":tagId", tagId);
+        assert(query.exec());
     }
 }
 
@@ -192,9 +194,12 @@ QList<Clip> ClipService::search(QMap<QString, QVariant> &filter)
         phash = QtPhash::computePhash(image);
     }
     int distanceThreshold = filter.contains("threshold") ? filter["threshold"].toInt() : 15;
-    auto result = _store.exec(sqlText);
-    while (result.next()) {
-        auto clip = convertResultToClip(result);
+
+    QSqlQuery query(sqlText);
+    assert(query.exec());
+    while (query.next()) {
+        Clip clip;
+        query2clip(query, clip);
         if (phash && QtPhash::computeDistance(phash, clip.phash) > distanceThreshold)
             continue;
         clips.append(clip);

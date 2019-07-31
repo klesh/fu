@@ -1,15 +1,11 @@
 #ifndef SETTINGSERVICE_H
 #define SETTINGSERVICE_H
 
-#include "../store/sqlstore.h"
+#include <QtCore>
 
 class SettingService
 {
-    SqlStore &_store;
-
 public:
-    SettingService(SqlStore &store);
-
     QVariant get(const QString &settingKey);
     void set(const QString &settingKey, const QString &settingValue);
 

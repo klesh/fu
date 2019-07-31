@@ -10,11 +10,10 @@ class UploadThread : public QThread
     Q_OBJECT
 
     UploadJob &_job;
-
     void run() override;
 
 public:
-    UploadThread(UploadThread &job);
+    UploadThread(UploadJob &job);
 };
 
 #endif // UPLOADTHREAD_H

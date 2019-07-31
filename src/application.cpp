@@ -12,10 +12,6 @@ Application::Application(int &argc, char **argv)
 
 Application::~Application()
 {
-    if (_store)
-        delete _store;
-    if (_tagService)
-        delete _tagService;
 }
 
 template<typename T>
@@ -38,7 +34,7 @@ void Application::showWindowOrDialog(T **wd)
 int Application::showUpgradeWindow()
 {
     // run migrations if needed
-    Migrator migrator(*_store);
+    Migrator migrator;
     if (migrator.totalPendingMigration() > 0) {
         showWindowOrDialog<UpgradeDialog>(&upgradeDialog);
         upgradeDialog->setMigrator(&migrator);
@@ -108,9 +104,7 @@ void Application::showUploadDialog()
 
 bool Application::prepare(const QString &dbPath)
 {
-    if (_store)
-        throw_error("Application:prepare being invoked multiple time");
-
+    // create folder
     QFileInfo dbFileInfo(dbPath);
     if (!dbFileInfo.exists() && !dbFileInfo.dir().exists()) {
         dbFileInfo.dir().mkdir(".");
@@ -119,13 +113,13 @@ bool Application::prepare(const QString &dbPath)
     // setup database
     _dbPath = dbPath;
     qDebug() << "database path : " << dbPath;
-    _store = new SqlStore(dbPath);
-    _tagService = new TagService(*_store);
-    _serverService = new ServerService(*_store);
-    _settingService = new SettingService(*_store);
-    _outputFormatService = new OutputFormatService(*_store);
-    _clipService = new ClipService(*_store);
-    _uploadService = new UploadService(*_store);
+    _sqlDb.setDatabaseName(_dbPath);
+    _tagService = new TagService();
+    _serverService = new ServerService();
+    _settingService = new SettingService();
+    _formatService = new FormatService();
+    _clipService = new ClipService();
+    _uploadService = new UploadService();
 
     // upgrade checking
     if (showUpgradeWindow() == QDialog::Rejected)
