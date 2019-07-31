@@ -47,6 +47,7 @@ void UploadService::upload(QList<Clip> &clips, const QStringList &tags, const QS
 
 void UploadService::upload(QList<Clip> &clips)
 {
+    auto servers = APP->serverService()->getAllUploadEnabled();
     // prepare image preprocess data
     auto imageCompressionEanbled = APP->settingService()->imageCompressionEnabled();
     auto imageWartermarkEnabled = APP->settingService()->imageWatermarkEnabled();
@@ -181,20 +182,22 @@ void UploadService::handleDuplication(UploadJob &job)
         auto msgBox = new QMessageBox(QMessageBox::Question,
                                       tr("File exists"),
                                       tr("File %1 already exists on Server %2. What would you like to do?")
-                                      .arg(job.server.name).arg(job.name));
+                                      .arg(job.name).arg(job.server.name));
+        auto btnAutoRename = new QPushButton(tr("Auto rename"), msgBox);
+        auto btnOverwrite = new QPushButton(tr("Overwrite"), msgBox);
+        auto btnSkip = new QPushButton(tr("Skip"), msgBox);
         msgBox->setCheckBox(new QCheckBox(tr("Apply to all"), msgBox));
-        msgBox->addButton(new QPushButton(tr("Auto rename"), msgBox), QMessageBox::AcceptRole);
-        msgBox->addButton(new QPushButton(tr("Overwrite"), msgBox), QMessageBox::DestructiveRole);
-        msgBox->addButton(new QPushButton(tr("Skip"), msgBox), QMessageBox::RejectRole);
+        msgBox->addButton(btnAutoRename, QMessageBox::AcceptRole);
+        msgBox->addButton(btnOverwrite, QMessageBox::DestructiveRole);
+        msgBox->addButton(btnSkip, QMessageBox::RejectRole);
 
-        int role = msgBox->exec();
-        if (role == QMessageBox::AcceptRole)
+        msgBox->exec();
+        if (msgBox->clickedButton() == btnAutoRename)
             method = AutoRename;
-        else if (role == QMessageBox::DestructiveRole)
+        else if (msgBox->clickedButton() == btnOverwrite)
             method = Overwrite;
-        else {
+        else
             method = Skip;
-        }
         if (msgBox->checkBox()->checkState() == Qt::Checked)
             _applyToAll = method;
         delete msgBox;
@@ -221,30 +224,19 @@ void UploadService::threadFinished()
 
 void UploadService::uploadFinished()
 {
-    // clean up uploader
-    for (auto &uploader : _uploaders.values()) {
-        delete uploader;
-    }
-    _uploaders.clear();
-
-
-    // load all formatters
-    QMap<uint, Format> formats;
-    for (auto &job : _jobs) {
-        if (formats.contains(job.server.id) || job.server.outputFormatId == 0)
-            continue;
-        formats[job.server.id] = APP->formatService()->findById(job.server.outputFormatId);
-    }
-
     // produce output for Clipboard
+    QMap<uint, Format> formats; // cache
     QStringList outputs;
     int success = 0, error = 0, skip = 0;
     for (auto &job : _jobs) {
         if (job.status == Success) {
             success++;
-            if (job.server.outputFormatId) {
-                auto &format = formats[job.server.outputFormatId];
-                outputs.append(format.genrate(job.url, job.clip.description));
+            auto formatId = job.server.formatId;
+            if (formatId) {
+                if (!formats.contains(formatId))
+                    formats[formatId] = APP->formatService()->findById(formatId);
+                auto &format = formats[formatId];
+                outputs.append(format.generate(job.url, job.clip.description));
             }
         } else if (job.status == Error) {
             error++;

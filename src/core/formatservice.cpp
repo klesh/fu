@@ -7,7 +7,7 @@ inline void query2format(QSqlQuery &query, Format &format) {
     auto rec = query.record();
     format.id = query.value(rec.indexOf("id")).toUInt();
     format.name = query.value(rec.indexOf("name")).toString();
-    format.format = query.value(rec.indexOf("template")).toString();
+    format.format = query.value(rec.indexOf("format")).toString();
 }
 
 QList<Format> FormatService::getAll()
@@ -38,9 +38,9 @@ Format FormatService::findById(uint id)
 bool FormatService::append(Format &format)
 {
     QSqlQuery query;
-    query.prepare("INSERT INTO formats (name, template, enabled) VALUES (:name, :template, :enabled)");
+    query.prepare("INSERT INTO formats (name, format, enabled) VALUES (:name, :format, :enabled)");
     query.bindValue(":name", format.name);
-    query.bindValue(":template", format.format);
+    query.bindValue(":format", format.format);
     if (query.exec()) {
         format.id = query.lastInsertId().toUInt();
         return true;
@@ -52,9 +52,9 @@ bool FormatService::append(Format &format)
 bool FormatService::update(Format &format)
 {
     QSqlQuery query;
-    query.prepare("UPDATE formats SET name=:name, template=:template, enabled=:enabled WHERE id=:id");
+    query.prepare("UPDATE formats SET name=:name, format=:format, enabled=:enabled WHERE id=:id");
     query.bindValue(":name", format.name);
-    query.bindValue(":template", format.format);
+    query.bindValue(":format", format.format);
     query.bindValue(":id", format.id);
     return query.exec();
 }

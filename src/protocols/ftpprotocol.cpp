@@ -56,22 +56,7 @@ void FtpUploader::upload(QDataStream *stream, UploadJob &job)
     QUrl remoteUrl(_ftpUrl);
     remoteUrl.setPath(_ftpUrl.path() + job.name);
 
-    QNetworkRequest getReq(remoteUrl);
-    QNetworkReply *getRes = _network.get(getReq);
-    connect(getRes, &QNetworkReply::readyRead, [&]() {
-        getRes->close(); // remote file exists, emit QNetworkReply::OperationCanceledError
-    });
-    connect(getRes, QOverload<QNetworkReply::NetworkError>::of(&QNetworkReply::error), [&]() {
-        if (getRes->error() == QNetworkReply::OperationCanceledError) {
-            job.status = Duplicated;
-            return;
-        }
-        if (getRes->error() != QNetworkReply::ContentNotFoundError) {
-            job.status = Error;
-            job.msg = getRes->errorString();
-            return;
-        }
-
+    auto performUpload = [&]() {
         QNetworkRequest putReq(remoteUrl);
         QNetworkReply *putRes = _network.put(putReq, stream->device());
         connect(putRes, &QNetworkReply::finished, [&]() {
@@ -82,5 +67,31 @@ void FtpUploader::upload(QDataStream *stream, UploadJob &job)
             job.status = Error;
             job.msg = putRes->errorString();
         });
-    });
+    };
+
+    auto performUploadIfNotExists = [&]() {
+        QNetworkRequest getReq(remoteUrl);
+        QNetworkReply *getRes = _network.get(getReq);
+        connect(getRes, &QNetworkReply::readyRead, [&]() {
+            getRes->close(); // remote file exists, emit QNetworkReply::OperationCanceledError
+        });
+        connect(getRes, QOverload<QNetworkReply::NetworkError>::of(&QNetworkReply::error), [&]() {
+            if (getRes->error() == QNetworkReply::OperationCanceledError) {
+                job.status = Duplicated;
+                return;
+            }
+            if (getRes->error() != QNetworkReply::ContentNotFoundError) {
+                job.status = Error;
+                job.msg = getRes->errorString();
+                return;
+            }
+
+            performUpload();
+        });
+    };
+
+    if (job.overwrite)
+        performUpload();
+    else
+        performUploadIfNotExists();
 }

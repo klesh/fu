@@ -97,7 +97,7 @@ void HistoryWindow::reload()
 
     // rebuild previews
     auto datedClips = APP->clipService()->searchAndGroup(filter);
-    for (const auto &pair : datedClips) {
+    for (auto &pair : datedClips) {
         auto date = pair.first;
         QLabel *dateLabel = new QLabel(this);
         dateLabel->setText(date.toString("yyyy-MM-dd"));
@@ -113,12 +113,12 @@ void HistoryWindow::reload()
         for (auto &clip: pair.second) {
             auto preview = new PreviewBox(this);
             preview->setProperty("clipId", clip.id);
-            preview->setImage(QPixmap::fromImage(clip.thumbnail));
+            preview->setImage(clip.thumbnailPixmap());
             preview->setTags(clip.tags);
             preview->setName(clip.name);
             groupedLayout->addWidget(preview);
 
-            connect(preview, &PreviewBox::clicked, [=]() {
+            connect(preview, &PreviewBox::clicked, [&]() {
                 QList<PreviewBox*> selected;
                 for (auto &p : ui->sclClips->findChildren<PreviewBox*>()) {
                     if (p->isSelected())
@@ -194,7 +194,7 @@ void HistoryWindow::showContextMenu(const QPoint &pos)
 
     QMenu contextMenu(this);
 
-    auto outputFormats = APP->outputFormatService()->getAll();
+    auto formats = APP->formatService()->getAll();
 
     uint clipId = preview->property("clipId").toUInt();
     QList<QObject*> pointers;
@@ -203,12 +203,12 @@ void HistoryWindow::showContextMenu(const QPoint &pos)
         auto serverMenu = new QMenu(upload.serverName);
         pointers.append(serverMenu);
 
-        for (auto &outputFormat : outputFormats) {
-            auto outputAs = new QAction(tr("Copy as %1").arg(outputFormat.name));
+        for (auto &format : formats) {
+            auto outputAs = new QAction(tr("Copy as %1").arg(format.name));
             serverMenu->addAction(outputAs);
-            connect(outputAs, &QAction::triggered, [=]() {
+            connect(outputAs, &QAction::triggered, [&]() {
                 Clip clip = APP->clipService()->findById(clipId);
-                APP->clipService()->setClipboard(FormatService::format(outputFormat, clip, upload));
+                APP->clipService()->setClipboard(format.generate(upload.url, clip.description));
             });
             pointers.append(outputAs);
         }
@@ -228,7 +228,7 @@ void HistoryWindow::showContextMenu(const QPoint &pos)
     contextMenu.addAction(&editAction);
 
     QAction deleteAction(tr("&Delete this"), this);
-    connect(&deleteAction, &QAction::triggered, [=]() {
+    connect(&deleteAction, &QAction::triggered, [&]() {
         this->deleteClip(clipId);
     });
     contextMenu.addAction(&deleteAction);

@@ -56,6 +56,8 @@ ConfigDialog::ConfigDialog() :
     connect(ui->btnAddTag, SIGNAL(clicked()), this, SLOT(tagsAddItem()));
     connect(ui->btnDelTag, SIGNAL(clicked()), this, SLOT(tagsDelItems()));
 
+    connect(ui->btnOpenDataDir, SIGNAL(clicked()), this, SLOT(bakOpenDataDir()));
+
     ui->tabs->setCurrentIndex(0);
 
     // load all protocols

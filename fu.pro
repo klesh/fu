@@ -50,14 +50,12 @@ SOURCES += \
         src/main.cpp \
         src/protocols/ftpprotocol.cpp \
         src/protocols/localstorageprotocol.cpp \
-        src/store/migration.cpp \
         src/store/migrations/migrationv0.cpp \
         src/store/migrator.cpp \
         src/upgradedialog.cpp \
         src/uploaddialog.cpp
 
 HEADERS += \
-        libs/qt-hash/QtPhash.h \
         src/aboutdialog.h \
         src/components/errormessage.h \
         src/components/flowlayout.h \

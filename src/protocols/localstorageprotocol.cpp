@@ -21,7 +21,7 @@ const QList<ProtocolSettingInfo> &LocalStorageProtocol::getSettingInfos()
     return _settingInfos;
 }
 
-Uploader *LocalStorageProtocol::createUploader(QVariantMap &settings)
+Uploader *LocalStorageProtocol::createUploader(const QVariantMap &settings)
 {
     return new LocalStorageUploader(settings);
 }
@@ -34,24 +34,27 @@ LocalStorageUploader::LocalStorageUploader(QVariantMap settings)
     _output = settings["output"].toString();
 }
 
-LocalStorageUploader::~LocalStorageUploader()
-{
-
-}
-
-QString LocalStorageUploader::upload(QDataStream *stream, const QString name, bool overwrite = false)
+void LocalStorageUploader::upload(QDataStream *stream, UploadJob &job)
 {
     QDir dir(_folder);
-    QFile outputFile(dir.absoluteFilePath(name));
+    QString filePath = dir.filePath(job.name);
+    QFile outputFile(filePath);
+    if (outputFile.exists() && !job.overwrite) {
+        job.status = Duplicated;
+        return;
+    }
     outputFile.open(QIODevice::WriteOnly);
     QDataStream outputStream(&outputFile);
-    char *buffer = new char[1024];
+    const size_t BUFFER_SIZE = 1024 * 8;
+
+    char *buffer = new char[BUFFER_SIZE];
     while (!stream->atEnd()) {
-        int len = stream->readRawData(buffer, 1024);
+        int len = stream->readRawData(buffer, BUFFER_SIZE);
         outputFile.write(buffer, len);
     }
     outputFile.close();
 
     delete[] buffer;
-    return _output.arg(name);
+    job.status = Success;
+    job.url = _output.arg(job.name);
 }

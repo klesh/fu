@@ -1,5 +1,5 @@
-#ifndef OUTPUTFORMAT_H
-#define OUTPUTFORMAT_H
+#ifndef FORMAT_H
+#define FORMAT_H
 
 #include <QtCore>
 
@@ -9,9 +9,9 @@ struct Format
     QString name;
     QString format;
 
-    QString genrate(QString &url, QString &desc) {
+    QString generate(const QString &url, const QString &desc) {
         return QString(format).arg(url).arg(desc);
     }
 };
 
-#endif // OUTPUTFORMAT_H
+#endif // FORMAT_H

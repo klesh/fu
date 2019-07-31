@@ -5,29 +5,34 @@
 #include <QSqlQuery>
 #include <QDateTime>
 
-Migrator::Migrator(SqlStore &store)
-    : _store(store)
+Migrator::Migrator()
 {
     // construct migration list
     _migrations.append(new MigrationV0());
 
     // find out current database version
     do {
-        auto historyTableExists = _store.exec(("SELECT name FROM sqlite_master WHERE type='table' AND name='_migration_history'"));
-        if (!historyTableExists.next()) {
-            _store.exec("CREATE TABLE _migration_history ("
-                      "version INTEGER PRIMARY KEY, "
-                      "appliedAt TEXT"
-                      ")");
+        QSqlQuery query;
+
+        query.exec("SELECT name "
+                   "FROM sqlite_master "
+                   "WHERE type='table' AND name='_migration_history'");
+        if (!query.next()) {
+            query.exec("CREATE TABLE _migration_history ("
+                       "version INTEGER PRIMARY KEY, "
+                       "appliedAt TEXT"
+                       ")");
             break;
         }
 
-        auto latestVersion = _store.exec("SELECT version FROM _migration_history ORDER BY version DESC LIMIT 1");
-        if (!latestVersion.next()) {
+        query.exec("SELECT version "
+                   "FROM _migration_history "
+                   "ORDER BY version DESC "
+                   "LIMIT 1");
+        if (!query.next())
             break;
-        }
 
-        _currentDbVersion = latestVersion.value(0).toInt();
+        _currentDbVersion = query.value(0).toInt();
     } while (false);
 
     qDebug() << "current database version : " << _currentDbVersion;
@@ -54,18 +59,18 @@ int Migrator::totalPendingMigration()
 void Migrator::run()
 {
     int i = 1;
+    QSqlQuery query;
+    query.prepare("INSERT INTO _migration_history "
+                  "(version, appliedAt) "
+                  " VALUES (:version, :appliedAt)");
     for (Migration *migration : _pendingMigrations) {
         emit progressChanged(i, 0);
         connect(migration, &Migration::progressChanged, [this, i](double p){ this->progressChanged(i, p);});
-        migration->run(_store);
+        migration->run();
         emit progressChanged(i, 1);
         qDebug() << "finish migration : " << migration->getVersion();
-        QSqlQuery query;
-        query.prepare("INSERT INTO _migration_history "
-                   "(version, appliedAt) "
-                   " VALUES (:version, :appliedAt)");
         query.bindValue(":version", migration->getVersion());
         query.bindValue(":appliedAt", QDateTime::currentDateTime().toString(Qt::ISODate));
-        query.exec();
+        assert(query.exec());
     }
 }

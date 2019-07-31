@@ -23,7 +23,7 @@
    <item>
     <widget class="QTabWidget" name="tabs">
      <property name="currentIndex">
-      <number>2</number>
+      <number>4</number>
      </property>
      <widget class="QWidget" name="tabServers">
       <attribute name="title">
@@ -681,7 +681,7 @@
        <item>
         <widget class="QLabel" name="lblBackupRestoreHint">
          <property name="text">
-          <string>fu stores all data in a single fu.db file, to Backup/Restore, just Copy/Restore this file while fu is not running</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;fu stores all data in a single &lt;span style=&quot; font-weight:600;&quot;&gt;data.db&lt;/span&gt; file, to Backup/Restore, just Copy/Restore this file while fu is not running&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="wordWrap">
           <bool>true</bool>

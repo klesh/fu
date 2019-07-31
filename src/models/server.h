@@ -11,7 +11,7 @@ struct Server
     QString protocol;
     QVariantMap settings;
     bool uploadEnabled;
-    uint outputFormatId;
+    uint formatId;
     QDateTime createdAt;
 };
 

@@ -75,7 +75,7 @@ void Application::createTrayIcon()
 
     connect(_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(trayIconActivated(QSystemTrayIcon::ActivationReason)));
 
-    connect(qApp, &QApplication::aboutToQuit, [=](void){
+    connect(qApp, &QApplication::aboutToQuit, [&](void){
         qDebug() << "cleanup tray icon";
         delete _trayIcon;
         delete trayMenu;
@@ -113,7 +113,9 @@ bool Application::prepare(const QString &dbPath)
     // setup database
     _dbPath = dbPath;
     qDebug() << "database path : " << dbPath;
+    _sqlDb = QSqlDatabase::addDatabase("QSQLITE");
     _sqlDb.setDatabaseName(_dbPath);
+    _sqlDb.open();
     _tagService = new TagService();
     _serverService = new ServerService();
     _settingService = new SettingService();
@@ -129,7 +131,7 @@ bool Application::prepare(const QString &dbPath)
 
     // timer for uploading icon animation
     auto timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, [=](void) {
+    connect(timer, &QTimer::timeout, [&](void) {
         if (_uploadService->isUploading()) {
             _isUploadingIcon = !_isUploadingIcon;
             _trayIcon->setIcon(_isUploadingIcon ? _uploadingIcon : _windowIcon);

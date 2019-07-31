@@ -85,7 +85,7 @@ void TagsEdit::selectTag(const QString &tag)
         return;
 
     auto tagButton = new TagButton(tag, sclSelected);
-    connect(tagButton, &QPushButton::clicked, [=](void){this->deselectTag(tag);});
+    connect(tagButton, &QPushButton::clicked, [&](void){this->deselectTag(tag);});
     laySelected->addWidget(tagButton);
 
     cbxPicker->setCurrentIndex(-1);

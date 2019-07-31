@@ -17,9 +17,9 @@ inline void query2server(QSqlQuery &query, Server &server) {
     server.name = query.value(rec.indexOf("name")).toString();
     server.protocol = query.value(rec.indexOf("protocol")).toString();
     server.createdAt = query.value(rec.indexOf("createdAt")).toDateTime();
-    server.settings = QJsonDocument::fromJson(query.value(rec.indexOf("settingsJSON")).toByteArray()).toVariant().toMap();
+    server.settings = QJsonDocument::fromJson(query.value(rec.indexOf("settings")).toByteArray()).toVariant().toMap();
     server.uploadEnabled = query.value(rec.indexOf("uploadEnabled")).toBool();
-    server.outputFormatId = query.value(rec.indexOf("outputFormatId")).toUInt();
+    server.formatId = query.value(rec.indexOf("formatId")).toUInt();
 }
 
 ServerService::ServerService()
@@ -68,7 +68,7 @@ Server ServerService::findById(uint id)
 bool ServerService::append(Server &server)
 {
     QSqlQuery query;
-    query.prepare("INSERT INTO servers (name, protocol, settingsJSON, createdAt) "
+    query.prepare("INSERT INTO servers (name, protocol, settings, createdAt) "
                   "VALUES (:name, :protocol, :settings, :createdAt)");
     query.bindValue(":name", server.name);
     query.bindValue(":protocol", server.protocol);
@@ -86,7 +86,7 @@ bool ServerService::update(Server &server)
 {
     QSqlQuery query;
     query.prepare("UPDATE servers "
-                  "SET name=:name, protocol=:protocol, settingsJSON=:settings "
+                  "SET name=:name, protocol=:protocol, settings=:settings "
                   "WHERE id=:id");
     query.bindValue(":name", server.name);
     query.bindValue(":protocol", server.protocol);
@@ -115,11 +115,11 @@ void ServerService::setUploadEnabled(uint id, bool enabled)
     assert(query.exec());
 }
 
-void ServerService::setOutputFormatId(uint id, uint outputFormatId)
+void ServerService::setOutputFormatId(uint id, uint formatId)
 {
     QSqlQuery query;
-    query.prepare("UPDATE servers SET outputFormatId=:outputFormatId WHERE id=:id");
-    query.bindValue(":outputFormatId", outputFormatId);
+    query.prepare("UPDATE servers SET formatId=:formatId WHERE id=:id");
+    query.bindValue(":formatId", formatId);
     query.bindValue(":id", id);
     assert(query.exec());
 }

@@ -99,16 +99,16 @@ void UploadDialog::editMode(uint clipId)
 
 void UploadDialog::uploadMode()
 {
-    auto outputFormats = APP->outputFormatService()->getAll();
+    auto formats = APP->formatService()->getAll();
     for (auto &server : APP->serverService()->getAll()) {
-        createUploadToRow(server, outputFormats);
+        createUploadToRow(server, formats);
     }
 
     connect(QApplication::clipboard(), SIGNAL(dataChanged()), this, SLOT(reload()));
     reload();
 }
 
-void UploadDialog::createUploadToRow(const Server &server, const QList<Format> &outputFormats)
+void UploadDialog::createUploadToRow(const Server &server, const QList<Format> &formats)
 {
     auto rowLayout = new QHBoxLayout();
 
@@ -121,15 +121,15 @@ void UploadDialog::createUploadToRow(const Server &server, const QList<Format> &
         auto outputWidget = new QComboBox(ui->sclUploadTo);
         outputWidget->addItem(tr("Don't output"), 0);
         int i = 1;
-        for (auto &outputFormat : outputFormats) {
-            outputWidget->addItem(outputFormat.name, outputFormat.id);
-            if (outputFormat.id == server.outputFormatId) {
+        for (auto &format : formats) {
+            outputWidget->addItem(format.name, format.id);
+            if (format.id == server.formatId) {
                 outputWidget->setCurrentIndex(i);
             }
             i++;
         }
         uploadWidget->setChecked(server.uploadEnabled);
-        connect(uploadWidget, &QPushButton::toggled, [=](bool checked) {
+        connect(uploadWidget, &QPushButton::toggled, [this, server, outputWidget](bool checked) {
             outputWidget->setEnabled(checked);
             APP->serverService()->setUploadEnabled(server.id, checked);
             syncState();
@@ -139,7 +139,7 @@ void UploadDialog::createUploadToRow(const Server &server, const QList<Format> &
         outputWidget->setStyleSheet(OUTPUT_STYLE_SHEET);
         outputWidget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
         rowLayout->addWidget(outputWidget);
-        connect(outputWidget, &QComboBox::currentTextChanged, [=](const QString&) {
+        connect(outputWidget, &QComboBox::currentTextChanged, [server, outputWidget](const QString&) {
             APP->serverService()->setOutputFormatId(server.id, outputWidget->currentData().toUInt());
         });
     } else { // edit mode
@@ -187,7 +187,7 @@ void UploadDialog::reload()
     _clips =  APP->clipService()->getAllFromClipboard();
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
     for (auto &clip : _clips) {
-        auto thumbnail = new ThumbnailLabel(ui->sclPreview, clip);
+        auto thumbnail = new ThumbnailLabel(ui->sclPreview, &clip);
 
         _previewLayout->addWidget(thumbnail);
         auto name = new QLineEdit(ui->sclPreview);
@@ -196,7 +196,7 @@ void UploadDialog::reload()
         name->setAlignment(Qt::AlignCenter);
         name->setMinimumWidth(THUMB_WIDTH);
         name->setObjectName(clip.name);
-        connect(name, &QLineEdit::textChanged, [=](const QString &) {
+        connect(name, &QLineEdit::textChanged, [&](const QString &) {
             this->syncState();
         });
         _previewLayout->addWidget(name);

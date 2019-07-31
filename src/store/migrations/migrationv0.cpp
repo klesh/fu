@@ -1,6 +1,7 @@
 #include "migrationv0.h"
 
-#include <QThread>
+#include <QtCore>
+#include <QSqlQuery>
 
 MigrationV0::MigrationV0()
 {
@@ -12,68 +13,69 @@ int MigrationV0::getVersion()
     return 0;
 }
 
-void MigrationV0::run(SqlStore &store)
+void MigrationV0::run()
 {
-    store.exec("CREATE TABLE tags ( "
+    QSqlQuery query;
+    query.exec("CREATE TABLE tags ( "
                "id INTEGER PRIMARY KEY AUTOINCREMENT, "
                "name TEXT NOT NULL UNIQUE, "
                "createdAt TEXT NOT NULL,"
                "lastUsedTimestamp INTEGER"
                ")");
-    store.exec("CREATE INDEX idx_tags_lastUsedTimestamp ON tags (lastUsedTimestamp DESC);");
+    query.exec("CREATE INDEX idx_tags_lastUsedTimestamp ON tags (lastUsedTimestamp DESC);");
     emit progressChanged(0.3);
 
-    store.exec("CREATE TABLE outputFormats ("
+    query.exec("CREATE TABLE formats ("
                "id INTEGER PRIMARY KEY AUTOINCREMENT, "
                "name TEXT NOT NULL UNIQUE, "
-               "template TEXT NOT NULL "
+               "format TEXT NOT NULL "
                ")");
 
-    store.exec("CREATE TABLE servers ( "
+    query.exec("CREATE TABLE servers ( "
                "id INTEGER PRIMARY KEY AUTOINCREMENT, "
                "name TEXT NOT NULL UNIQUE, "
                "protocol TEXT NOT NULL, "
-               "settingsJSON TEXT NOT NULL DEFAULT '{}', "
+               "settings TEXT NOT NULL DEFAULT '{}', "
                "uploadEnabled INTEGER NOT NULL DEFAULT 1, "
-               "outputFormatId INTEGER REFERENCES outputFormats (id) ON DELETE SET NULL, "
+               "formatId INTEGER REFERENCES formats (id) ON DELETE SET NULL, "
                "createdAt TEXT NOT NULL"
                ")");
 
-    store.exec("CREATE TABLE settings ( "
+    query.exec("CREATE TABLE settings ( "
                "settingKey TEXT NOT NULL PRIMARY KEY, "
                "settingValue TEXT DEFAULT ''"
                ")");
 
-    store.exec("INSERT INTO settings (settingKey, settingValue) VALUES ('imageCompressionEnabled', 'true')");
-    store.exec("INSERT INTO settings (settingKey, settingValue) VALUES ('imageWatermarkEnabled', 'false')");
-    store.exec("INSERT INTO settings (settingKey, settingValue) VALUES ('imageWatermarkPath', '')");
-    store.exec("INSERT INTO settings (settingKey, settingValue) VALUES ('imageWatermarkPosition', 'MiddleCenter')");
+    query.exec("INSERT INTO settings (settingKey, settingValue) VALUES ('imageCompressionEnabled', 'true')");
+    query.exec("INSERT INTO settings (settingKey, settingValue) VALUES ('imageWatermarkEnabled', 'false')");
+    query.exec("INSERT INTO settings (settingKey, settingValue) VALUES ('imageWatermarkPath', '')");
+    query.exec("INSERT INTO settings (settingKey, settingValue) VALUES ('imageWatermarkPosition', 'MiddleCenter')");
 
     emit progressChanged(0.6);
 
-    QSqlQuery query = store.prepare("INSERT INTO outputFormats (name, template) VALUES (:name, :template)");
+    query.prepare("INSERT INTO formats (name, format) VALUES (:name, :format)");
 
     query.bindValue(":name", tr("Raw"));
-    query.bindValue(":template", "%1");
-    store.exec();
+    query.bindValue(":format", "%1");
+    query.exec();
 
     query.bindValue(":name", tr("Markdown Link"));
-    query.bindValue(":template", "[%2](%1)");
-    store.exec();
+    query.bindValue(":format", "[%2](%1)");
+    query.exec();
 
     query.bindValue(":name", tr("Markdown Image"));
-    query.bindValue(":template", "![%2](%1)");
-    store.exec();
+    query.bindValue(":format", "![%2](%1)");
+    query.exec();
 
     query.bindValue(":name", tr("HTML Link"));
-    query.bindValue(":template", "<a href=\"%1\">%2</a>");
-    store.exec();
+    query.bindValue(":format", "<a href=\"%1\">%2</a>");
+    query.exec();
 
     query.bindValue(":name", tr("HTML Image"));
-    query.bindValue(":template", "<img src=\"%1\" alt=\"%2\" />");
-    store.exec();
+    query.bindValue(":format", "<img src=\"%1\" alt=\"%2\" />");
+    query.exec();
 
-    store.exec("CREATE TABLE clips ("
+    query.exec("CREATE TABLE clips ("
                "id INTEGER PRIMARY KEY AUTOINCREMENT, "
                "name TEXT NOT NULL, "
                "isImage INTEGER NOT NULL,"
@@ -84,13 +86,13 @@ void MigrationV0::run(SqlStore &store)
                "createdAt TEXT NOT NULL"
                ")");
 
-    store.exec("CREATE TABLE clips_tags ("
+    query.exec("CREATE TABLE clips_tags ("
                "clipId INTEGER NOT NULL REFERENCES clips (id) ON DELETE CASCADE,"
                "tagId INTEGER NOT NULL REFERENCES tags (id) ON DELETE CASCADE,"
                "PRIMARY KEY (clipId, tagId)"
                ")");
 
-    store.exec("CREATE TABLE uploads ("
+    query.exec("CREATE TABLE uploads ("
                "id INTEGER PRIMARY KEY AUTOINCREMENT, "
                "clipId INTEGER NOT NULL REFERENCES clips (id) ON DELETE CASCADE,"
                "serverId INTEGER NOT NULL REFERENCES servers (id) ON DELETE CASCADE,"

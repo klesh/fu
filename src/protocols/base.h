@@ -38,7 +38,7 @@ struct UploadJob {
     QString path;           // or local file to be uploaded
     QString name;           // file name
     UploadJobStatus status = Pending;
-    int counter;
+    int counter = 0;
     bool overwrite = false;
     QString url;
     QString msg;
