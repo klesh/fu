@@ -187,7 +187,7 @@ void UploadDialog::reload()
     _clips =  APP->clipService()->getAllFromClipboard();
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
     for (auto &clip : _clips) {
-        auto thumbnail = new ThumbnailLabel(ui->sclPreview, &clip);
+        auto thumbnail = new ThumbnailLabel(ui->sclPreview, clip);
 
         _previewLayout->addWidget(thumbnail);
         auto name = new QLineEdit(ui->sclPreview);

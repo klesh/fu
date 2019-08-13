@@ -2,31 +2,8 @@
 #include "../application.h"
 #include "../core/clipservice.h"
 
-void ThumbnailLabel::loadClip()
-{
-    if ((*_clip).isImage) {
-        setText(tr("Loading"));
-        _loading = QThread::create([&](void) {
-            this->setPixmap((*_clip).thumbnailPixmap());
-            this->setText("");
-        });
-        connect(_loading, SIGNAL(finished()), _loading, SLOT(deleteLater()));
-        _loading->start();
-    } else if ((*_clip).isFile) {
-        setPixmap(ClipService::unkownFileIcon());
-    } else {
-        setText("N/A");
-    }
-}
-
 ThumbnailLabel::ThumbnailLabel(QWidget *parent)
     : QLabel(parent)
-{
-
-}
-
-ThumbnailLabel::ThumbnailLabel(QWidget *parent, Clip *clip)
-    : QLabel(parent), _clip(clip)
 {
     setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     setMinimumSize(THUMB_WIDTH, THUMB_HEIGHT);
@@ -35,11 +12,31 @@ ThumbnailLabel::ThumbnailLabel(QWidget *parent, Clip *clip)
     setAlignment(Qt::AlignCenter);
     setStyleSheet("background: white");
 
-    loadClip();
+    setText("N/A");
 }
 
-void ThumbnailLabel::setClip(Clip *clip)
+ThumbnailLabel::ThumbnailLabel(QWidget *parent, Clip &clip)
+    : ThumbnailLabel(parent)
 {
-    _clip = clip;
-    loadClip();
+    loadByClip(clip);
+}
+
+void ThumbnailLabel::loadByClip(Clip &clip)
+{
+    if (clip.isImage) {
+        setText(tr("Loading"));
+        _loading = QThread::create([&](void) {
+            auto pixmap = clip.thumbnailPixmap();
+            if (pixmap.isNull()) {
+                this->setText("Failed");
+            } else {
+                this->setPixmap(pixmap);
+                this->setText("");
+            }
+        });
+        connect(_loading, SIGNAL(finished()), _loading, SLOT(deleteLater()));
+        _loading->start();
+    } else if (clip.isFile) {
+        setPixmap(ClipService::unkownFileIcon());
+    }
 }

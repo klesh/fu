@@ -37,6 +37,7 @@ HistoryWindow::HistoryWindow() :
     connect(ui->btnReload, SIGNAL(clicked()), this, SLOT(reload()));
     connect(ui->btnDeselect, SIGNAL(clicked()), this, SLOT(deselectAll()));
     connect(ui->sclClips, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(showContextMenu(const QPoint &)));
+
 }
 
 HistoryWindow::~HistoryWindow()

@@ -7,14 +7,12 @@
 class ThumbnailLabel : public QLabel
 {
     Q_OBJECT
-    QThread *_loading = nullptr;
-    Clip *_clip = nullptr ;
-    void loadClip();
+    QThread *_loading;
 
 public:
-    ThumbnailLabel(QWidget *parent);
-    ThumbnailLabel(QWidget *parent, Clip *clip);
-    void setClip(Clip *clip);
+    ThumbnailLabel(QWidget *parent = nullptr);
+    ThumbnailLabel(QWidget *parent, Clip &clip);
+    void loadByClip(Clip &clip);
 };
 
 #endif // THUMBNAILLABEL_H

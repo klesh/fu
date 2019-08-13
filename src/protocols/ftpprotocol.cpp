@@ -1,4 +1,5 @@
 #include "ftpprotocol.h"
+#include <qcurl.h>
 
 FtpProtocol::FtpProtocol()
 {
@@ -53,45 +54,20 @@ FtpUploader::FtpUploader(QVariantMap settings)
 
 void FtpUploader::upload(QDataStream *stream, UploadJob &job)
 {
-    QUrl remoteUrl(_ftpUrl);
-    remoteUrl.setPath(_ftpUrl.path() + job.name);
+    QCurl curl(_ftpUrl);
 
-    auto performUpload = [&]() {
-        QNetworkRequest putReq(remoteUrl);
-        QNetworkReply *putRes = _network.put(putReq, stream->device());
-        connect(putRes, &QNetworkReply::finished, [&]() {
-            job.status = Success;
-            job.url = _outputUrl.arg(job.name);
-        });
-        connect(putRes, QOverload<QNetworkReply::NetworkError>::of(&QNetworkReply::error), [&]() {
-            job.status = Error;
-            job.msg = putRes->errorString();
-        });
-    };
+    if (curl.exists(job.name)) {
+        job.status = Duplicated;
+        return;
+    }
 
-    auto performUploadIfNotExists = [&]() {
-        QNetworkRequest getReq(remoteUrl);
-        QNetworkReply *getRes = _network.get(getReq);
-        connect(getRes, &QNetworkReply::readyRead, [&]() {
-            getRes->close(); // remote file exists, emit QNetworkReply::OperationCanceledError
-        });
-        connect(getRes, QOverload<QNetworkReply::NetworkError>::of(&QNetworkReply::error), [&]() {
-            if (getRes->error() == QNetworkReply::OperationCanceledError) {
-                job.status = Duplicated;
-                return;
-            }
-            if (getRes->error() != QNetworkReply::ContentNotFoundError) {
-                job.status = Error;
-                job.msg = getRes->errorString();
-                return;
-            }
+    auto res = curl.put(job.name, *stream->device());
 
-            performUpload();
-        });
-    };
-
-    if (job.overwrite)
-        performUpload();
-    else
-        performUploadIfNotExists();
+    if (res.code()) {
+        job.status = Error;
+        job.msg = res.message();
+    } else {
+        job.status = Success;
+        job.url = _outputUrl.arg(job.name);
+    }
 }

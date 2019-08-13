@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core sql network
+#QMAKE_CXXFLAGS += -fopenmp
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -18,8 +19,8 @@ TEMPLATE = app
 DEFINES += QT_DEPRECATED_WARNINGS
 
 # app version auto-updationg
-APP_VERSION = $$system(cd \""$$_PRO_FILE_PWD_"\" && git rev-parse --abbrev-ref HEAD)
-DEFINES += APP_VERSION=\"\\\"$${APP_VERSION}\\\"\"
+VERSION = $$system(cd \""$$_PRO_FILE_PWD_"\" && git rev-parse --abbrev-ref HEAD)
+DEFINES += APP_VERSION=\\\"$${VERSION}\\\"
 
 # You can also make your code fail to compile if you use deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -104,8 +105,32 @@ TRANSLATIONS = \
         i18n/fu.zh_cn.ts \
         i18n/fu.en_us.ts
 
+CONFIG(release, debug|release) {
+    BUILD = release
+}
+CONFIG(debug, debug|release) {
+    BUILD = debug
+}
+msvc:COMPILER=msvc
+gcc:COMPILER=gcc
+
+ROOTDIR = $$PWD/..
+DEPSDIR = $$ROOTDIR/deps/$$QT_ARCH
+DESTDIR = $$ROOTDIR/builds/fu-$$COMPILER-$$QT_ARCH-$$BUILD-$$VERSION
+
 win32 {
     RC_FILE = platforms/win32/fu.rc
+
+    INCLUDEPATH += $$DEPSDIR/include
+    LIBS += -L$$DEPSDIR/lib -llibqcurl1 \
+
+    dlls.path = $$DESTDIR
+    dlls.files = $$DEPSDIR/bin/*.dll
+    INSTALLS += dlls
+}
+
+unix {
+    LIBS +=  -lqcurl
 }
 
 # Default rules for deployment.
