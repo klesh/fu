@@ -306,6 +306,7 @@ void ConfigDialog::serversReloadSettingsFrame(const QString &protocolTitle)
             {
                 auto spinbox = new QSpinBox(this);
                 spinbox->setValue(settingInfo.defaultValue.toInt());
+                spinbox->setRange(1, 65536);
                 input = spinbox;
                 break;
             }

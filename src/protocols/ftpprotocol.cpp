@@ -4,7 +4,7 @@
 FtpProtocol::FtpProtocol()
 {
     _settingInfos.append({"host", tr("Host"), tr("FTP server host name"), Text, true, tr("Please pick a storage location"), ""});
-    _settingInfos.append({"port", tr("Port"), tr(""), Integer, true, "", 22});
+    _settingInfos.append({"port", tr("Port"), tr(""), Integer, true, "", 21});
     _settingInfos.append({"user", tr("Username"), tr(""), Text, true, "", ""});
     _settingInfos.append({"pass", tr("Password"), tr(""), Text, true, "", ""});
     _settingInfos.append({"path", tr("Path"), tr(""), Text, true, "", ""});
@@ -56,7 +56,7 @@ void FtpUploader::upload(QDataStream *stream, UploadJob &job)
 {
     QCurl curl(_ftpUrl);
 
-    if (curl.exists(job.name)) {
+    if (job.overwrite == false && curl.exists(job.name) == 1) {
         job.status = Duplicated;
         return;
     }

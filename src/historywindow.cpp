@@ -125,15 +125,6 @@ void HistoryWindow::reload()
                     if (p->isSelected())
                         selected.append(p);
                 }
-                if (selected.length() == 2) {
-                    uint distance = 0;
-                    auto a = selected.front();
-                    auto b = selected.back();
-                    for (int i = 0; i < 10000; i++) {
-                        distance += (a->bits[i] - b->bits[i])^2;
-                    }
-                    qDebug() << "distance : " << distance;
-                }
             });
         }
         layout->addWidget(groupedFrame);
