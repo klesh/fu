@@ -33,7 +33,7 @@ Uploader *FtpProtocol::createUploader(const QVariantMap &settings)
 
 // uploader
 FtpUploader::FtpUploader(QVariantMap settings)
-    : _ftpUrl(createUrlFromSettings(settings))
+    : _ftpUrl(createUrlFromSettings(settings, "ftp"))
 {
     _outputUrl = settings["outputUrl"].toString();
 }
@@ -42,9 +42,19 @@ void FtpUploader::upload(QDataStream *stream, UploadJob &job)
 {
     QCurl curl(_ftpUrl);
 
-    if (job.overwrite == false && curl.exists(job.name) == 1) {
-        job.status = Duplicated;
-        return;
+
+    if (job.overwrite == false) {
+        int exists;
+        auto re = curl.exists(exists, job.name);
+        if (exists == 1) {
+            job.status = Duplicated;
+            return;
+        }
+        if (exists == -1) {
+            job.status = Error;
+            job.msg = re.message();
+            return;
+        }
     }
 
     auto res = curl.put(job.name, *stream->device());

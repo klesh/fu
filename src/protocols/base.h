@@ -44,6 +44,7 @@ struct UploadJob {
     QString url;
     QString msg;
     bool saved = false;
+    bool notified = false;
 };
 
 class Uploader : public QObject
@@ -65,9 +66,9 @@ public:
 };
 
 
-inline QUrl createUrlFromSettings(const QVariantMap &settings) {
+inline QUrl createUrlFromSettings(const QVariantMap &settings, const QString scheme) {
     QUrl url;
-    url.setScheme("ftp");
+    url.setScheme(scheme);
     url.setHost(settings["host"].toString());
     url.setPort(settings["port"].toInt());
     url.setUserName(settings["user"].toString());

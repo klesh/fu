@@ -157,6 +157,9 @@ void UploadService::populatePool()
             query.bindValue(":createdAt", datetimeToISO());
             assert(query.exec());
             job.saved = true;
+        } else if (job.status == Error && job.notified == false) {
+            job.notified = true;
+            APP->sendNotification(job.msg, "fu", QSystemTrayIcon::Warning);
         }
     }
 

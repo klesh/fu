@@ -35,7 +35,7 @@ Uploader *SftpProtocol::createUploader(const QVariantMap &settings)
 }
 
 SftpUploader::SftpUploader(const QVariantMap settings)
-    : _sftpUrl(createUrlFromSettings(settings))
+    : _sftpUrl(createUrlFromSettings(settings, "sftp"))
 {
     _keyPath = settings["keyPath"].toString();
     _keyPass = settings["keyPass"].toString();
@@ -47,14 +47,24 @@ void SftpUploader::upload(QDataStream *stream, UploadJob &job)
 {
     QCurl curl(_sftpUrl);
 
-    if (!_keyPath.isEmpty())
-        curl.setSshKeyFiles(_keyPath, _pubkeyPath, _keyPass);
+//    if (!_keyPath.isEmpty())
+//        curl.setSshKeyFiles(_keyPath, _pubkeyPath, _keyPass);
 
-    if (job.overwrite == false && curl.exists(job.name) == 1) {
-        job.status = Duplicated;
-        return;
+    if (job.overwrite == false) {
+        int exists;
+        auto re = curl.exists(exists, job.name);
+        if (exists == 1) {
+            job.status = Duplicated;
+            return;
+        }
+        if (exists == -1) {
+            job.status = Error;
+            job.msg = re.message();
+            return;
+        }
     }
 
+    curl.setVerbose(true);
     auto res = curl.put(job.name, *stream->device());
 
     if (res.code()) {
