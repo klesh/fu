@@ -2,6 +2,7 @@
 #include "./utils.h"
 #include "../protocols/localstorageprotocol.h"
 #include "../protocols/ftpprotocol.h"
+#include "../protocols/sftpprotocol.h"
 
 #include <QSqlQuery>
 #include <QSqlRecord>
@@ -26,6 +27,7 @@ ServerService::ServerService()
 {
     _protocols.append(new LocalStorageProtocol());
     _protocols.append(new FtpProtocol());
+    _protocols.append(new SftpProtocol());
 }
 
 QList<Server> ServerService::getAll()

@@ -31,20 +31,6 @@ Uploader *FtpProtocol::createUploader(const QVariantMap &settings)
     return new FtpUploader(settings);
 }
 
-QUrl createUrlFromSettings(const QVariantMap &settings) {
-    QUrl url;
-    url.setScheme("ftp");
-    url.setHost(settings["host"].toString());
-    url.setPort(settings["port"].toInt());
-    url.setUserName(settings["user"].toString());
-    url.setPassword(settings["pass"].toString());
-    auto path = settings["path"].toString();
-    if (!path.endsWith('/'))
-        path += '/';
-    url.setPath(path);
-    return url;
-}
-
 // uploader
 FtpUploader::FtpUploader(QVariantMap settings)
     : _ftpUrl(createUrlFromSettings(settings))

@@ -1,10 +1,10 @@
-#include "folderpicker.h"
+#include "pathpicker.h"
 
 #include <QHBoxLayout>
 #include <QFileDialog>
 
-FolderPicker::FolderPicker(QWidget *parent)
-    : QFrame (parent)
+PathPicker::PathPicker(QWidget *parent, TargetType targetType)
+    : QFrame (parent), _targetType(targetType)
 {
     auto layout = new QHBoxLayout(this);
     layout->setMargin(0);
@@ -20,20 +20,24 @@ FolderPicker::FolderPicker(QWidget *parent)
     _btnBrowse->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     layout->addWidget(_btnBrowse);
 
-    connect(_btnBrowse, SIGNAL(clicked()), this, SLOT(pickFolder()));
+    connect(_btnBrowse, SIGNAL(clicked()), this, SLOT(showPickingDialog()));
 }
 
-QString FolderPicker::currentPath()
+QString PathPicker::currentPath()
 {
     return _txtCurrentPath->text();
 }
 
-void FolderPicker::setCurrentPath(QString text)
+void PathPicker::setCurrentPath(QString text)
 {
     _txtCurrentPath->setText(text);
 }
 
-void FolderPicker::pickFolder()
+void PathPicker::showPickingDialog()
 {
-    _txtCurrentPath->setText(QFileDialog::getExistingDirectory(this, "", _txtCurrentPath->text()));
+    if (_targetType == Directory) {
+        _txtCurrentPath->setText(QFileDialog::getExistingDirectory(this, "", _txtCurrentPath->text()));
+    } else {
+        _txtCurrentPath->setText(QFileDialog::getOpenFileName(this, "", _txtCurrentPath->text()));
+    }
 }

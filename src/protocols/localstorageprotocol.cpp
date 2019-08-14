@@ -45,7 +45,7 @@ void LocalStorageUploader::upload(QDataStream *stream, UploadJob &job)
     }
     outputFile.open(QIODevice::WriteOnly);
     QDataStream outputStream(&outputFile);
-    const size_t BUFFER_SIZE = 1024 * 8;
+    const size_t BUFFER_SIZE = 1024 * 256;
 
     char *buffer = new char[BUFFER_SIZE];
     while (!stream->atEnd()) {

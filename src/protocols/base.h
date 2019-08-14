@@ -8,7 +8,8 @@
 enum ProtocolSettingDataType {
     Text,
     Integer,
-    Directory
+    Directory,
+    File
 };
 
 struct ProtocolSettingInfo
@@ -63,4 +64,18 @@ public:
     virtual Uploader *createUploader(const QVariantMap &settings) = 0;
 };
 
+
+inline QUrl createUrlFromSettings(const QVariantMap &settings) {
+    QUrl url;
+    url.setScheme("ftp");
+    url.setHost(settings["host"].toString());
+    url.setPort(settings["port"].toInt());
+    url.setUserName(settings["user"].toString());
+    url.setPassword(settings["pass"].toString());
+    auto path = settings["path"].toString();
+    if (!path.endsWith('/'))
+        path += '/';
+    url.setPath(path);
+    return url;
+}
 #endif // PROTOCOL_H

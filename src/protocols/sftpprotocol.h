@@ -1,23 +1,28 @@
-#ifndef FTPPROTOCOL_H
-#define FTPPROTOCOL_H
+#ifndef SFTPPROTOCOL_H
+#define SFTPPROTOCOL_H
 
 #include <QtCore>
 #include "./base.h"
 
-class FtpUploader : public Uploader
+class SftpUploader : public Uploader
 {
-    const QUrl _ftpUrl;
+    const QUrl _sftpUrl;
     QString _outputUrl;
+    QString _keyPath;
+    QString _keyPass;
+    QString _pubkeyPath;
+
 public:
-    FtpUploader(const QVariantMap settings);
+    SftpUploader(const QVariantMap settings);
     void upload(QDataStream *stream, UploadJob &job) override;
 };
 
-class FtpProtocol : public Protocol
+class SftpProtocol: public Protocol
 {
     QList<ProtocolSettingInfo> _settingInfos;
+
 public:
-    FtpProtocol();
+    SftpProtocol();
 
     // Protocol interface
     const QString getName();
@@ -26,4 +31,4 @@ public:
     Uploader *createUploader(const QVariantMap &settings);
 };
 
-#endif // FTPPROTOCOL_H
+#endif // SFTPPROTOCOL_H

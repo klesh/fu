@@ -37,6 +37,6 @@ int main(int argc, char *argv[])
     if (!app.prepare(parser.value(dbPathOption)))
         return -1;
 
-    app.showHistoryWindow();
+//    app.showHistoryWindow();
     return app.exec();
 }

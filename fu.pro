@@ -33,7 +33,7 @@ SOURCES += \
         src/aboutdialog.cpp \
         src/components/errormessage.cpp \
         src/components/flowlayout.cpp \
-        src/components/folderpicker.cpp \
+        src/components/pathpicker.cpp \
         src/components/previewbox.cpp \
         src/components/tagbutton.cpp \
         src/components/tagsedit.cpp \
@@ -51,6 +51,7 @@ SOURCES += \
         src/main.cpp \
         src/protocols/ftpprotocol.cpp \
         src/protocols/localstorageprotocol.cpp \
+        src/protocols/sftpprotocol.cpp \
         src/store/migrations/migrationv0.cpp \
         src/store/migrator.cpp \
         src/upgradedialog.cpp \
@@ -61,7 +62,7 @@ HEADERS += \
         src/components/errormessage.h \
         src/components/flowlayout.h \
         src/components/focuswatcher.h \
-        src/components/folderpicker.h \
+        src/components/pathpicker.h \
         src/components/previewbox.h \
         src/components/tagbutton.h \
         src/components/tagsedit.h \
@@ -85,6 +86,7 @@ HEADERS += \
         src/protocols/base.h \
         src/protocols/ftpprotocol.h \
         src/protocols/localstorageprotocol.h \
+        src/protocols/sftpprotocol.h \
         src/store/migration.h \
         src/store/migrations/migrationv0.h \
         src/store/migrator.h \

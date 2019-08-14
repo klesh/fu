@@ -1,7 +1,7 @@
 #include "application.h"
 #include "configdialog.h"
 #include "ui_configdialog.h"
-#include "components/folderpicker.h"
+#include "components/pathpicker.h"
 
 #include <QDesktopServices>
 #include <QFileInfo>
@@ -165,7 +165,7 @@ void ConfigDialog::serversShowItem(QListWidgetItem* current, QListWidgetItem* pr
         switch (settingInfo.type) {
         case Directory:
         {
-            auto folderPicker = ui->frmServerSettings->findChild<FolderPicker*>(settingInfo.name);
+            auto folderPicker = ui->frmServerSettings->findChild<PathPicker*>(settingInfo.name);
             assert(folderPicker);
             folderPicker->setCurrentPath(server.settings[settingInfo.name].toString());
             break;
@@ -212,7 +212,7 @@ void ConfigDialog::serversEditItemSave()
         switch (settingInfo.type) {
             case Directory:
             {
-                auto folderPicker = ui->frmServerSettings->findChild<FolderPicker*>(settingInfo.name);
+                auto folderPicker = ui->frmServerSettings->findChild<PathPicker*>(settingInfo.name);
                 assert(folderPicker);
                 if (settingInfo.required && folderPicker->currentPath().isEmpty()) {
                     return highlightWidget(folderPicker, settingInfo.hint);
@@ -297,9 +297,16 @@ void ConfigDialog::serversReloadSettingsFrame(const QString &protocolTitle)
         switch (settingInfo.type) {
             case Directory:
             {
-                auto folderPicker = new FolderPicker(this);
+                auto folderPicker = new PathPicker(this);
                 folderPicker->setCurrentPath(settingInfo.defaultValue.toString());
                 input = folderPicker;
+                break;
+            }
+            case File:
+            {
+                auto filePicker = new PathPicker(this, PathPicker::File);
+                filePicker->setCurrentPath(settingInfo.defaultValue.toString());
+                input = filePicker;
                 break;
             }
             case Integer:
@@ -310,7 +317,7 @@ void ConfigDialog::serversReloadSettingsFrame(const QString &protocolTitle)
                 input = spinbox;
                 break;
             }
-            case Text:
+            default:
             {
                 auto lineEdit = new QLineEdit(this);
                 lineEdit->setText(settingInfo.defaultValue.toString());
