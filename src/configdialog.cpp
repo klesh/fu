@@ -170,6 +170,12 @@ void ConfigDialog::serversShowItem(QListWidgetItem* current, QListWidgetItem* pr
             folderPicker->setCurrentPath(server.settings[settingInfo.name].toString());
             break;
         }
+        case File:
+        {
+            auto filePicker = ui->frmServerSettings->findChild<PathPicker*>(settingInfo.name);
+            filePicker->setCurrentPath(server.settings[settingInfo.name].toString());
+            break;
+        }
         case Integer:
         {
             auto spinBox = ui->frmServerSettings->findChild<QSpinBox*>(settingInfo.name);
@@ -219,6 +225,17 @@ void ConfigDialog::serversEditItemSave()
                 }
                 qDebug() << folderPicker->currentPath();
                 server.settings[settingInfo.name] = folderPicker->currentPath();
+                break;
+            }
+            case File:
+            {
+                auto filePicker = ui->frmServerSettings->findChild<PathPicker*>(settingInfo.name);
+                assert(filePicker);
+                if (settingInfo.required && filePicker->currentPath().isEmpty()) {
+                    return highlightWidget(filePicker, settingInfo.hint);
+                }
+                qDebug() << filePicker->currentPath();
+                server.settings[settingInfo.name] = filePicker->currentPath();
                 break;
             }
             case Integer:

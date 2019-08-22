@@ -4,11 +4,11 @@
 FtpProtocol::FtpProtocol()
 {
     _settingInfos.append({"host", tr("Host"), tr("FTP server host name"), Text, true, tr("Please pick a storage location"), ""});
-    _settingInfos.append({"port", tr("Port"), tr(""), Integer, true, "", 21});
-    _settingInfos.append({"user", tr("Username"), tr(""), Text, true, "", ""});
-    _settingInfos.append({"pass", tr("Password"), tr(""), Text, true, "", ""});
-    _settingInfos.append({"path", tr("Path"), tr(""), Text, true, "", ""});
-    _settingInfos.append({"outputUrl", tr("Output Url"), tr(""), Text, true, "", "%1"});
+    _settingInfos.append({"port", tr("Port"), tr(""), Integer, true, tr("Please enter port number"), 21});
+    _settingInfos.append({"user", tr("Username"), tr(""), Text, true, tr("Please enter login user name"), ""});
+    _settingInfos.append({"pass", tr("Password"), tr(""), Text, true, tr("Please enter login password"), ""});
+    _settingInfos.append({"path", tr("Remote Path"), tr(""), Text, false, "", ""});
+    _settingInfos.append({"outputUrl", tr("Output Url"), tr(""), Text, false, "", "%1"});
 }
 
 const QString FtpProtocol::getName()

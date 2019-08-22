@@ -4,14 +4,14 @@
 SftpProtocol::SftpProtocol()
 {
     _settingInfos.append({"host", tr("Host"), tr("FTP server host name"), Text, true, tr("Please pick a storage location"), ""});
-    _settingInfos.append({"port", tr("Port"), tr(""), Integer, true, "", 22});
-    _settingInfos.append({"user", tr("Username"), tr(""), Text, true, "", ""});
-    _settingInfos.append({"pass", tr("Password"), tr(""), Text, true, "", ""});
+    _settingInfos.append({"port", tr("Port"), tr(""), Integer, true, tr("Please enter port number"), 22});
+    _settingInfos.append({"user", tr("Username"), tr(""), Text, true, tr("Please enter login user name"), ""});
+    _settingInfos.append({"pass", tr("Password"), tr(""), Text, true, tr("Please enter login password"), ""});
     _settingInfos.append({"keyPath", tr("Private Key"), tr(""), File, false, "", ""});
     _settingInfos.append({"keyPass", tr("Key Password"), tr(""), Text, false, "", ""});
     _settingInfos.append({"pubkeyPath", tr("Public Key"), tr(""), File, false, "", ""});
-    _settingInfos.append({"path", tr("Remote Path"), tr(""), Text, true, "", ""});
-    _settingInfos.append({"outputUrl", tr("Output Url"), tr(""), Text, true, "", "http://localhost/%1"});
+    _settingInfos.append({"path", tr("Remote Path"), tr(""), Text, false, "", ""});
+    _settingInfos.append({"outputUrl", tr("Output Url"), tr(""), Text, false, "", "http://localhost/%1"});
 }
 
 const QString SftpProtocol::getName()
