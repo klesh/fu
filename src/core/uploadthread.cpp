@@ -8,19 +8,18 @@ UploadThread::UploadThread(UploadJob &job)
 
 void UploadThread::run()
 {
-    QDataStream *stream;
+    QIODevice *stream;
 
     if (!_job.data.isEmpty()) { // share same processed image
-        stream = new QDataStream(_job.data);
+        stream = new QBuffer(&_job.data);
+        stream->open(QIODevice::ReadOnly);
     } else { // create independent file stream
-        QString filePath = _job.path;
-        QFile file(filePath);
-        if (!file.open(QIODevice::ReadOnly)) {
+        stream = new QFile(_job.path);
+        if (!stream->open(QIODevice::ReadOnly)) {
             _job.status = Error;
-            _job.msg = tr("Failed to open file %1").arg(filePath);
+            _job.msg = tr("Failed to open file %1").arg(_job.path);
             APP->sendNotification(_job.msg, tr("Error"), QSystemTrayIcon::MessageIcon::Warning);
         }
-        stream = new QDataStream(&file);
     }
 
     Uploader *uploader = APP->serverService()->createUploader(_job.server);

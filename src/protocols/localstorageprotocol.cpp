@@ -34,7 +34,7 @@ LocalStorageUploader::LocalStorageUploader(QVariantMap settings)
     _output = settings["output"].toString();
 }
 
-void LocalStorageUploader::upload(QDataStream *stream, UploadJob &job)
+void LocalStorageUploader::upload(QIODevice *stream, UploadJob &job)
 {
     QDir dir(_folder);
     QString filePath = dir.filePath(job.name);
@@ -44,13 +44,12 @@ void LocalStorageUploader::upload(QDataStream *stream, UploadJob &job)
         return;
     }
     outputFile.open(QIODevice::WriteOnly);
-    QDataStream outputStream(&outputFile);
     const size_t BUFFER_SIZE = 1024 * 256;
-
     char *buffer = new char[BUFFER_SIZE];
     while (!stream->atEnd()) {
-        int len = stream->readRawData(buffer, BUFFER_SIZE);
+        auto len = stream->read(buffer, BUFFER_SIZE);
         outputFile.write(buffer, len);
+        qDebug() << "write bytes: " << len;
     }
     outputFile.close();
 

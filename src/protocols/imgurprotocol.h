@@ -1,23 +1,22 @@
-#ifndef FTPPROTOCOL_H
-#define FTPPROTOCOL_H
+#ifndef IMGURPROTOCOL_H
+#define IMGURPROTOCOL_H
 
 #include <QtCore>
 #include "./base.h"
 
-class FtpUploader : public Uploader
+class ImgurUploader: public Uploader
 {
     QCurl _curl;
-    QString _outputUrl;
 public:
-    FtpUploader(const QVariantMap settings);
+    ImgurUploader(const QVariantMap setttings);
     void upload(QIODevice *stream, UploadJob &job) override;
 };
 
-class FtpProtocol : public Protocol
+class ImgurProtocol : public Protocol
 {
     QList<ProtocolSettingInfo> _settingInfos;
 public:
-    FtpProtocol();
+    ImgurProtocol();
 
     // Protocol interface
     const QString getName();
@@ -26,4 +25,4 @@ public:
     Uploader *createUploader(const QVariantMap &settings);
 };
 
-#endif // FTPPROTOCOL_H
+#endif // IMGURPROTOCOL_H

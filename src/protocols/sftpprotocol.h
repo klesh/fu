@@ -6,15 +6,12 @@
 
 class SftpUploader : public Uploader
 {
-    const QUrl _sftpUrl;
+    QCurl _curl;
     QString _outputUrl;
-    QString _keyPath;
-    QString _keyPass;
-    QString _pubkeyPath;
 
 public:
     SftpUploader(const QVariantMap settings);
-    void upload(QDataStream *stream, UploadJob &job) override;
+    void upload(QIODevice *stream, UploadJob &job) override;
 };
 
 class SftpProtocol: public Protocol

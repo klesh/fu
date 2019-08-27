@@ -51,6 +51,7 @@ SOURCES += \
         src/main.cpp \
         src/protocols/ftpprotocol.cpp \
         src/protocols/localstorageprotocol.cpp \
+        src/protocols/imgurprotocol.cpp \
         src/protocols/sftpprotocol.cpp \
         src/store/migrations/migrationv0.cpp \
         src/store/migrator.cpp \
@@ -86,6 +87,7 @@ HEADERS += \
         src/protocols/base.h \
         src/protocols/ftpprotocol.h \
         src/protocols/localstorageprotocol.h \
+        src/protocols/imgurprotocol.h \
         src/protocols/sftpprotocol.h \
         src/store/migration.h \
         src/store/migrations/migrationv0.h \
@@ -117,14 +119,14 @@ msvc:COMPILER=msvc
 gcc:COMPILER=gcc
 
 ROOTDIR = $$PWD/..
-DEPSDIR = $$ROOTDIR/deps/$$QT_ARCH
+DEPSDIR = $$ROOTDIR/deps/$$QT_ARCH/$$BUILD
 DESTDIR = $$ROOTDIR/builds/fu-$$COMPILER-$$QT_ARCH-$$BUILD-$$VERSION
 
 win32 {
     RC_FILE = platforms/win32/fu.rc
 
     INCLUDEPATH += $$DEPSDIR/include
-    LIBS += -L$$DEPSDIR/lib -llibqcurl1 \
+    LIBS += -L$$DEPSDIR/bin -lqcurl1
 
     dlls.path = $$DESTDIR
     dlls.files = $$DEPSDIR/bin/*.dll

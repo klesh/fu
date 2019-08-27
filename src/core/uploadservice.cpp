@@ -61,7 +61,7 @@ void UploadService::upload(QList<Clip> &clips)
         clip.freePixmap(); // no need pixmap anymore, free it up
         QByteArray imageBytes;
 
-        if (clip.isImage) {
+        if (clip.isImage && (imageCompressionEanbled || imageWartermarkEnabled)) {
             // detect format and initialize quality
             QByteArray fmt = "jpg";
             int quality = -1;
@@ -159,7 +159,13 @@ void UploadService::populatePool()
             job.saved = true;
         } else if (job.status == Error && job.notified == false) {
             job.notified = true;
-            APP->sendNotification(job.msg, "fu", QSystemTrayIcon::Warning);
+            APP->sendNotification(
+                        tr("Upload %1 to %2 failed: %3")
+                            .arg(job.clip.name)
+                            .arg(job.server.name)
+                            .arg(job.msg),
+                        "fu",
+                        QSystemTrayIcon::Warning);
         }
     }
 
@@ -177,7 +183,7 @@ void UploadService::populatePool()
 void UploadService::handleDuplication(UploadJob &job)
 {
     DuplicationHandlingMethod method;
-    if (job.counter) { // already selected AutoRename for this job before
+    if (job.renameCounter) { // already selected AutoRename for this job before
         method = AutoRename;
     } else if (_applyToAll != None) { // `apply to all` was checked
         method = _applyToAll;
@@ -209,7 +215,7 @@ void UploadService::handleDuplication(UploadJob &job)
     if (method == AutoRename) {
         QFileInfo fi(job.clip.name);
         job.name = QString("%1-%2.%3")
-                .arg(fi.baseName()).arg(++job.counter).arg(fi.completeSuffix());
+                .arg(fi.baseName()).arg(++job.renameCounter).arg(fi.completeSuffix());
         job.status = Pending;
     } else if (method == Overwrite) {
         job.overwrite = true;
@@ -248,14 +254,16 @@ void UploadService::uploadFinished()
         }
 
     }
-    _jobs.clear();
 
     if (outputs.size())
         APP->clipService()->setClipboard(outputs.join("\n"));
 
-    QString notification = tr("File upload completed.\n%1 succeeded, %2 failed and %3 skipped")
-            .arg(success).arg(error).arg(skip);
-    APP->sendNotification(notification);
+    if (_jobs.size() > 1 || _jobs.first().status == Success) {
+        QString notification = tr("File upload completed.\n%1 succeeded, %2 failed and %3 skipped")
+                .arg(success).arg(error).arg(skip);
+        APP->sendNotification(notification);
+    }
+    _jobs.clear();
     _isUploading = false;
 }
 

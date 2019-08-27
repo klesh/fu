@@ -3,6 +3,7 @@
 
 FtpProtocol::FtpProtocol()
 {
+    _settingInfos.append({"proxy", tr("Proxy"), tr("socks5://localhost:1080"), Text, false, "", ""});
     _settingInfos.append({"host", tr("Host"), tr("FTP server host name"), Text, true, tr("Please pick a storage location"), ""});
     _settingInfos.append({"port", tr("Port"), tr(""), Integer, true, tr("Please enter port number"), 21});
     _settingInfos.append({"user", tr("Username"), tr(""), Text, true, tr("Please enter login user name"), ""});
@@ -33,19 +34,16 @@ Uploader *FtpProtocol::createUploader(const QVariantMap &settings)
 
 // uploader
 FtpUploader::FtpUploader(QVariantMap settings)
-    : _ftpUrl(createUrlFromSettings(settings, "ftp"))
+    : _curl(createQCurl(settings, "ftp"))
 {
     _outputUrl = settings["outputUrl"].toString();
 }
 
-void FtpUploader::upload(QDataStream *stream, UploadJob &job)
+void FtpUploader::upload(QIODevice *stream, UploadJob &job)
 {
-    QCurl curl(_ftpUrl);
-
-
     if (job.overwrite == false) {
         int exists;
-        auto re = curl.exists(exists, job.name);
+        auto re = _curl.exists(exists, job.name);
         if (exists == 1) {
             job.status = Duplicated;
             return;
@@ -57,7 +55,7 @@ void FtpUploader::upload(QDataStream *stream, UploadJob &job)
         }
     }
 
-    auto res = curl.put(job.name, *stream->device());
+    auto res = _curl.put(job.name, *stream);
 
     if (res.code()) {
         job.status = Error;

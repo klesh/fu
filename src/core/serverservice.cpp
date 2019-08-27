@@ -3,6 +3,7 @@
 #include "../protocols/localstorageprotocol.h"
 #include "../protocols/ftpprotocol.h"
 #include "../protocols/sftpprotocol.h"
+#include "../protocols/imgurprotocol.h"
 
 #include <QSqlQuery>
 #include <QSqlRecord>
@@ -28,6 +29,7 @@ ServerService::ServerService()
     _protocols.append(new LocalStorageProtocol());
     _protocols.append(new FtpProtocol());
     _protocols.append(new SftpProtocol());
+    _protocols.append(new ImgurProtocol());
 }
 
 QList<Server> ServerService::getAll()
@@ -138,6 +140,7 @@ Protocol *ServerService::findProtocol(const QString &name)
             return protocol;
     }
     assert(false);
+    return nullptr;
 }
 
 Uploader *ServerService::createUploader(const Server &server)

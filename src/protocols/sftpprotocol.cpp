@@ -3,6 +3,7 @@
 
 SftpProtocol::SftpProtocol()
 {
+    _settingInfos.append({"proxy", tr("Proxy"), tr("socks5://localhost:1080"), Text, false, "", ""});
     _settingInfos.append({"host", tr("Host"), tr("FTP server host name"), Text, true, tr("Please pick a storage location"), ""});
     _settingInfos.append({"port", tr("Port"), tr(""), Integer, true, tr("Please enter port number"), 22});
     _settingInfos.append({"user", tr("Username"), tr(""), Text, true, tr("Please enter login user name"), ""});
@@ -35,24 +36,19 @@ Uploader *SftpProtocol::createUploader(const QVariantMap &settings)
 }
 
 SftpUploader::SftpUploader(const QVariantMap settings)
-    : _sftpUrl(createUrlFromSettings(settings, "sftp"))
+    : _curl(createQCurl(settings, "sftp"))
 {
-    _keyPath = settings["keyPath"].toString();
-    _keyPass = settings["keyPass"].toString();
-    _pubkeyPath = settings["pubkeyPath"].toString();
+    _curl.setPrivateKeyPath(settings["keyPath"].toString());
+    _curl.setPublicKeyPath(settings["pubkeyPath"].toString());
+    _curl.setKeyPassword(settings["keyPass"].toString());
     _outputUrl = settings["outputUrl"].toString();
 }
 
-void SftpUploader::upload(QDataStream *stream, UploadJob &job)
+void SftpUploader::upload(QIODevice *stream, UploadJob &job)
 {
-    QCurl curl(_sftpUrl);
-
-//    if (!_keyPath.isEmpty())
-//        curl.setSshKeyFiles(_keyPath, _pubkeyPath, _keyPass);
-
     if (job.overwrite == false) {
         int exists;
-        auto re = curl.exists(exists, job.name);
+        auto re = _curl.exists(exists, job.name);
         if (exists == 1) {
             job.status = Duplicated;
             return;
@@ -64,8 +60,7 @@ void SftpUploader::upload(QDataStream *stream, UploadJob &job)
         }
     }
 
-    curl.setVerbose(true);
-    auto res = curl.put(job.name, *stream->device());
+    auto res = _curl.put(job.name, *stream);
 
     if (res.code()) {
         job.status = Error;

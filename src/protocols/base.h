@@ -2,6 +2,7 @@
 #define PROTOCOL_H
 
 #include <QtCore>
+#include <qcurl.h>
 #include "../models/server.h"
 #include "../models/clip.h"
 
@@ -39,7 +40,7 @@ struct UploadJob {
     QString path;           // or local file to be uploaded
     QString name;           // file name
     UploadJobStatus status = Pending;
-    int counter = 0;
+    int renameCounter = 0;
     bool overwrite = false;
     QString url;
     QString msg;
@@ -51,7 +52,7 @@ class Uploader : public QObject
 {
     Q_OBJECT
 public:
-    virtual void upload(QDataStream *stream, UploadJob &job) = 0;
+    virtual void upload(QIODevice *device, UploadJob &job) = 0;
 };
 
 class Protocol : public QObject
@@ -65,8 +66,7 @@ public:
     virtual Uploader *createUploader(const QVariantMap &settings) = 0;
 };
 
-
-inline QUrl createUrlFromSettings(const QVariantMap &settings, const QString scheme) {
+inline QCurl createQCurl(const QVariantMap &settings, const QString scheme) {
     QUrl url;
     url.setScheme(scheme);
     url.setHost(settings["host"].toString());
@@ -77,6 +77,8 @@ inline QUrl createUrlFromSettings(const QVariantMap &settings, const QString sch
     if (!path.endsWith('/'))
         path += '/';
     url.setPath(path);
-    return url;
+    QCurl curl(url);
+    curl.setProxyUrl(settings["proxy"].toString());
+    return curl;
 }
 #endif // PROTOCOL_H
