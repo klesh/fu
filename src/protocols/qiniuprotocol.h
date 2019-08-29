@@ -1,22 +1,24 @@
-#ifndef IMGURPROTOCOL_H
-#define IMGURPROTOCOL_H
+#ifndef QINIUPROTOCOL_H
+#define QINIUPROTOCOL_H
 
 #include <QtCore>
 #include "./base.h"
 
-class ImgurUploader: public Uploader
+class QiniuUploader: public Uploader
 {
     QCurl _curl;
+    const QVariantMap _settings;
+
 public:
-    ImgurUploader(const QVariantMap settings);
+    QiniuUploader(const QVariantMap settings);
     void upload(QIODevice *stream, UploadJob &job) override;
 };
 
-class ImgurProtocol : public Protocol
+class QiniuProtocol : public Protocol
 {
     QList<ProtocolSettingInfo> _settingInfos;
 public:
-    ImgurProtocol();
+    QiniuProtocol();
 
     // Protocol interface
     const QString getName();
@@ -25,4 +27,4 @@ public:
     Uploader *createUploader(const QVariantMap &settings);
 };
 
-#endif // IMGURPROTOCOL_H
+#endif // QINIUPROTOCOL_H

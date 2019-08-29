@@ -12,6 +12,7 @@ void UploadThread::run()
 
     if (!_job.data.isEmpty()) { // share same processed image
         stream = new QBuffer(&_job.data);
+        stream->setProperty("filename", _job.name);
         stream->open(QIODevice::ReadOnly);
     } else { // create independent file stream
         stream = new QFile(_job.path);

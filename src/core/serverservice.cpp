@@ -4,6 +4,7 @@
 #include "../protocols/ftpprotocol.h"
 #include "../protocols/sftpprotocol.h"
 #include "../protocols/imgurprotocol.h"
+#include "../protocols/qiniuprotocol.h"
 
 #include <QSqlQuery>
 #include <QSqlRecord>
@@ -30,6 +31,7 @@ ServerService::ServerService()
     _protocols.append(new FtpProtocol());
     _protocols.append(new SftpProtocol());
     _protocols.append(new ImgurProtocol());
+    _protocols.append(new QiniuProtocol());
 }
 
 QList<Server> ServerService::getAll()
