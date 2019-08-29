@@ -80,11 +80,22 @@ QiniuUploader::QiniuUploader(const QVariantMap settings)
 
 void QiniuUploader::upload(QIODevice *stream, UploadJob &job)
 {
+    // compose remote path
+    QString path = job.name;
+    auto prefix = _settings["prefix"].toString();
+    if (prefix.isEmpty() == false) {
+        if (prefix.endsWith('/') == false) prefix.append('/');
+        path = prefix + path;
+    }
+    if (path.startsWith('/')) path.remove(0, 1);
+
     // obtain upload token
-    const QString putPolicy = QString("{\"scope\":\"%1\",\"deadline\":%2,\"insertOnly\":%3}")
-            .arg(_settings["bucket"].toString())
+    const QString bucket = _settings["bucket"].toString();
+    const QString putPolicy = QString("{\"scope\":\"%1:%2\",\"deadline\":%3,\"insertOnly\":%4}")
+            .arg(bucket)
+            .arg(path)
             .arg(QDateTime::currentDateTime().toTime_t()+3600)
-            .arg(job.overwrite ? 1 : 0);
+            .arg(job.overwrite ? 0 : 1);
     const QString encodedPutPolicy = putPolicy.toUtf8().toBase64(QByteArray::Base64UrlEncoding);
 
     const QString secretKey = _settings["secretKey"].toString();
@@ -101,21 +112,17 @@ void QiniuUploader::upload(QIODevice *stream, UploadJob &job)
 
     // construct multipart form
     QCurlMultipart parts;
-    QString path = job.name;
-    auto prefix = _settings["prefix"].toString();
-    if (prefix.isEmpty() == false) {
-        if (prefix.endsWith('/') == false) prefix.append('/');
-        path = prefix + path;
-    }
-    if (path.startsWith('/')) path.remove(0, 1);
     parts.append({"key", path});
     parts.append({"token", uploadToken});
     parts.append({"file", QVariant::fromValue(stream)});
 
+//    _curl.setVerbose(true);
     auto res = _curl.post(parts);
     if (res.statusCode() == 200) {
         job.status = Success;
         job.url = QString("http://%1/%2").arg(_settings["domain"].toString()).arg(path);
+    } else if (res.statusCode() == 614) {
+        job.status = Duplicated;
     } else {
         job.status = Error;
         auto json = res.responseJson();
