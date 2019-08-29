@@ -85,7 +85,7 @@ void QiniuUploader::upload(QIODevice *stream, UploadJob &job)
             .arg(_settings["bucket"].toString())
             .arg(QDateTime::currentDateTime().toTime_t()+3600)
             .arg(job.overwrite ? 1 : 0);
-    const QString encodedPutPolicy = putPolicy.toLatin1().toBase64(QByteArray::Base64UrlEncoding);
+    const QString encodedPutPolicy = putPolicy.toUtf8().toBase64(QByteArray::Base64UrlEncoding);
 
     const QString secretKey = _settings["secretKey"].toString();
     QMessageAuthenticationCode hmac(QCryptographicHash::Sha1, secretKey.toUtf8());
