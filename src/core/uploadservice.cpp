@@ -41,6 +41,7 @@ void UploadService::upload(QList<Clip> &clips, const QStringList &tags, const QS
 {
     assert (_isUploading == false);
     _isUploading = true;
+    emit uploadStateChanged();
     APP->clipService()->massAppend(clips, tags, desc);
     upload(clips);
 }
@@ -265,5 +266,6 @@ void UploadService::uploadFinished()
     }
     _jobs.clear();
     _isUploading = false;
+    emit uploadStateChanged();
 }
 

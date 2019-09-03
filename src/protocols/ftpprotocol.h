@@ -7,7 +7,8 @@
 class FtpUploader : public Uploader
 {
     QCurl _curl;
-    QString _outputUrl;
+    QVariantMap _settings;
+
 public:
     FtpUploader(const QVariantMap settings);
     void upload(QIODevice *stream, UploadJob &job) override;

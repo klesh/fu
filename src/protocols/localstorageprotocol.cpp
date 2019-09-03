@@ -2,8 +2,9 @@
 
 LocalStorageProtocol::LocalStorageProtocol()
 {
-    _settingInfos.append({"folder", tr("Storage folder"), tr("Click 'Browse' button to select a folder"), Directory, true, tr("Please pick a storage location"), ""});
-    _settingInfos.append({"output", tr("Output template"), tr("%1 will be replace with your file name"), Text, false, "", "http://localhost/%1"});
+    _settingInfos.append({"root", tr("Root path"), tr("Root path on local machine, will not be part of output url"), Directory, true, "", ""});
+    _settingInfos.append({"folder", tr("Folder"), tr("%1 for Year, %2 for Month, %3 for Day Of Month, part of output url"), Text, false, "", "%1-%2-%3"});
+    _settingInfos.append({"outputUrl", tr("Output Url"), tr("%1 for {Folder}/{File name}"), Text, false, "", "http://localhost/%1"});
 }
 
 const QString LocalStorageProtocol::getName()
@@ -29,16 +30,16 @@ Uploader *LocalStorageProtocol::createUploader(const QVariantMap &settings)
 
 // uploader
 LocalStorageUploader::LocalStorageUploader(QVariantMap settings)
+    : _settings(settings)
 {
-    _folder = settings["folder"].toString();
-    _output = settings["output"].toString();
 }
 
 void LocalStorageUploader::upload(QIODevice *stream, UploadJob &job)
 {
-    QDir dir(_folder);
-    QString filePath = dir.filePath(job.name);
-    QFile outputFile(filePath);
+    QString path = formatPath(_settings["folder"].toString(), job.name);
+    QString fullpath = joinPath(_settings["root"].toString(), path);
+
+    QFile outputFile(fullpath);
     if (outputFile.exists() && !job.overwrite) {
         job.status = Duplicated;
         return;
@@ -49,11 +50,10 @@ void LocalStorageUploader::upload(QIODevice *stream, UploadJob &job)
     while (!stream->atEnd()) {
         auto len = stream->read(buffer, BUFFER_SIZE);
         outputFile.write(buffer, len);
-        qDebug() << "write bytes: " << len;
     }
     outputFile.close();
 
     delete[] buffer;
     job.status = Success;
-    job.url = _output.arg(job.name);
+    job.url = _settings["outputUrl"].toString().arg(path);
 }

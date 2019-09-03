@@ -31,6 +31,9 @@ private slots:
     void threadFinished();
     void uploadFinished();
 
+signals:
+    void uploadStateChanged();
+
 public:
     void upload(QList<Clip> &clips, const QStringList &tags, const QString &desc);
     bool isUploading() { return _isUploading; }

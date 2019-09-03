@@ -81,12 +81,7 @@ QiniuUploader::QiniuUploader(const QVariantMap settings)
 void QiniuUploader::upload(QIODevice *stream, UploadJob &job)
 {
     // compose remote path
-    QString path = job.name;
-    auto prefix = _settings["prefix"].toString();
-    if (prefix.isEmpty() == false) {
-        if (prefix.endsWith('/') == false) prefix.append('/');
-        path = prefix + path;
-    }
+    QString path = formatPath(_settings["prefix"].toString(), job.name);
     if (path.startsWith('/')) path.remove(0, 1);
 
     // obtain upload token

@@ -63,6 +63,7 @@ UploadDialog::UploadDialog(QWidget *parent, uint clipId) :
     }
 
     uploadToLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::Minimum, QSizePolicy::Expanding));
+    connect(APP->uploadService(), SIGNAL(uploadStateChanged()), this, SLOT(syncState()));
 }
 
 
@@ -222,5 +223,8 @@ void UploadDialog::syncState()
         }
     }
 
-    ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(isAnyServerSelected && !_clips.empty() && !isAnyClipNameEmpty);
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(isAnyServerSelected
+                                                            && !_clips.empty()
+                                                            && !isAnyClipNameEmpty
+                                                            && !APP->uploadService()->isUploading());
 }

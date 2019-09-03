@@ -11,8 +11,9 @@ SftpProtocol::SftpProtocol()
     _settingInfos.append({"keyPath", tr("Private Key"), tr(""), File, false, "", ""});
     _settingInfos.append({"keyPass", tr("Key Password"), tr(""), Text, false, "", ""});
     _settingInfos.append({"pubkeyPath", tr("Public Key"), tr(""), File, false, "", ""});
-    _settingInfos.append({"path", tr("Remote Path"), tr(""), Text, false, "", ""});
-    _settingInfos.append({"outputUrl", tr("Output Url"), tr(""), Text, false, "", "http://localhost/%1"});
+    _settingInfos.append({"root", tr("Root path"), tr("Root path on remote server, will not be part of output url"), Text, false, "", ""});
+    _settingInfos.append({"folder", tr("Folder"), tr("%1 for Year, %2 for Month, %3 for Day Of Month, part of output url"), Text, false, "", "%1-%2-%3"});
+    _settingInfos.append({"outputUrl", tr("Output Url"), tr("%1 for {Folder}/{File name}"), Text, false, "", "http://localhost/%1"});
 }
 
 const QString SftpProtocol::getName()
@@ -36,19 +37,21 @@ Uploader *SftpProtocol::createUploader(const QVariantMap &settings)
 }
 
 SftpUploader::SftpUploader(const QVariantMap settings)
-    : _curl(createQCurl(settings, "sftp"))
+    : _curl(createQCurl(settings, "sftp")), _settings(settings)
 {
     _curl.setPrivateKeyPath(settings["keyPath"].toString());
     _curl.setPublicKeyPath(settings["pubkeyPath"].toString());
     _curl.setKeyPassword(settings["keyPass"].toString());
-    _outputUrl = settings["outputUrl"].toString();
 }
 
 void SftpUploader::upload(QIODevice *stream, UploadJob &job)
 {
+    QString path = formatPath(_settings["folder"].toString(), job.name);
+    QString fullpath = joinPath(_settings["root"].toString(), path);
+
     if (job.overwrite == false) {
         int exists;
-        auto re = _curl.exists(exists, job.name);
+        auto re = _curl.exists(exists, fullpath);
         if (exists == 1) {
             job.status = Duplicated;
             return;
@@ -60,13 +63,13 @@ void SftpUploader::upload(QIODevice *stream, UploadJob &job)
         }
     }
 
-    auto res = _curl.put(job.name, *stream);
+    auto res = _curl.put(fullpath, *stream);
 
     if (res.code()) {
         job.status = Error;
         job.msg = res.message();
     } else {
         job.status = Success;
-        job.url = _outputUrl.arg(job.name);
+        job.url = _settings["outputUrl"].toString().arg(path);
     }
 }

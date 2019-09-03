@@ -7,8 +7,7 @@
 
 class LocalStorageUploader : public Uploader
 {
-    QString _folder;
-    QString _output;
+    QVariantMap _settings;
 
 public:
     LocalStorageUploader(const QVariantMap settings);

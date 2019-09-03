@@ -7,7 +7,7 @@
 class SftpUploader : public Uploader
 {
     QCurl _curl;
-    QString _outputUrl;
+    QVariantMap _settings;
 
 public:
     SftpUploader(const QVariantMap settings);

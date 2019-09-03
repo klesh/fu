@@ -81,4 +81,25 @@ inline QCurl createQCurl(const QVariantMap &settings, const QString scheme) {
     curl.setProxyUrl(settings["proxy"].toString());
     return curl;
 }
+
+inline QString formatPath(QString folder, QString file) {
+    if (folder.isEmpty())
+        return file;
+
+    QDate today = QDate::currentDate();
+    QString path = folder
+                .arg(today.year(), 4, 10, QChar('0'))
+                .arg(today.month(), 2, 10, QChar('0'))
+                .arg(today.day(), 2, 10, QChar('0'));
+    if (!path.endsWith('/')) path.append('/');
+    path.append(file);
+    return path;
+}
+
+inline QString joinPath(QString root, QString path) {
+    if (root.isEmpty())
+        return path;
+    if (!root.endsWith('/')) root.append('/');
+    return root + path;
+}
 #endif // PROTOCOL_H
