@@ -9,8 +9,10 @@ QVariant SettingService::get(const QString &settingKey)
     query.prepare("SELECT settingValue FROM settings WHERE settingKey=:settingKey");
     query.bindValue(":settingKey", settingKey);
     assert(query.exec());
-    assert(query.next());
-    return query.value(0);
+    if (query.next()) {
+        return query.value(0);
+    }
+    return QString();
 }
 
 void SettingService::set(const QString &settingKey, const QString &settingValue)
@@ -20,6 +22,12 @@ void SettingService::set(const QString &settingKey, const QString &settingValue)
     query.bindValue(":settingKey", settingKey);
     query.bindValue(":settingValue", settingValue);
     assert(query.exec());
+    if (query.numRowsAffected() == 0) {
+        query.prepare("INSERT INTO settings (settingKey, settingValue) VALUES (:settingKey, :settingValue)");
+        query.bindValue(":settingKey", settingKey);
+        query.bindValue(":settingValue", settingValue);
+        query.exec();
+    }
 }
 
 bool SettingService::imageCompressionEnabled()
@@ -60,4 +68,14 @@ QString SettingService::imageWatermarkPosition()
 void SettingService::setImageWatermarkPosition(const QString &pos)
 {
     set("imageWatermarkPosition", pos);
+}
+
+QString SettingService::lang()
+{
+    return get("lang").toString();
+}
+
+void SettingService::setLang(const QString &lang)
+{
+    set("lang", lang);
 }

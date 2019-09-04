@@ -4,7 +4,7 @@
 SftpProtocol::SftpProtocol()
 {
     _settingInfos.append({"proxy", tr("Proxy"), tr("socks5://localhost:1080"), Text, false, "", ""});
-    _settingInfos.append({"host", tr("Host"), tr("FTP server host name"), Text, true, tr("Please pick a storage location"), ""});
+    _settingInfos.append({"host", tr("Host"), tr("SFTP server host name"), Text, true, tr("Please enter server host name"), ""});
     _settingInfos.append({"port", tr("Port"), tr(""), Integer, true, tr("Please enter port number"), 22});
     _settingInfos.append({"user", tr("Username"), tr(""), Text, true, tr("Please enter login user name"), ""});
     _settingInfos.append({"pass", tr("Password"), tr(""), Text, true, tr("Please enter login password"), ""});

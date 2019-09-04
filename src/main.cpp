@@ -12,11 +12,6 @@ int main(int argc, char *argv[])
 {
     Application app(argc, argv);
 
-    // setup i18n
-    QTranslator qTranslator(&app);
-    qTranslator.load(QLocale::system(), "fu", ".", app.applicationDirPath().append("/i18n"));
-    app.installTranslator(&qTranslator);
-
     // application info
     QApplication::setApplicationName("fu");
     QApplication::setApplicationVersion(APP_VERSION);
@@ -31,7 +26,6 @@ int main(int argc, char *argv[])
     QString defaultDbPath = dataDir.filePath("data.db");
     QCommandLineOption dbPathOption("p", app.tr("sqlite database file path"), "path", defaultDbPath);
     parser.addOption(dbPathOption);
-
     parser.process(app);
 
     if (!app.prepare(parser.value(dbPathOption)))

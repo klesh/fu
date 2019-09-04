@@ -348,21 +348,6 @@
     </item>
    </layout>
   </widget>
-  <action name="actionDelete">
-   <property name="icon">
-    <iconset resource="../fu.qrc">
-     <normaloff>:/icons/x.svg</normaloff>:/icons/x.svg</iconset>
-   </property>
-   <property name="text">
-    <string>Delete</string>
-   </property>
-   <property name="toolTip">
-    <string>Delete selected clips</string>
-   </property>
-   <property name="shortcut">
-    <string>Del</string>
-   </property>
-  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>

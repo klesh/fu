@@ -111,6 +111,24 @@ TRANSLATIONS = \
         i18n/fu.zh_cn.ts \
         i18n/fu.en_us.ts
 
+TRANSLATIONS_FILES =
+LANGS =
+qtPrepareTool(LRELEASE, lrelease)
+for(tsfile, TRANSLATIONS) {
+    qmfile = $$shadowed($$tsfile)
+    qmfile ~= s,.ts$,.qm,
+    qmdir = $$dirname(qmfile)
+    LANGS = $$LANGS,$$basename(qmfile)
+    !exists($$qmdir) {
+        mkpath($$qmdir)|error("Aborting.")
+    }
+    command = $$LRELEASE -removeidentical $$tsfile -qm $$qmfile
+    system($$command)|error("Failed to run: $$command")
+    TRANSLATIONS_FILES += $$qmfile
+}
+
+DEFINES += LANGS=\\\"$${LANGS}\\\"
+message($$LANGS)
 CONFIG(release, debug|release) {
     BUILD = release
 }
@@ -133,6 +151,10 @@ win32 {
     dlls.path = $$DESTDIR
     dlls.files = $$DEPSDIR/bin/*.dll
     INSTALLS += dlls
+
+    langs.path = $$DESTDIR/i18n
+    langs.files = $$qmdir/*.qm
+    INSTALLS += langs
 }
 
 unix {

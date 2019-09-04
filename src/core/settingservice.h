@@ -20,6 +20,9 @@ public:
 
     QString imageWatermarkPosition();
     void setImageWatermarkPosition(const QString &pos);
+
+    QString lang();
+    void setLang(const QString &lang);
 };
 
 #endif // SETTINGSERVICE_H

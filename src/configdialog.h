@@ -48,6 +48,8 @@ private slots:
     void bakOpenDataDir();
     void highlightWidget(QWidget*, const QString);
 
+    void langSaveLang();
+
 private:
     Ui::ConfigDialog *ui;
 };

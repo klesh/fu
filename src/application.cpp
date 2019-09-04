@@ -123,6 +123,24 @@ bool Application::prepare(const QString &dbPath)
     _clipService = new ClipService();
     _uploadService = new UploadService();
 
+    auto lang = _settingService->lang();
+
+    // setup i18n
+    qDebug() << "lang" << lang;
+    if (!lang.isEmpty()) {
+        QTranslator *qTranslator = new QTranslator(this);
+        qDebug() << "lang" << QString("fu.%1.qm").arg(lang);
+        qTranslator->load(QString("fu.%1.qm").arg(lang), "./i18n");
+        installTranslator(qTranslator);
+    }
+
+#ifdef Q_OS_WIN
+    auto f = font();
+    f.setFamily("Microsoft YaHei");
+    f.setPointSize(9);
+    setFont(f);
+#endif
+
     // upgrade checking
     if (showUpgradeWindow() == QDialog::Rejected)
         return false;

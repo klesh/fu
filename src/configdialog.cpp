@@ -14,6 +14,7 @@
 #define TAB_OUTPUT_FORMATS 2
 #define TAB_TAGS 3
 #define TAB_BACKUP_RESTORE 4
+#define TAB_LANG 5
 
 
 ConfigDialog::ConfigDialog() :
@@ -58,11 +59,24 @@ ConfigDialog::ConfigDialog() :
 
     connect(ui->btnOpenDataDir, SIGNAL(clicked()), this, SLOT(bakOpenDataDir()));
 
+    connect(ui->btnSaveLang, SIGNAL(clicked()), this, SLOT(langSaveLang()));
+
     ui->tabs->setCurrentIndex(0);
 
     // load all protocols
     for (auto protocol : APP->serverService()->getProtocols()) {
         ui->cbbProtocol->addItem(protocol->getTitle(), protocol->getName());
+    }
+
+    // load all langs
+    auto langs = QString(LANGS);
+    for (auto lang : langs.split(",")) {
+        if (lang.isEmpty()) continue;
+        lang = lang.mid(3, lang.size() - 6);
+        QLocale locale(lang);
+        auto listItem = new QListWidgetItem(locale.nativeLanguageName(), ui->lstLangs);
+        auto langName = locale.name().toLower();
+        listItem->setData(Qt::UserRole, langName);
     }
 
     reloadTab(TAB_SERVERS);
@@ -132,6 +146,16 @@ void ConfigDialog::reloadTab(int id)
             ui->lstTags->addItem(listItem);
         }
         break;
+    }
+    case TAB_LANG:
+    {
+        auto currLang = APP->settingService()->lang();
+        for(int i = 0; i < ui->lstLangs->count(); ++i)
+        {
+            QListWidgetItem* listItem = ui->lstLangs->item(i);
+            listItem->setSelected(listItem->data(Qt::UserRole).toString() == currLang);
+            //Do stuff!
+        }
     }
     }
 }
@@ -503,4 +527,14 @@ void ConfigDialog::highlightWidget(QWidget *widget, const QString hint)
 {
     widget->setFocus();
     QToolTip::showText(widget->mapToGlobal(QPoint()), hint);
+}
+
+void ConfigDialog::langSaveLang()
+{
+    QString lang;
+    if (ui->lstLangs->selectedItems().size()) {
+        lang = ui->lstLangs->selectedItems()[0]->data(Qt::UserRole).toString();
+    }
+    APP->settingService()->setLang(lang);
+    QMessageBox::information(this, tr("Restart needed"), tr("In order to switch language, you need to restart this program."));
 }

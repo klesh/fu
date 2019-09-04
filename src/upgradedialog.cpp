@@ -1,12 +1,15 @@
 #include "application.h"
 #include "upgradedialog.h"
 #include "ui_upgradedialog.h"
+#include <QPushButton>
 
 UpgradeDialog::UpgradeDialog() :
     QDialog(),
     ui(new Ui::UpgradeDialog)
 {
     ui->setupUi(this);
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setText(tr("Ok"));
+    ui->buttonBox->button(QDialogButtonBox::Cancel)->setText(tr("Cancel"));
 
     setAttribute(Qt::WA_DeleteOnClose);
     connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(startUpgrading()));

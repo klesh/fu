@@ -48,11 +48,14 @@ QComboBox::drop-down { \
 } \
 " ;
 
+
 UploadDialog::UploadDialog(QWidget *parent, uint clipId) :
     QDialog(parent),
     ui(new Ui::UploadDialog)
 {
     ui->setupUi(this);
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setText(tr("Ok"));
+    ui->buttonBox->button(QDialogButtonBox::Cancel)->setText(tr("Cancel"));
 
     _previewLayout = new FlowLayout(ui->sclPreview);
     auto uploadToLayout = new QVBoxLayout(ui->sclUploadTo);

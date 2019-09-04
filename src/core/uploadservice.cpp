@@ -17,7 +17,7 @@ inline void query2upload(QSqlQuery &query, Upload &upload) {
     upload.url = query.value(rec.indexOf("output")).toString();
     upload.createdAt = query.value(rec.indexOf("createdAt")).toDateTime();
     auto serverNameIdx = rec.indexOf("serverName");
-    if (!~serverNameIdx) upload.serverName = query.value(serverNameIdx).toString();
+    if (serverNameIdx > -1) upload.serverName = query.value(serverNameIdx).toString();
 }
 
 
