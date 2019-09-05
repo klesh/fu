@@ -39,12 +39,24 @@ void LocalStorageUploader::upload(QIODevice *stream, UploadJob &job)
     QString path = formatPath(_settings["folder"].toString(), job.name);
     QString fullpath = joinPath(_settings["root"].toString(), path);
 
-    QFile outputFile(fullpath);
-    if (outputFile.exists() && !job.overwrite) {
+    QFileInfo fi(fullpath);
+
+    if (fi.exists() && !job.overwrite) {
         job.status = Duplicated;
         return;
     }
-    outputFile.open(QIODevice::WriteOnly);
+    if (!fi.dir().exists() && !fi.dir().mkpath(".")) {
+        job.status = Error;
+        job.msg = tr("Failed to create folder");
+        return;
+    }
+
+    QFile outputFile(fullpath);
+    if (!outputFile.open(QIODevice::WriteOnly)) {
+        job.status = Error;
+        job.msg = tr("Failed to open file for writing.");
+        return;
+    }
     const size_t BUFFER_SIZE = 1024 * 256;
     char *buffer = new char[BUFFER_SIZE];
     while (!stream->atEnd()) {

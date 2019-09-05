@@ -128,7 +128,6 @@ for(tsfile, TRANSLATIONS) {
 }
 
 DEFINES += LANGS=\\\"$${LANGS}\\\"
-message($$LANGS)
 CONFIG(release, debug|release) {
     BUILD = release
 }

@@ -123,7 +123,6 @@
     <message>
         <location filename="../src/configdialog.ui" line="176"/>
         <location filename="../src/configdialog.ui" line="620"/>
-        <location filename="../src/configdialog.cpp" line="26"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
@@ -249,62 +248,61 @@
     </message>
     <message>
         <location filename="../src/configdialog.ui" line="724"/>
-        <location filename="../src/configdialog.cpp" line="25"/>
         <source>Ok</source>
         <translation>确认</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="233"/>
+        <location filename="../src/configdialog.cpp" line="231"/>
         <source>Please enter the name of server</source>
         <translation>请输入服务器的名称</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="307"/>
+        <location filename="../src/configdialog.cpp" line="305"/>
         <source>new server</source>
         <translation>新建的服务器</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="381"/>
+        <location filename="../src/configdialog.cpp" line="379"/>
         <source>Select an image file as watermark</source>
         <translation>请选择一个图片文件作为水印</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="381"/>
+        <location filename="../src/configdialog.cpp" line="379"/>
         <source>Images (*.png *.gif *.jpg)</source>
         <translation>图像文件 (*.png *.gif *.jpg)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="439"/>
+        <location filename="../src/configdialog.cpp" line="437"/>
         <source>Please enter the name of output format</source>
         <translation>请输入输出格式的名称</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="442"/>
+        <location filename="../src/configdialog.cpp" line="440"/>
         <source>Please enter the template of output format</source>
         <translation>请输出输出格式的模板</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="470"/>
+        <location filename="../src/configdialog.cpp" line="468"/>
         <source>new format</source>
         <translation>新建的格式</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="511"/>
+        <location filename="../src/configdialog.cpp" line="509"/>
         <source>No tag is selected!</source>
         <translation>未选择任何标签</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="513"/>
+        <location filename="../src/configdialog.cpp" line="511"/>
         <source>Are you sure to delete all selected tags?</source>
         <translation>您确认要删除所选的标签吗？</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="541"/>
+        <location filename="../src/configdialog.cpp" line="539"/>
         <source>Restart needed</source>
         <translation>需要重启</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="541"/>
+        <location filename="../src/configdialog.cpp" line="539"/>
         <source>In order to switch language, you need to restart this program.</source>
         <translation>为了切换语言，您需要重新启动本程序</translation>
     </message>
@@ -607,6 +605,19 @@
         <location filename="../src/protocols/localstorageprotocol.cpp" line="17"/>
         <source>Local Storage</source>
         <translation>本地存储</translation>
+    </message>
+</context>
+<context>
+    <name>LocalStorageUploader</name>
+    <message>
+        <location filename="../src/protocols/localstorageprotocol.cpp" line="50"/>
+        <source>Failed to create folder</source>
+        <translation>创建文件夹失败</translation>
+    </message>
+    <message>
+        <location filename="../src/protocols/localstorageprotocol.cpp" line="57"/>
+        <source>Failed to open file for writing.</source>
+        <translation>无法打开文件进行写入</translation>
     </message>
 </context>
 <context>

@@ -16,6 +16,7 @@ public:
 
 class FtpProtocol : public Protocol
 {
+    Q_OBJECT
     QList<ProtocolSettingInfo> _settingInfos;
 public:
     FtpProtocol();

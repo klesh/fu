@@ -7,6 +7,7 @@
 
 class LocalStorageUploader : public Uploader
 {
+    Q_OBJECT
     QVariantMap _settings;
 
 public:
@@ -16,6 +17,7 @@ public:
 
 class LocalStorageProtocol : public Protocol
 {
+    Q_OBJECT
     QList<ProtocolSettingInfo> _settingInfos;
 
 public:

@@ -106,7 +106,8 @@ bool Application::prepare(const QString &dbPath)
 {
     // create folder
     QFileInfo dbFileInfo(dbPath);
-    if (!dbFileInfo.exists() && !dbFileInfo.dir().exists()) {
+    bool firstRun = !dbFileInfo.exists();
+    if (firstRun && !dbFileInfo.dir().exists()) {
         dbFileInfo.dir().mkdir(".");
     }
 
@@ -116,23 +117,27 @@ bool Application::prepare(const QString &dbPath)
     _sqlDb = QSqlDatabase::addDatabase("QSQLITE");
     _sqlDb.setDatabaseName(_dbPath);
     _sqlDb.open();
-    _tagService = new TagService();
-    _serverService = new ServerService();
     _settingService = new SettingService();
+
+    if (!firstRun) {
+        auto lang = _settingService->lang();
+
+        // setup i18n
+        qDebug() << "lang" << lang;
+        if (!lang.isEmpty()) {
+            QTranslator *qTranslator = new QTranslator(this);
+            qDebug() << "lang" << QString("fu.%1.qm").arg(lang);
+            qTranslator->load(QString("fu.%1.qm").arg(lang), "./i18n");
+            installTranslator(qTranslator);
+        }
+        qDebug() << "lang set to " << lang;
+    }
+
+    _serverService = new ServerService();
+    _tagService = new TagService();
     _formatService = new FormatService();
     _clipService = new ClipService();
     _uploadService = new UploadService();
-
-    auto lang = _settingService->lang();
-
-    // setup i18n
-    qDebug() << "lang" << lang;
-    if (!lang.isEmpty()) {
-        QTranslator *qTranslator = new QTranslator(this);
-        qDebug() << "lang" << QString("fu.%1.qm").arg(lang);
-        qTranslator->load(QString("fu.%1.qm").arg(lang), "./i18n");
-        installTranslator(qTranslator);
-    }
 
 #ifdef Q_OS_WIN
     auto f = font();

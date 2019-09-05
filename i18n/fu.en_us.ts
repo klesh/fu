@@ -123,7 +123,6 @@
     <message>
         <location filename="../src/configdialog.ui" line="176"/>
         <location filename="../src/configdialog.ui" line="620"/>
-        <location filename="../src/configdialog.cpp" line="26"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
@@ -249,62 +248,61 @@
     </message>
     <message>
         <location filename="../src/configdialog.ui" line="724"/>
-        <location filename="../src/configdialog.cpp" line="25"/>
         <source>Ok</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="233"/>
+        <location filename="../src/configdialog.cpp" line="231"/>
         <source>Please enter the name of server</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="307"/>
+        <location filename="../src/configdialog.cpp" line="305"/>
         <source>new server</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="381"/>
+        <location filename="../src/configdialog.cpp" line="379"/>
         <source>Select an image file as watermark</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="381"/>
+        <location filename="../src/configdialog.cpp" line="379"/>
         <source>Images (*.png *.gif *.jpg)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="439"/>
+        <location filename="../src/configdialog.cpp" line="437"/>
         <source>Please enter the name of output format</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="442"/>
+        <location filename="../src/configdialog.cpp" line="440"/>
         <source>Please enter the template of output format</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="470"/>
+        <location filename="../src/configdialog.cpp" line="468"/>
         <source>new format</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="511"/>
+        <location filename="../src/configdialog.cpp" line="509"/>
         <source>No tag is selected!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="513"/>
+        <location filename="../src/configdialog.cpp" line="511"/>
         <source>Are you sure to delete all selected tags?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="541"/>
+        <location filename="../src/configdialog.cpp" line="539"/>
         <source>Restart needed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="541"/>
+        <location filename="../src/configdialog.cpp" line="539"/>
         <source>In order to switch language, you need to restart this program.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -606,6 +604,19 @@
     <message>
         <location filename="../src/protocols/localstorageprotocol.cpp" line="17"/>
         <source>Local Storage</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>LocalStorageUploader</name>
+    <message>
+        <location filename="../src/protocols/localstorageprotocol.cpp" line="50"/>
+        <source>Failed to create folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/protocols/localstorageprotocol.cpp" line="57"/>
+        <source>Failed to open file for writing.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
