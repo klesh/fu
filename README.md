@@ -15,8 +15,8 @@
   * Compress image before upload
   * Adding wartermark for image
   * Customizable output format, HTML/Markdown/Raw or whatever plain-text format you like
-  * Tagging support
-  * Reuse previous uploaded clips
+  * Copy output from History records
+  * Manage history by tagging
   * Search history clips by similarity (base on `pHash`)
   * Easy to backup/restore your data
   * i18n support
