@@ -421,7 +421,7 @@ void ConfigDialog::formatsShowItem(QListWidgetItem *current, QListWidgetItem *pr
     if (id) {
         Format format = APP->formatService()->findById(id);
         ui->txtFormatName->setText(format.name);
-        ui->txtFormatTemplate->setText(format.format);
+        ui->txtFormatTemplate->setPlainText(format.format);
     }
 }
 
