@@ -107,8 +107,11 @@ bool Application::prepare(const QString &dbPath)
     // create folder
     QFileInfo dbFileInfo(dbPath);
     bool firstRun = !dbFileInfo.exists();
-    if (firstRun && !dbFileInfo.dir().exists()) {
-        dbFileInfo.dir().mkdir(".");
+    if (firstRun) {
+        auto dir = dbFileInfo.dir();
+        if (!dir.exists()) {
+            dir.mkpath(".");
+        }
     }
 
     // setup database
