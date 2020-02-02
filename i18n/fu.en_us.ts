@@ -116,13 +116,13 @@
     </message>
     <message>
         <location filename="../src/configdialog.ui" line="169"/>
-        <location filename="../src/configdialog.ui" line="613"/>
+        <location filename="../src/configdialog.ui" line="609"/>
         <source>Save</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/configdialog.ui" line="176"/>
-        <location filename="../src/configdialog.ui" line="620"/>
+        <location filename="../src/configdialog.ui" line="616"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
@@ -207,47 +207,47 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/configdialog.ui" line="593"/>
+        <location filename="../src/configdialog.ui" line="586"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;i.e.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;&amp;lt;img src=&amp;quot;%1&amp;quot; alt=&amp;quot;%2&amp;quot;&amp;gt;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;%1 will be replaced with &amp;quot;Protocol Output&amp;quot; (normally a URL)&lt;/p&gt;&lt;p&gt;%2 will be replaced with the Description&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/configdialog.ui" line="633"/>
+        <location filename="../src/configdialog.ui" line="629"/>
         <source>Tags</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/configdialog.ui" line="648"/>
+        <location filename="../src/configdialog.ui" line="644"/>
         <source>&amp;Add</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/configdialog.ui" line="655"/>
+        <location filename="../src/configdialog.ui" line="651"/>
         <source>&amp;Delete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/configdialog.ui" line="678"/>
+        <location filename="../src/configdialog.ui" line="674"/>
         <source>Backup/Restore</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/configdialog.ui" line="684"/>
+        <location filename="../src/configdialog.ui" line="680"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;fu stores all data in a single &lt;span style=&quot; font-weight:600;&quot;&gt;data.db&lt;/span&gt; file, to Backup/Restore, just Copy/Restore this file while fu is not running&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/configdialog.ui" line="694"/>
+        <location filename="../src/configdialog.ui" line="690"/>
         <source>Open Data Directory</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/configdialog.ui" line="715"/>
+        <location filename="../src/configdialog.ui" line="711"/>
         <source>Language</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/configdialog.ui" line="724"/>
+        <location filename="../src/configdialog.ui" line="720"/>
         <source>Ok</source>
         <translation type="unfinished"></translation>
     </message>

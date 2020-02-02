@@ -4,7 +4,7 @@
 
 # Introduction
 
-`fu` stands for `File Uploader`, a utility design to help you upload images/files and produce Markdown/HTML snippets with couple of clicks.
+`fu` stands for `File to URL`, a utility design to help you upload images/files and produce Markdown/HTML snippets with couple of clicks.
 
 # Features
 

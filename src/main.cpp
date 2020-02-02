@@ -12,6 +12,13 @@ int main(int argc, char *argv[])
 {
     Application app(argc, argv);
 
+    QSharedMemory sm;
+    sm.setKey("File2URL");
+    if (!sm.create(1)) {
+        QMessageBox::warning(NULL, app.tr("Warning!"), app.tr("An instance of this application is running!") );
+        exit(1);
+    }
+
     // application info
     QApplication::setApplicationName("fu");
     QApplication::setApplicationVersion(APP_VERSION);
