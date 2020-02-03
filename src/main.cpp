@@ -6,15 +6,15 @@
 #include <QStandardPaths>
 
 #include "application.h"
+#include "runguard.h"
 
 
 int main(int argc, char *argv[])
 {
     Application app(argc, argv);
 
-    QSharedMemory sm;
-    sm.setKey("File2URL");
-    if (!sm.create(1)) {
+    RunGuard guard("File2URL");
+    if (!guard.tryToRun()) {
         QMessageBox::warning(NULL, app.tr("Warning!"), app.tr("An instance of this application is running!") );
         exit(1);
     }

@@ -54,6 +54,7 @@ SOURCES += \
         src/protocols/imgurprotocol.cpp \
         src/protocols/qiniuprotocol.cpp \
         src/protocols/sftpprotocol.cpp \
+        src/runguard.cpp \
         src/store/migrations/migrationv0.cpp \
         src/store/migrator.cpp \
         src/upgradedialog.cpp \
@@ -91,6 +92,7 @@ HEADERS += \
         src/protocols/imgurprotocol.h \
         src/protocols/qiniuprotocol.h \
         src/protocols/sftpprotocol.h \
+        src/runguard.h \
         src/store/migration.h \
         src/store/migrations/migrationv0.h \
         src/store/migrator.h \
