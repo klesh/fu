@@ -19,7 +19,8 @@ void UploadThread::run()
         if (!stream->open(QIODevice::ReadOnly)) {
             _job.status = Error;
             _job.msg = tr("Failed to open file %1").arg(_job.path);
-            APP->sendNotification(_job.msg, tr("Error"), QSystemTrayIcon::MessageIcon::Warning);
+            APP->sendNotification(_job.msg, tr("Error"), QSystemTrayIcon::MessageIcon::Critical);
+            return;
         }
     }
 
