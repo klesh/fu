@@ -59,10 +59,9 @@ void UploadService::upload(QList<Clip> &clips)
 
     // build up job list
     for (auto &clip : clips) {
-        clip.freePixmap(); // no need pixmap anymore, free it up
         QByteArray imageBytes;
 
-        if (clip.isImage && (imageCompressionEanbled || imageWartermarkEnabled)) {
+        if (clip.isImage && (!clip.isFile || imageCompressionEanbled || imageWartermarkEnabled)) {
             // detect format and initialize quality
             QByteArray fmt = "jpg";
             int quality = -1;
@@ -101,6 +100,7 @@ void UploadService::upload(QList<Clip> &clips)
             buffer.open(QIODevice::WriteOnly);
             pixmap.save(&buffer, fmt, quality);
         }
+        clip.freePixmap(); // no need pixmap anymore, free it up
 
         for (auto &server : servers) {
             UploadJob job;

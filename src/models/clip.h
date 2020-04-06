@@ -30,7 +30,7 @@ struct Clip
         if (isFile) {
             _pixmap.load(data.toUrl().toLocalFile());
         } else {
-            _pixmap = qvariant_cast<QPixmap>(data);
+            _pixmap = QPixmap::fromImage(qvariant_cast<QImage>(data));
         }
         return _pixmap;
     }
