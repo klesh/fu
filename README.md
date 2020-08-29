@@ -47,6 +47,20 @@
   * libqcurl
   * qt-phash
 
+
+# Build on Windows (Qt 5.13.2)
+
+Tested on Windows 10 with Qt 5.13.2, higher version may not work.
+
+  1. Create working directory `mkdir fu2`
+  2. Create dependencies directory `mkdir fu2\deps`
+  3. Download libqcurl binaries from https://github.com/klesh/libqcurl/releases/tag/v1.0.0 and extract them to `fu2\deps\i386\release` and `fu2\deps\x86_64\release` accordingly
+  4. Clone repository: `git clone https://github.com/klesh/fu.git fu2\fu`
+  5. Launch `Qt Creator` and open `fu2\fu\fu.pro`, select both `Desktop Qt 5.13.2 MinGW 32-bit` and `Desktop Qt 5.13.2 MinGW 64-bit` kits
+  6. For each `release` configuration of each kits, add a building step `Make` with `install` as _Make arugments_
+  7. Select target Kit/Build (computer-like icon on the bottom left corner), then press `Ctrl-B` to build.
+  8. Open `Qt 5.13.2 (MinGW xxx 32-bit)`(or `64-bit`) command prompt accordingly and go to `fu2\builds\fu-gcc-i386-release-vx.x.x` (or `x86_64`) and run `windeployqt .`
+
 # FAQ
 
    Q: How to add imgur.com?

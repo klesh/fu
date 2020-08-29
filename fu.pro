@@ -18,8 +18,8 @@ TEMPLATE = app
 # deprecated API in order to know how to port your code away from it.
 DEFINES += QT_DEPRECATED_WARNINGS
 
-# app version auto-updationg
-VERSION = $$system(cd \""$$_PRO_FILE_PWD_"\" && git rev-parse --abbrev-ref HEAD)
+# app version auto-updating
+VERSION = $$system(cd \""$$_PRO_FILE_PWD_"\" && git branch --show-current)
 DEFINES += APP_VERSION=\\\"$${VERSION}\\\"
 
 # You can also make your code fail to compile if you use deprecated APIs.
