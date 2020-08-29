@@ -38,7 +38,7 @@ Format FormatService::findById(uint id)
 bool FormatService::append(Format &format)
 {
     QSqlQuery query;
-    query.prepare("INSERT INTO formats (name, format, enabled) VALUES (:name, :format, :enabled)");
+    query.prepare("INSERT INTO formats (name, format) VALUES (:name, :format)");
     query.bindValue(":name", format.name);
     query.bindValue(":format", format.format);
     if (query.exec()) {
@@ -52,7 +52,7 @@ bool FormatService::append(Format &format)
 bool FormatService::update(Format &format)
 {
     QSqlQuery query;
-    query.prepare("UPDATE formats SET name=:name, format=:format, enabled=:enabled WHERE id=:id");
+    query.prepare("UPDATE formats SET name=:name, format=:format WHERE id=:id");
     query.bindValue(":name", format.name);
     query.bindValue(":format", format.format);
     query.bindValue(":id", format.id);
